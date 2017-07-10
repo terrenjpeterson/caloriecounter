@@ -308,7 +308,7 @@ function validateFood(slots) {
         return { isValid: true, calories: foodCalories };
     } else if (slots.Food) {
         console.log("failed food validation");
-        return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + '.');
+        return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + '. Please try again.');
     } else {
         console.log("no food items provided yet.");
         return { isValid: true };
@@ -516,31 +516,58 @@ function calculateCalories(intentRequest, callback) {
 
     // check to see if in validation mode or final confirmation
     if (intentRequest.invocationSource === 'DialogCodeHook') {
-        console.log("validation in progress");
-        
+        console.log("Validation in progress.");
+
         const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
         console.log("Validation Result: " + JSON.stringify(validationResult));
 
-        if (restaurantName) {        
-            const foodValidationResult = validateFood(intentRequest.currentIntent.slots);
-            console.log("Validation Result: " + JSON.stringify(foodValidationResult));
-        }
-        
-        if (validationResult.isValid) {
-            callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+        // if a restaurant name has been provided, then validate it. If not, its too early and return.
+        if (restaurantName) {
+            // restaurant name has been provided. if failed validation, return with error message.
+            if (!validationResult.isValid) {
+                console.log("Invalid restaurant name. Pass back failed validation");
+                slots[`${validationResult.violatedSlot}`] = null;
+                
+                console.log("Validation Result: " + JSON.stringify(validationResult));
+                callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                    slots, validationResult.violatedSlot, validationResult.message));
+            } else {
+                // Restaurant name is valid, now check if a food name was provided.
+                if (foodName) {
+                    // food name exists, so validate it
+                    console.log("Validate Food Name: " + foodName);                
+                    const foodValidationResult = validateFood(intentRequest.currentIntent.slots);
+                    console.log("Validation Result: " + JSON.stringify(foodValidationResult));
+
+                    // check if food was valid
+                    if (!foodValidationResult.isValid) {
+                        console.log("Invalid food name " + foodName + ". Pass back failed validation");
+                        slots[`${foodValidationResult.violatedSlot}`] = null;
+                        
+                        console.log("Validation Result: " + JSON.stringify(foodValidationResult));
+                        callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                            slots, foodValidationResult.violatedSlot, foodValidationResult.message));
+                    } else {
+                        console.log("Valid food name " + foodName + " was provided.");
+                        callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+                    }
+                } else {
+                    console.log("No food name entered yet, but restaurant name is valid.");
+                    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+                }
+            }
         } else {
-            console.log("pass back failed validation");
-            slots[`${validationResult.violatedSlot}`] = null;
-            console.log("Validation Result: " + JSON.stringify(validationResult));
-            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                slots, validationResult.violatedSlot, validationResult.message));
+            // nothing has been entered - so pass through a success message
+            console.log("Nothing entered yet, so continue without alerts.");
+            callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
         }
     } else {
-        // this is the processing for the final confirmation
+        // this is the processing for the final confirmation. calculate calories and format message
         console.log("confirm final response - now calculating calories");
         const foodValidationResult = validateFood(intentRequest.currentIntent.slots);
         console.log("Validation Result: " + JSON.stringify(foodValidationResult));
 
+        // this attribute is what the chatbot will respond back with
         var counterResponse = 'At ' + restaurantName + ' eating a ' + foodName + 
             ' and drinking a ' + drinkName + '. That is ' + foodValidationResult.calories + 
             ' calories.';
@@ -595,3 +622,4 @@ exports.handler = (event, context, callback) => {
         callback(err);
     }
 };
+
