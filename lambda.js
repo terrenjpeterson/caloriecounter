@@ -12,11 +12,37 @@ var foodChoices = [
     {
         "restaurant":"Chipotle",
         "foodItems":[
-            {"foodName":"Chicken Burrito", "calories":845},
-            {"foodName":"Steak Burrito", "calories":815},
-            {"foodName":"Chicken Burrito Bowl", "calories":530},
-            {"foodName":"Steak Burrito Bowl", "calories":500},
-            {"foodName":"Carnitas Burrito Bowl", "calories":560}
+            {"foodName":"Chicken Burrito", "calories":975},
+            {"foodName":"Steak Burrito", "calories":945},
+            {"foodName":"Carnitas Burrito", "calories":1005},
+            {"foodName":"Barbacoa Burrito", "calories":965},
+            {"foodName":"Chorizo Burrito", "calories":1095},
+            {"foodName":"Sofritas Burrito", "calories":945},
+            {"foodName":"Chicken Burrito Bowl", "calories":630},
+            {"foodName":"Steak Burrito Bowl", "calories":600},
+            {"foodName":"Carnitas Burrito Bowl", "calories":660},
+            {"foodName":"Barbacoa Burrito Bowl", "calories":620},
+            {"foodName":"Chorizo Burrito Bowl", "calories":750},
+            {"foodName":"Sofritas Burrito Bowl", "calories":600},
+            {"foodName":"Chicken Salad", "calories":345},
+            {"foodName":"Chicken Corn Tortilla Taco", "calories":650},
+            {"foodName":"Chicken Flour Tortilla Taco", "calories":700},
+            {"foodName":"Steak Corn Tortilla Taco", "calories":620},
+            {"foodName":"Steak Flour Tortilla Taco", "calories":670},
+            {"foodName":"Carnitas Corn Tortilla Taco", "calories":680},
+            {"foodName":"Carnitas Flour Tortilla Taco", "calories":730},
+            {"foodName":"Barbacoa Corn Tortilla Taco", "calories":640},
+            {"foodName":"Barbacoa Flour Tortilla Taco", "calories":690},
+            {"foodName":"Chorizo Corn Tortilla Taco", "calories":770},
+            {"foodName":"Chorizo Flour Tortilla Taco", "calories":820},
+            {"foodName":"Sofritas Corn Tortilla Taco", "calories":620},
+            {"foodName":"Sofritas Flour Tortilla Taco", "calories":670},
+            {"foodName":"Steak Salad", "calories":315},
+            {"foodName":"Carnitas Salad", "calories":375},
+            {"foodName":"Barbacoa Salad", "calories":335},
+            {"foodName":"Chorizo Salad", "calories":465},
+            {"foodName":"Kids Chicken Taco", "calories":205},
+            {"foodName":"Kids Steak Taco", "calories":200}
             ]
     },
     {
@@ -76,16 +102,30 @@ var foodChoices = [
         "restaurant":"Subway",
         "foodItems":[
             {"foodName":"Black Forest Ham", "calories":290},
-            {"foodName":"Carved Turkey", "calories":330},
-            {"foodName":"Chicken and Bacon Ranch Melt", "calories":590},
-            {"foodName":"Tuna", "calories":470},
-            {"foodName":"Cold Cut Combo", "calories":340},
-            {"foodName":"Italian BMT", "calories":390},
-            {"foodName":"Italian Hero", "calories":550},
-            {"foodName":"Meatball Marinara", "calories":460},
             {"foodName":"Oven Roasted Chicken", "calories":320},
             {"foodName":"Roast Beef", "calories":320},
-            {"foodName":"Spicy Italian", "calories":470}
+            {"foodName":"Rotisserie-Style Chicken", "calories":350},
+            {"foodName":"Subway Club", "calories":310},
+            {"foodName":"Sweet Onion Chicken Teriyaki", "calories":370},
+            {"foodName":"Turkey Breast", "calories":280},
+            {"foodName":"Veggie Delite", "calories":280},
+            {"foodName":"Carved Turkey", "calories":330},
+            {"foodName":"Chicken and Bacon Ranch Melt", "calories":590},
+            {"foodName":"Cold Cut Combo", "calories":340},
+            {"foodName":"Italian BMT", "calories":390},
+            {"foodName":"Meatball Marinara", "calories":460},
+            {"foodName":"Spicy Italian", "calories":470},
+            {"foodName":"Steak and Cheese", "calories":470},
+            {"foodName":"Tuna", "calories":470},
+            {"foodName":"Italian Hero", "calories":550},
+            {"foodName":"Black Forest Ham Salad", "calories":110},
+            {"foodName":"Oven Roasted Chicken Salad", "calories":150},
+            {"foodName":"Roast Beef Salad", "calories":140},
+            {"foodName":"Rotisserie-Style Chicken Salad", "calories":170},
+            {"foodName":"Subway Club Salad", "calories":140},
+            {"foodName":"Sweet Onion Chicken Teriyaki Salad", "calories":230},
+            {"foodName":"Turkey Breast Salad", "calories":110},
+            {"foodName":"Veggie Delite Salad", "calories":60}
             ]
     },
     {
@@ -109,6 +149,14 @@ var foodChoices = [
             {"foodName":"3 count Chicken Strips", "calories":360},
             {"foodName":"Chick-n-Strips 3 count", "calories":360},
             {"foodName":"Chick-n-Strips three count", "calories":360},
+            {"foodName":"Four piece Chicken Strips", "calories":470},
+            {"foodName":"4 piece Chicken Strips", "calories":470},
+            {"foodName":"Chick-n-Strips 4 piece", "calories":470},
+            {"foodName":"Chick-n-Strips four piece", "calories":470},
+            {"foodName":"Three piece Chicken Strips", "calories":360},
+            {"foodName":"3 piece Chicken Strips", "calories":360},
+            {"foodName":"Chick-n-Strips 3 piece", "calories":360},
+            {"foodName":"Chick-n-Strips three piece", "calories":360},
             {"foodName":"Grilled Chicken Club Sandwich", "calories":440},
             {"foodName":"Grilled Chicken Club", "calories":440},
             {"foodName":"Cobb Salad", "calories":500},
@@ -117,6 +165,10 @@ var foodChoices = [
             {"foodName":"Twelve count nuggets", "calories":400},
             {"foodName":"12 count chicken nuggets", "calories":400},
             {"foodName":"Twelve count chicken nuggets", "calories":400},
+            {"foodName":"12 piece nuggets", "calories":400},
+            {"foodName":"Twelve piece nuggets", "calories":400},
+            {"foodName":"12 piece chicken nuggets", "calories":400},
+            {"foodName":"Twelve piece chicken nuggets", "calories":400},
             {"foodName":"Grilled Chicken Cool Wrap", "calories":340},
             {"foodName":"Grilled Chicken Market Salad", "calories":470},
             {"foodName":"Grilled Market Salad", "calories":470},
@@ -139,6 +191,7 @@ var foodChoices = [
             {"foodName":"Hamburger", "calories":250},
             {"foodName":"Cheeseburger", "calories":300},
             {"foodName":"Double Quarter Pounder with Cheese", "calories":770},
+            {"foodName":"Double Quarter Pounder", "calories":770},
             {"foodName":"Filet-o-Fish", "calories":390},
             {"foodName":"McChicken", "calories":350},
             {"foodName":"McChicken Sandwich", "calories":350},
@@ -158,7 +211,34 @@ var foodChoices = [
             {"foodName":"4 Piece Nuggets", "calories":180},
             {"foodName":"6 Piece Nuggets", "calories":270},
             {"foodName":"10 Piece Nuggets", "calories":440},
-            {"foodName":"20 Piece Nuggets", "calories":890}
+            {"foodName":"20 Piece Nuggets", "calories":890},
+            {"foodName":"Small Fries", "calories":230},
+            {"foodName":"Medium Fries", "calories":340},
+            {"foodName":"Large Fries", "calories":510},
+            {"foodName":"Bacon Ranch Salad and Buttermilk Crispy Chicken", "calories":490},
+            {"foodName":"Bacon Ranch Salad & Buttermilk Crispy Chicken", "calories":490},
+            {"foodName":"Bacon Ranch Grilled Chicken Salad", "calories":320},
+            {"foodName":"Southwest Buttermilk Crispy Chicken Salad", "calories":520},
+            {"foodName":"Southwest Grilled Chicken Salad", "calories":350},
+            {"foodName":"Fruit 'N Yogurt Parfait", "calories":150},
+            {"foodName":"Egg McMuffin", "calories":300},
+            {"foodName":"Egg White Delight McMuffin", "calories":260},
+            {"foodName":"Sausage McMuffin", "calories":400},
+            {"foodName":"Sausage and Egg McMuffin", "calories":470},
+            {"foodName":"Bacon Egg and Cheese Biscuit", "calories":450},
+            {"foodName":"Sausage Biscuit", "calories":460},
+            {"foodName":"Sausage Biscuit with Egg", "calories":530},
+            {"foodName":"Steak Egg and Cheese Biscuit", "calories":530},
+            {"foodName":"Bacon Egg and Cheese McGriddles", "calories":420},
+            {"foodName":"Sausage Egg and Cheese McGriddles", "calories":550},
+            {"foodName":"Bacon Egg and Cheese Bagel", "calories":550},
+            {"foodName":"Big Breakfast", "calories":750},
+            {"foodName":"Big Breakfast with Hotcakes", "calories":1350},
+            {"foodName":"Hotcakes", "calories":600},
+            {"foodName":"Hotcakes and Sausage", "calories":790},
+            {"foodName":"Sausage Burrito", "calories":290},
+            {"foodName":"Hash Browns", "calories":150},
+            {"foodName":"Fruit and Maple Oatmeal", "calories":310}
         ]
     },
     {
@@ -192,9 +272,13 @@ var foodChoices = [
         "foodItems":[
             {"foodName":"7 Layer Burrito","calories":440},
             {"foodName":"Seven Layer Burrito","calories":440},
+            {"foodName":"7 Layer","calories":440},
+            {"foodName":"Seven Layer","calories":440},
             {"foodName":"Bean Burrito","calories":380},
             {"foodName":"Beefy 5 Layer Burrito","calories":500},
             {"foodName":"Beefy five layer burrito","calories":500},
+        //    {"foodName":"Beefy 5 Layer","calories":500},
+        //    {"foodName":"Beefy five layer","calories":500},
             {"foodName":"Beefy Fritos Burrito","calories":440},
             {"foodName":"Beefy Nacho Loader Griller","calories":370},
             {"foodName":"Black Bean Burrito","calories":390},
@@ -234,7 +318,58 @@ var foodChoices = [
             {"foodName":"Beef Fresco Crunchy Taco","calories":140},
             {"foodName":"Beef Fresco Soft Taco","calories":160},
             {"foodName":"Shredded Chicken Fresco Soft Taco","calories":150},
-            {"foodName":"Steak Fresco Soft Taco","calories":140}
+            {"foodName":"Steak Fresco Soft Taco","calories":140},
+            {"foodName":"Double Chalupa","calories":600},
+            {"foodName":"Spicy Double Chalupa","calories":600},
+            {"foodName":"Beefy Mini Quesadilla","calories":210},
+            {"foodName":"Beef Chalupa Supreme","calories":350},
+            {"foodName":"Chicken Chalupa Supreme","calories":330},
+            {"foodName":"Steak Chalupa Supreme","calories":330},
+            {"foodName":"Cheese Roll-Up","calories":180},
+            {"foodName":"Cheesy Gordita Crunch","calories":500},
+            {"foodName":"Cheesy Gordita Crunch Supreme","calories":520},
+            {"foodName":"Cool Ranch Doritos Cheesy Gordita Crunch","calories":500},
+            {"foodName":"Crunchwrap Supreme","calories":530},
+            {"foodName":"Double Tostada","calories":270},
+            {"foodName":"Chicken DoubleDilla","calories":660},
+            {"foodName":"Steak DoubleDilla","calories":670},
+            {"foodName":"Express Fiesta Taco Salad","calories":580},
+            {"foodName":"Fiery Doritos Cheesy Gordita Crunch","calories":500},
+            {"foodName":"Beef Fiesta Taco Salad","calories":760},
+            {"foodName":"Chicken Fiesta Taco Salad","calories":720},
+            {"foodName":"Steak Fiesta Taco Salad","calories":730},
+            {"foodName":"Beef Gordita Supreme","calories":280},
+            {"foodName":"Chicken Gordita Supreme","calories":260},
+            {"foodName":"Steak Gordita Supreme","calories":270},
+            {"foodName":"Mexican Pizza","calories":550},
+            {"foodName":"Meximelt","calories":250},
+            {"foodName":"Nacho Cheese Doritos Cheesy Gordita Crunch","calories":490},
+            {"foodName":"Nachos BellGrande","calories":760},
+            {"foodName":"Nachos Supreme","calories":440},
+            {"foodName":"Cheese Quesadilla","calories":460},
+            {"foodName":"Chicken Quesadilla","calories":510},
+            {"foodName":"Steak Quesadilla","calories":510},
+            {"foodName":"Shredded Chicken Mini Quesadilla","calories":200},
+            {"foodName":"Spicy Tostada","calories":210},
+            {"foodName":"Triple Layer Nachos","calories":320},
+            {"foodName":"Cool Ranch Doritos Double Decker Taco","calories":320},
+            {"foodName":"Cool Ranch Doritos Locos Taco","calories":170},
+            {"foodName":"Cool Ranch Doritos Locos Taco Supreme","calories":190},
+            {"foodName":"Crunchy Taco","calories":170},
+            {"foodName":"Crunchy Taco Supreme","calories":190},
+            {"foodName":"Double Decker Taco","calories":320},
+            {"foodName":"Double Decker Taco Supreme","calories":340},
+            {"foodName":"Fiery Doritos Double Decker Taco","calories":320},
+            {"foodName":"Fiery Doritos Locos Taco","calories":170},
+            {"foodName":"Fiery Doritos Locos Taco Supreme","calories":190},
+            {"foodName":"Grilled Steak Soft Taco","calories":200},
+            {"foodName":"Nacho Cheese Doritos Double Decker Taco","calories":320},
+            {"foodName":"Nacho Cheese Doritos Locos Taco","calories":170},
+            {"foodName":"Nacho Cheese Doritos Locos Taco Supreme","calories":190},
+            {"foodName":"Beef Soft Taco","calories":180},
+            {"foodName":"Chicken Soft Taco","calories":170},
+            {"foodName":"Beef Soft Taco Supreme","calories":210},
+            {"foodName":"Spicy Potato Soft Taco","calories":230}
         ]
     }
 ];
@@ -243,11 +378,20 @@ var drinks = [
     {"drinkName":"Water", "calories":0},
     {"drinkName":"Nothing", "calories":0},
     {"drinkName":"None", "calories":0},
+    {"drinkName":"Small Soda", "calories":150},
     {"drinkName":"Soda", "calories":150},
     {"drinkName":"Large Soda", "calories":250},
+    {"drinkName":"Small Coke", "calories":120},
     {"drinkName":"Coke", "calories":150},
+    {"drinkName":"Small Pepsi", "calories":120},
     {"drinkName":"Pepsi", "calories":150},
+    {"drinkName":"Small Sprite", "calories":120},
     {"drinkName":"Sprite", "calories":150},
+    {"drinkName":"Mountain Dew", "calories":170},
+    {"drinkName":"Mountain Dew Baja Blast", "calories":170},
+    {"drinkName":"Dr. Pepper", "calories":150},
+    {"drinkName":"Dr.Pepper", "calories":150},
+    {"drinkName":"Dr Pepper", "calories":150},
     {"drinkName":"Large Diet Lemonade", "calories":0},
     {"drinkName":"Diet Lemonade", "calories":0},
     {"drinkName":"Lemonade", "calories":150},
@@ -540,71 +684,14 @@ function calculateCalories(intentRequest, callback) {
     const foodName       = intentRequest.currentIntent.slots.Food;
     const drinkName      = intentRequest.currentIntent.slots.Drink;
     
-    console.log("now doing some calculating");
+    console.log("processing user response");
 
     // check to see if in validation mode or final confirmation
     if (intentRequest.invocationSource === 'DialogCodeHook') {
         console.log("Validation in progress.");
 
-        const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
-        console.log("Validation Result: " + JSON.stringify(validationResult));
-
-        // if a restaurant name has been provided, then validate it. If not, its too early and return.
-        if (restaurantName) {
-            // restaurant name has been provided. if failed validation, return with error message.
-            if (!validationResult.isValid) {
-                console.log("Invalid restaurant name. Pass back failed validation");
-                slots[`${validationResult.violatedSlot}`] = null;
-                
-                console.log("Validation Result: " + JSON.stringify(validationResult));
-                callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                    slots, validationResult.violatedSlot, validationResult.message));
-            } else {
-                // Restaurant name is valid, now check if a food name was provided.
-                if (foodName) {
-                    // food name exists, so validate it
-                    console.log("Validate Food Name: " + foodName);                
-                    const foodValidationResult = validateFood(intentRequest.currentIntent.slots);
-                    console.log("Validation Result: " + JSON.stringify(foodValidationResult));
-
-                    // check if food was valid
-                    if (!foodValidationResult.isValid) {
-                        console.log("Invalid food name " + foodName + ". Pass back failed validation");
-                        slots[`${foodValidationResult.violatedSlot}`] = null;
-                        
-                        console.log("Validation Result: " + JSON.stringify(foodValidationResult));
-                        callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                            slots, foodValidationResult.violatedSlot, foodValidationResult.message));
-                    } else {
-                        console.log("Valid food name " + foodName + " was provided.");
-                        if (drinkName) {
-                            const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
-                            if (!drinkValidationResult.isValid) {
-                                console.log("Invalid drink name " + drinkName + ". Pass back failed validation.");
-                                slots[`${drinkValidationResult.violatedSlot}`] = null;
-                                
-                                console.log("Validation Result: " + JSON.stringify(drinkValidationResult));
-                                callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                                    slots, drinkValidationResult.violatedSlot, drinkValidationResult.message));
-                            } else {
-                                console.log("Validated drink choice.");
-                                callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-                            }
-                        } else {
-                            console.log("No drink name provided yet.");
-                            callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-                        }
-                    }
-                } else {
-                    console.log("No food name entered yet, but restaurant name is valid.");
-                    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-                }
-            }
-        } else {
-            // nothing has been entered - so pass through a success message
-            console.log("Nothing entered yet, so continue without alerts.");
-            callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-        }
+        validateUserEntry(intentRequest, callback);
+        
     } else {
         // this is the processing for the final confirmation. calculate calories and format message
         console.log("confirm final response - now calculating calories");
@@ -626,7 +713,78 @@ function calculateCalories(intentRequest, callback) {
     }
 }
 
- // --------------- Intents -----------------------
+// this function is what validates what information has been provided
+
+function validateUserEntry(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+    const slots = intentRequest.currentIntent.slots;
+
+    const restaurantName = intentRequest.currentIntent.slots.Restaurant;
+    const foodName       = intentRequest.currentIntent.slots.Food;
+    const drinkName      = intentRequest.currentIntent.slots.Drink;
+
+    const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
+    console.log("Validation Result: " + JSON.stringify(validationResult));
+
+    // if a restaurant name has been provided, then validate it. If not, its too early and return.
+    if (restaurantName) {
+        // restaurant name has been provided. if failed validation, return with error message.
+        if (!validationResult.isValid) {
+            console.log("Invalid restaurant name. Pass back failed validation");
+            slots[`${validationResult.violatedSlot}`] = null;
+            
+            console.log("Validation Result: " + JSON.stringify(validationResult));
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                slots, validationResult.violatedSlot, validationResult.message));
+        } else {
+            // Restaurant name is valid, now check if a food name was provided.
+            if (foodName) {
+                // food name exists, so validate it
+                console.log("Validate Food Name: " + foodName);                
+                const foodValidationResult = validateFood(intentRequest.currentIntent.slots);
+                console.log("Validation Result: " + JSON.stringify(foodValidationResult));
+
+                // check if food was valid
+                if (!foodValidationResult.isValid) {
+                    console.log("Invalid food name " + foodName + ". Pass back failed validation");
+                    slots[`${foodValidationResult.violatedSlot}`] = null;
+                        
+                    console.log("Validation Result: " + JSON.stringify(foodValidationResult));
+                    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                        slots, foodValidationResult.violatedSlot, foodValidationResult.message));
+                } else {
+                    console.log("Valid food name " + foodName + " was provided.");
+                    if (drinkName) {
+                        const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
+                        if (!drinkValidationResult.isValid) {
+                            console.log("Invalid drink name " + drinkName + ". Pass back failed validation.");
+                            slots[`${drinkValidationResult.violatedSlot}`] = null;
+                                
+                            console.log("Validation Result: " + JSON.stringify(drinkValidationResult));
+                            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                                slots, drinkValidationResult.violatedSlot, drinkValidationResult.message));
+                        } else {
+                            console.log("Validated drink choice.");
+                            callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+                        }
+                    } else {
+                        console.log("No drink name provided yet.");
+                        callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+                    }
+                }
+            } else {
+                console.log("No food name entered yet, but restaurant name is valid.");
+                callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+            }
+        }
+    } else {
+        // nothing has been entered - so pass through a success message
+        console.log("Nothing entered yet, so continue without alerts.");
+        callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+    }
+}
+
+// --------------- Intents -----------------------
 
 /**
  * Called when the user specifies an intent for this skill.
