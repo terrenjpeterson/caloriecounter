@@ -1,0 +1,231 @@
+{
+	"name": "FastFoodChecker",
+	"description": null,
+	"intents": [{
+		"intentName": "Thanks",
+		"intentVersion": "1"
+	}, {
+		"intentName": "GetCalories",
+		"intentVersion": "7"
+	}, {
+		"intentName": "WhichRestaurants",
+		"intentVersion": "1"
+	}, {
+		"intentName": "EndConversation",
+		"intentVersion": "2"
+	}, {
+		"intentName": "HelpRequest",
+		"intentVersion": "1"
+	}, {
+		"intentName": "Introduction",
+		"intentVersion": "3"
+	}],
+	"clarificationPrompt": {
+		"messages": [{
+			"contentType": "PlainText",
+			"content": "Sorry, can you please repeat that?"
+		}],
+		"maxAttempts": 5,
+		"responseCard": null
+	},
+	"abortStatement": {
+		"messages": [{
+			"contentType": "PlainText",
+			"content": "Sorry, I could not understand. Goodbye."
+		}],
+		"responseCard": null
+	},
+	"status": "READY",
+	"failureReason": null,
+	"lastUpdatedDate": "2017-07-11T20:55:23.578Z",
+	"createdDate": "2017-07-04T18:47:58.136Z",
+	"idleSessionTTLInSeconds": 60,
+	"voiceId": "0",
+	"checksum": "ef7ffef1-9938-421a-ae02-b5ebb98f254c",
+	"version": "$LATEST",
+	"locale": "en-US",
+	"childDirected": false,
+	"dependencies": {
+		"intents": [{
+			"name": "Introduction",
+			"description": null,
+			"slots": [],
+			"sampleUtterances": ["Hi", "Hello", "Get Started"],
+			"conclusionStatement": {
+				"messages": [{
+					"contentType": "PlainText",
+					"content": "Thanks - see you later!"
+				}],
+				"responseCard": null
+			},
+			"fulfillmentActivity": {
+				"type": "CodeHook",
+				"codeHook": {
+					"uri": "arn:aws:lambda:us-east-1:034353605017:function:myCalorieCounterGreen",
+					"messageVersion": "1.0"
+				}
+			},
+			"parentIntentSignature": null,
+			"lastUpdatedDate": "2017-07-11T20:32:21.369Z",
+			"createdDate": "2017-07-11T20:32:21.369Z",
+			"version": "3",
+			"checksum": "6d9645bc-93f2-4731-9346-d95bc4acd123"
+		}, {
+			"name": "WhichRestaurants",
+			"description": null,
+			"slots": [],
+			"sampleUtterances": ["What restaurants do you have", "Which restaurants do you have", "List of restaurants", "Which fast food restaurants do you have"],
+			"fulfillmentActivity": {
+				"type": "CodeHook",
+				"codeHook": {
+					"uri": "arn:aws:lambda:us-east-1:034353605017:function:myCalorieCounterGreen",
+					"messageVersion": "1.0"
+				}
+			},
+			"parentIntentSignature": null,
+			"lastUpdatedDate": "2017-07-11T20:32:21.330Z",
+			"createdDate": "2017-07-11T20:32:21.330Z",
+			"version": "1",
+			"checksum": "eff7ae5d-22b5-49bb-83fb-aaee9d424ead"
+		}, {
+			"name": "HelpRequest",
+			"description": null,
+			"slots": [],
+			"sampleUtterances": [],
+			"fulfillmentActivity": {
+				"type": "CodeHook",
+				"codeHook": {
+					"uri": "arn:aws:lambda:us-east-1:034353605017:function:myCalorieCounterGreen",
+					"messageVersion": "1.0"
+				}
+			},
+			"parentIntentSignature": "AMAZON.HelpIntent",
+			"lastUpdatedDate": "2017-07-11T20:54:59.352Z",
+			"createdDate": "2017-07-11T20:54:59.352Z",
+			"version": "1",
+			"checksum": "a6d76cab-09a4-431b-ac04-79393ba889aa"
+		}, {
+			"name": "EndConversation",
+			"description": null,
+			"slots": [],
+			"sampleUtterances": [],
+			"fulfillmentActivity": {
+				"type": "CodeHook",
+				"codeHook": {
+					"uri": "arn:aws:lambda:us-east-1:034353605017:function:myCalorieCounterGreen",
+					"messageVersion": "1.0"
+				}
+			},
+			"parentIntentSignature": "AMAZON.StopIntent",
+			"lastUpdatedDate": "2017-07-11T20:42:20.069Z",
+			"createdDate": "2017-07-11T20:42:20.069Z",
+			"version": "2",
+			"checksum": "1cce5ed2-9ba0-4f98-9a07-64ecaa84ac9c"
+		}, {
+			"name": "GetCalories",
+			"description": null,
+			"slots": [{
+				"name": "Restaurant",
+				"description": null,
+				"slotConstraint": "Required",
+				"slotType": "AMAZON.FoodEstablishment",
+				"slotTypeVersion": null,
+				"valueElicitationPrompt": {
+					"messages": [{
+						"contentType": "PlainText",
+						"content": "Which restaurant are you at?"
+					}],
+					"maxAttempts": 2,
+					"responseCard": null
+				},
+				"priority": 1,
+				"sampleUtterances": [],
+				"responseCard": null
+			}, {
+				"name": "Drink",
+				"description": null,
+				"slotConstraint": "Required",
+				"slotType": "AMAZON.Drink",
+				"slotTypeVersion": null,
+				"valueElicitationPrompt": {
+					"messages": [{
+						"contentType": "PlainText",
+						"content": "What are you having to drink?"
+					}],
+					"maxAttempts": 2,
+					"responseCard": null
+				},
+				"priority": 3,
+				"sampleUtterances": [],
+				"responseCard": null
+			}, {
+				"name": "Food",
+				"description": null,
+				"slotConstraint": "Required",
+				"slotType": "AMAZON.Food",
+				"slotTypeVersion": null,
+				"valueElicitationPrompt": {
+					"messages": [{
+						"contentType": "PlainText",
+						"content": "What are you having to eat?"
+					}],
+					"maxAttempts": 2,
+					"responseCard": null
+				},
+				"priority": 2,
+				"sampleUtterances": [],
+				"responseCard": null
+			}],
+			"sampleUtterances": ["What calories are in this", "How many calories"],
+			"confirmationPrompt": {
+				"messages": [{
+					"contentType": "PlainText",
+					"content": "Okay, do you want me to check for calories at {Restaurant}. Is that right?"
+				}],
+				"maxAttempts": 3,
+				"responseCard": null
+			},
+			"rejectionStatement": {
+				"messages": [{
+					"contentType": "PlainText",
+					"content": "Sorry!"
+				}],
+				"responseCard": null
+			},
+			"dialogCodeHook": {
+				"uri": "arn:aws:lambda:us-east-1:034353605017:function:myCalorieCounterGreen",
+				"messageVersion": "1.0"
+			},
+			"fulfillmentActivity": {
+				"type": "CodeHook",
+				"codeHook": {
+					"uri": "arn:aws:lambda:us-east-1:034353605017:function:myCalorieCounterGreen",
+					"messageVersion": "1.0"
+				}
+			},
+			"parentIntentSignature": null,
+			"lastUpdatedDate": "2017-07-04T21:24:56.961Z",
+			"createdDate": "2017-07-04T21:24:56.961Z",
+			"version": "7",
+			"checksum": "3c7733c1-84d3-4c6c-befa-b12ac7ccbc50"
+		}, {
+			"name": "Thanks",
+			"description": null,
+			"slots": [],
+			"sampleUtterances": ["thank you", "thanks"],
+			"fulfillmentActivity": {
+				"type": "CodeHook",
+				"codeHook": {
+					"uri": "arn:aws:lambda:us-east-1:034353605017:function:myCalorieCounterGreen",
+					"messageVersion": "1.0"
+				}
+			},
+			"parentIntentSignature": null,
+			"lastUpdatedDate": "2017-07-11T20:50:33.868Z",
+			"createdDate": "2017-07-11T20:50:33.868Z",
+			"version": "1",
+			"checksum": "fb9edcc9-932e-47c9-9e46-5b790c3ac313"
+		}],
+		"slotTypes": []
+	}
+}
