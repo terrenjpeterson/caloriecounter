@@ -6,7 +6,7 @@
 
 // variables that contain lookup information including restaurant name and calories by food
 
-var restaurants = ["Chipotle", "Burger King", "Subway", "Panera", "Chick-fil-A", "McDonalds", "Wendys", "Taco Bell"];
+var restaurants = ["Chipotle", "Burger King", "Subway", "Panera", "Chick-fil-A", "McDonalds", "Wendys", "Taco Bell", "Arbys"];
 
 // these are the valid choices based on website scraping
 var foodChoices = require("foods.json");
@@ -84,12 +84,16 @@ function validateRestaurant(slots) {
             slots.Restaurant = "McDonalds";
         } else if (slots.Restaurant.toLowerCase() === "wendy’s" ||
 	           slots.Restaurant.toLowerCase() === "wendy's") {
-            console.log("corrected restaurant name typo");
+            console.log("corrected restaurant name apostrophie");
             slots.Restaurant = "Wendys";
         } else if (slots.Restaurant.toLowerCase() === "chik-fil-a") {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "Chick-fil-A";
-        }
+        } else if (slots.Restaurant.toLowerCase() === "arby's" ||
+		   slots.Restaurant.toLowerCase() === "arby’s") {
+	    console.log("corrected restaurant name apostrophie");
+	    slots.Restaurant = "Arbys";
+	}
     }
 
     // make sure a Restaurant has been provided before attempting to validate
