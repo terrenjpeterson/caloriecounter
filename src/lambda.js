@@ -158,8 +158,17 @@ function validateFood(slots) {
         return { isValid: true, calories: foodCalories };
     } else if (slots.Food) {
         console.log("failed food validation");
-	if (slots.Food === "Taco" || slots.Food === "Salad" || slots.Food === "Chicken") {
+	// this is for the *too value* error condition
+	if (slots.Food.toLowerCase() === "taco" || 
+	    slots.Food.toLowerCase() === "salad" || 
+	    slots.Food.toLowerCase() === "chicken") {
 	    return buildValidationResult(false, 'Food', 'Can you be more specific? There are many types of ' + slots.Food + ' to choose from.');
+	// this is for the *quantity required* error condition
+	} else if (slots.Food.toLowerCase() === "chicken nuggets" || 
+	           slots.Food.toLowerCase() === "chicken tenders" || 
+		   slots.Food.toLowerCase() === "nuggets") {
+	    return buildValidationResult(false, 'Food', 'Can you be more specific? For example say six piece ' + slots.Food + ' so I can be precise.');
+	// this is the generic error message where a match can't be found
 	} else {
             return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + '. Please try again.');
 	}
