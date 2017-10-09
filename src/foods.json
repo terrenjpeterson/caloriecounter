@@ -47,7 +47,27 @@
             {"foodName":"Chicken Panini", "calories":750},
             {"foodName":"Turkey Sandwich", "calories":560},
             {"foodName":"Chicken Salad Sandwich", "calories":700},
-            {"foodName":"Veggie Sandwich", "calories":420}
+            {"foodName":"Veggie Sandwich", "calories":420},
+	    {"foodName":"Pecan Braid", "calories":470},
+            {"foodName":"Cheese Pastry", "calories":410},
+            {"foodName":"Chocolate Pastry", "calories":420},
+            {"foodName":"Cherry Pastry", "calories":460},
+            {"foodName":"Bear Claw", "calories":540},
+            {"foodName":"Cinnamon Roll", "calories":670},
+            {"foodName":"Pecan Roll", "calories":720},
+            {"foodName":"Cobblestone", "calories":560},
+            {"foodName":"Blueberry Muffin", "calories":460},
+            {"foodName":"Cranberry Orange Muffin", "calories":480},
+            {"foodName":"Apple Crunch Muffin", "calories":450},
+            {"foodName":"Pumpkin Muffin", "calories":580},
+            {"foodName":"Chocolate Chip Muffie", "calories":320},
+            {"foodName":"Pumpkin Muffie", "calories":290},
+            {"foodName":"Oatmeal", "calories":300},
+            {"foodName":"Oatmeal with Apple", "calories":370},
+            {"foodName":"Oatmeal with Strawberries", "calories":340},
+            {"foodName":"Oatmeal with Almonds", "calories":300},
+            {"foodName":"Greek Yogurt", "calories":300},
+            {"foodName":"Fruit Cup", "calories":60}
             ]
     },
     {

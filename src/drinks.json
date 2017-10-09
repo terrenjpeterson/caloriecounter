@@ -28,5 +28,13 @@
     {"drinkName":"Diet Pepsi", "calories":0},
     {"drinkName":"Milk", "calories":120},
     {"drinkName":"Chocolate Shake", "calories":400},
-    {"drinkName":"Vanilla Shake", "calories":350}
+    {"drinkName":"Vanilla Shake", "calories":350},
+    {"drinkName":"Coffee", "calories":30},
+    {"drinkName":"Dark Roast Coffee", "calories":30},
+    {"drinkName":"Hazelnut Coffee", "calories":30},
+    {"drinkName":"Light Roast Coffee", "calories":30},
+    {"drinkName":"Medium Coffee", "calories":30},
+    {"drinkName":"Small Coffee", "calories":20},
+    {"drinkName":"Large Coffee", "calories":40},
+    {"drinkName":"Decaf Coffee", "calories":30}
 ]
