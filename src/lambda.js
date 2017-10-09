@@ -77,10 +77,13 @@ function validateRestaurant(slots) {
 
     // correct common mistakes for restaurant names
     if (slots.Restaurant) {
-        if (slots.Restaurant.toLowerCase() === "mcdonald's") {
+	console.log("checking restaurant name:" + slots.Restaurant.toLowerCase());
+        if (slots.Restaurant.toLowerCase() === "mcdonald’s" ||
+	    slots.Restaurant.toLowerCase() === "mcdonald's") {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "McDonalds";
-        } else if (slots.Restaurant.toLowerCase() === "wendy's") {
+        } else if (slots.Restaurant.toLowerCase() === "wendy’s" ||
+	           slots.Restaurant.toLowerCase() === "wendy's") {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "Wendys";
         } else if (slots.Restaurant.toLowerCase() === "chik-fil-a") {
