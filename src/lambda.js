@@ -140,7 +140,7 @@ function validateFood(slots) {
         console.log("validating food: " + slots.Food);
         for (var j = 0; j < foodItems.length; j++) {
             console.log("food item: " + JSON.stringify(foodItems[j]));
-            if (slots.Food.toLowerCase() === foodItems[j].foodName.toLowerCase()) {
+            if (slots.Food.toLowerCase() == foodItems[j].foodName.toLowerCase()) {
                 console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
                 validFood = true;
                 foodCalories = foodItems[j].calories;
@@ -154,7 +154,11 @@ function validateFood(slots) {
         return { isValid: true, calories: foodCalories };
     } else if (slots.Food) {
         console.log("failed food validation");
-        return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + '. Please try again.');
+	if (slots.Food === "Taco" || slots.Food === "Salad" || slots.Food === "Chicken") {
+	    return buildValidationResult(false, 'Food', 'Can you be more specific? There are many types of ' + slots.Food + ' to choose from.');
+	} else {
+            return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + '. Please try again.');
+	}
     } else {
         console.log("no food items provided yet.");
         return { isValid: true };

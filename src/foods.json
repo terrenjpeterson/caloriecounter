@@ -85,7 +85,14 @@
             {"foodName":"Chili Cheese Grilled Dog","calories":330},
             {"foodName":"Grilled Chili Cheese Hot Dog","calories":330},
             {"foodName":"Grilled Chili Cheese Dog","calories":330},
-            {"foodName":"Chili Cheese Hot Dog","calories":330}
+            {"foodName":"Chili Cheese Hot Dog","calories":330},
+	    {"foodName":"Chicken Fries","calories":290},
+	    {"foodName":"Fries","calories":380},
+            {"foodName":"French Fries","calories":380},	    
+            {"foodName":"Medium Fries","calories":380},
+            {"foodName":"Small Fries","calories":320},
+            {"foodName":"Value Fries","calories":220},
+            {"foodName":"Large Fries","calories":430}
             ]
     },
     {
@@ -190,9 +197,13 @@
             {"foodName":"Six Piece Chicken Nuggets", "calories":270},
             {"foodName":"Ten Piece Chicken Nuggets", "calories":440},
             {"foodName":"Twenty Piece Chicken Nuggets", "calories":890},
+            {"foodName":"4 Piece Chicken Nugget", "calories":180},
             {"foodName":"4 Piece Chicken Nuggets", "calories":180},
+            {"foodName":"6 Piece Chicken Nugget", "calories":270},
             {"foodName":"6 Piece Chicken Nuggets", "calories":270},
+            {"foodName":"10 Piece Chicken Nugget", "calories":440},
             {"foodName":"10 Piece Chicken Nuggets", "calories":440},
+            {"foodName":"20 Piece Chicken Nugget", "calories":890},
             {"foodName":"20 Piece Chicken Nuggets", "calories":890},
             {"foodName":"Four Piece Nuggets", "calories":180},
             {"foodName":"Six Piece Nuggets", "calories":270},
@@ -228,7 +239,12 @@
             {"foodName":"Hotcakes and Sausage", "calories":790},
             {"foodName":"Sausage Burrito", "calories":290},
             {"foodName":"Hash Browns", "calories":150},
-            {"foodName":"Fruit and Maple Oatmeal", "calories":310}
+            {"foodName":"Fruit and Maple Oatmeal", "calories":310},
+	    {"foodName":"Fries", "calories":340},
+	    {"foodName":"French Fries", "calories":340},
+	    {"foodName":"Medium Fries", "calories":340},
+	    {"foodName":"Small Fries", "calories":230},
+	    {"foodName":"Large Fries", "calories":510}
         ]
     },
     {
@@ -279,6 +295,7 @@
             {"foodName":"Chipotle Chicken Loaded Griller","calories":340},
             {"foodName":"Combo Burrito","calories":450},
             {"foodName":"Loaded Potato Griller","calories":410},
+	    {"foodName":"Quesarito","calories":640},
             {"foodName":"Beef Quesarito","calories":650},
             {"foodName":"Chicken Quesarito","calories":640},
             {"foodName":"Steak Queasarito","calories":630},
