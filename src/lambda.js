@@ -143,7 +143,7 @@ function validateFood(slots) {
     if (slots.Food) {
         console.log("validating food: " + slots.Food);
         for (var j = 0; j < foodItems.length; j++) {
-            console.log("food item: " + JSON.stringify(foodItems[j]));
+            //console.log("food item: " + JSON.stringify(foodItems[j]));
             if (slots.Food.toLowerCase() == foodItems[j].foodName.toLowerCase()) {
                 console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
                 validFood = true;
@@ -190,7 +190,7 @@ function validateDrink(slots) {
     if (slots.Drink) {
         console.log("attempting to find drink: " + slots.Drink);
         for (var j = 0; j < drinks.length; j++) {
-            console.log("drink item: " + JSON.stringify(drinks[j]));
+            //console.log("drink item: " + JSON.stringify(drinks[j]));
             if (slots.Drink.toLowerCase() === drinks[j].drinkName.toLowerCase()) {
                 console.log("found a match for " + drinks[j].drinkName + " calories " + drinks[j].calories);
                 validDrink = true;
