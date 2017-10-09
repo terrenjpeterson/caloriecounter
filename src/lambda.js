@@ -212,35 +212,6 @@ function validateDrink(slots) {
     }
 }
 
-function validateHotel(slots) {
-    const location = slots.Location;
-    const checkInDate = slots.CheckInDate;
-    const nights = slots.Nights;
-    const roomType = slots.RoomType;
-
-    if (location && !isValidCity(location)) {
-        return buildValidationResult(false, 'Location', `We currently do not support ${location} as a valid destination.  Can you try a different city?`);
-    }
-
-    if (checkInDate) {
-        if (!isValidDate(checkInDate)) {
-            return buildValidationResult(false, 'CheckInDate', 'I did not understand your check in date.  When would you like to check in?');
-        } if (parseLocalDate(checkInDate) < new Date()) {
-            return buildValidationResult(false, 'CheckInDate', 'Reservations must be scheduled at least one day in advance.  Can you try a different date?');
-        }
-    }
-
-    if (nights != null && (nights < 1 || nights > 30)) {
-        return buildValidationResult(false, 'Nights', 'You can make a reservations for from one to thirty nights.  How many nights would you like to stay for?');
-    }
-
-    if (roomType && !isValidRoomType(roomType)) {
-        return buildValidationResult(false, 'RoomType', 'I did not recognize that room type.  Would you like to stay in a queen, king, or deluxe room?');
-    }
-
-    return { isValid: true };
-}
-
 // this function is what builds the introduction
 
 function getIntroduction(intentRequest, callback) {
