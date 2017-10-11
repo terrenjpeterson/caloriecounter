@@ -114,7 +114,9 @@ function validateRestaurant(slots) {
         return { isValid: true };
     } else if (slots.Restaurant) {
         console.log("failed restaurant validation");
-        return buildValidationResult(false, 'Restaurant', `Sorry, I dont have information for ` + slots.Restaurant + '.');
+	var botResponse = "Sorry, I dont have information for " + slots.Restaurant + ". " +
+	    "Say, List of restaurants for details.";
+        return buildValidationResult(false, 'Restaurant', botResponse);
     } else {
         console.log("no restaurant provided yet.");
         return { isValid: true };

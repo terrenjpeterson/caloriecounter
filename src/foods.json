@@ -153,6 +153,9 @@
             {"foodName":"Chicken Deluxe", "calories":500},
             {"foodName":"Spicy Chicken Deluxe Sandwich", "calories":570},
             {"foodName":"Spicy Chicken Deluxe", "calories":570},
+            {"foodName":"Spicy Deluxe", "calories":570},
+            {"foodName":"Spicy Deluxe Sandwich", "calories":570},
+            {"foodName":"Spicy Deluxe Chicken Sandwich", "calories":570},
             {"foodName":"Chicken Salad Sandwich", "calories":500},
             {"foodName":"Spicy Chicken Sandwich", "calories":490},
             {"foodName":"Spicy Chicken", "calories":490},
@@ -194,19 +197,27 @@
             {"foodName":"Spicy Southwest Salad", "calories":470},
             {"foodName":"Southwest Salad", "calories":450},
             {"foodName":"Waffle Potato Fries", "calories":360},
-            {"foodName":"Waffle Fries", "calories":360}
+            {"foodName":"Waffle Fries", "calories":360},
+	    {"foodName":"Small Chicken Soup", "calories":140},
+            {"foodName":"Small Chicken Noodle Soup", "calories":140},
+            {"foodName":"Chicken Soup", "calories":250},
+            {"foodName":"Chicken Noodle Soup", "calories":250},
+            {"foodName":"Large Chicken Soup", "calories":250},
+            {"foodName":"Large Chicken Noodle Soup", "calories":250}
         ]
     },
     {
         "restaurant":"McDonalds",
         "foodItems":[
             {"foodName":"Big Mac", "calories":540},
+	    {"foodName":"BigMac", "calories":540},
             {"foodName":"Quarter Pounder", "calories":540},
             {"foodName":"Quarter Pounder with Cheese", "calories":540},
             {"foodName":"Quarter Pounder Deluxe", "calories":600},
             {"foodName":"Grand Mac", "calories":860},
             {"foodName":"Hamburger", "calories":250},
             {"foodName":"Cheeseburger", "calories":300},
+	    {"foodName":"Double Cheeseburger", "calories":430},
             {"foodName":"Double Quarter Pounder with Cheese", "calories":770},
             {"foodName":"Double Quarter Pounder", "calories":770},
             {"foodName":"Filet-o-Fish", "calories":390},
@@ -272,7 +283,8 @@
 	    {"foodName":"French Fries", "calories":340},
 	    {"foodName":"Medium Fries", "calories":340},
 	    {"foodName":"Small Fries", "calories":230},
-	    {"foodName":"Large Fries", "calories":510}
+	    {"foodName":"Large Fries", "calories":510},
+            {"foodName":"Large Fry", "calories":510}
         ]
     },
     {
