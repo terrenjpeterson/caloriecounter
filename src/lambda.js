@@ -86,7 +86,8 @@ function validateRestaurant(slots) {
 	           slots.Restaurant.toLowerCase() === "wendy's") {
             console.log("corrected restaurant name apostrophie");
             slots.Restaurant = "Wendys";
-        } else if (slots.Restaurant.toLowerCase() === "chik-fil-a") {
+        } else if (slots.Restaurant.toLowerCase() === "chik-fil-a" ||
+		   slots.Restaurant.toLowerCase() === "chick fil a") {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "Chick-fil-A";
         } else if (slots.Restaurant.toLowerCase() === "arby's" ||
@@ -167,7 +168,8 @@ function validateFood(slots) {
 	    return buildValidationResult(false, 'Food', 'Can you be more specific? There are many types of ' + slots.Food + ' to choose from.');
 	// this is for the *quantity required* error condition
 	} else if (slots.Food.toLowerCase() === "chicken nuggets" || 
-	           slots.Food.toLowerCase() === "chicken tenders" || 
+                   slots.Food.toLowerCase() === "chicken tenders" ||
+                   slots.Food.toLowerCase() === "mcnuggets" ||
 		   slots.Food.toLowerCase() === "nuggets") {
 	    return buildValidationResult(false, 'Food', 'Can you be more specific? For example say six piece ' + slots.Food + ' so I can be precise.');
 	// this is the generic error message where a match can't be found
