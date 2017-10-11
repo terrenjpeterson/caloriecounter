@@ -74,7 +74,9 @@
         "restaurant":"Burger King",
         "foodItems":[
             {"foodName":"Whopper", "calories":630},
+            {"foodName":"Whooper", "calories":630},
             {"foodName":"Whopper with Cheese", "calories":710},
+            {"foodName":"Whooper with Cheese", "calories":710},
             {"foodName":"Bacon and Cheese Whopper", "calories":750},
             {"foodName":"Double Whopper", "calories":850},
             {"foodName":"Double Whopper with Cheese", "calories":930},
@@ -120,7 +122,8 @@
             {"foodName":"Medium Fry","calories":380},
             {"foodName":"Small Fry","calories":320},
             {"foodName":"Value Fry","calories":220},
-            {"foodName":"Large Fry","calories":430}
+            {"foodName":"Large Fry","calories":430},
+	    {"foodName":"Side Salad", "calories":60}
             ]
     },
     {

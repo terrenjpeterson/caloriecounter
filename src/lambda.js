@@ -79,11 +79,13 @@ function validateRestaurant(slots) {
     if (slots.Restaurant) {
 	console.log("checking restaurant name:" + slots.Restaurant.toLowerCase());
         if (slots.Restaurant.toLowerCase() === "mcdonald’s" ||
+            slots.Restaurant.toLowerCase() === "mcdonald" ||
 	    slots.Restaurant.toLowerCase() === "mcdonald's") {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "McDonalds";
         } else if (slots.Restaurant.toLowerCase() === "wendy’s" ||
-	           slots.Restaurant.toLowerCase() === "wendy's") {
+	           slots.Restaurant.toLowerCase() === "wendy" ||
+                   slots.Restaurant.toLowerCase() === "wendy's") {
             console.log("corrected restaurant name apostrophie");
             slots.Restaurant = "Wendys";
         } else if (slots.Restaurant.toLowerCase() === "chik-fil-a" ||
@@ -91,7 +93,8 @@ function validateRestaurant(slots) {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "Chick-fil-A";
         } else if (slots.Restaurant.toLowerCase() === "arby's" ||
-		   slots.Restaurant.toLowerCase() === "arby’s") {
+		   slots.Restaurant.toLowerCase() === "arby" ||
+                   slots.Restaurant.toLowerCase() === "arby’s") {
 	    console.log("corrected restaurant name apostrophie");
 	    slots.Restaurant = "Arbys";
 	}
@@ -172,6 +175,9 @@ function validateFood(slots) {
                    slots.Food.toLowerCase() === "mcnuggets" ||
 		   slots.Food.toLowerCase() === "nuggets") {
 	    return buildValidationResult(false, 'Food', 'Can you be more specific? For example say six piece ' + slots.Food + ' so I can be precise.');
+	// this is trying to catch where the user has replied with more than one food item
+	} else if (slots.Food.length > 25) {
+	    return buildValidationResult(false, 'Food', 'Can you just start by saying just the first item?');
 	// this is the generic error message where a match can't be found
 	} else {
             return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + '. Please try again.');
