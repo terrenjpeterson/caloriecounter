@@ -289,11 +289,19 @@
             {"foodName":"Hash Browns", "calories":150},
             {"foodName":"Fruit and Maple Oatmeal", "calories":310},
 	    {"foodName":"Fries", "calories":340},
+            {"foodName":"Fry", "calories":340},
 	    {"foodName":"French Fries", "calories":340},
+            {"foodName":"French Fry", "calories":340},
 	    {"foodName":"Medium Fries", "calories":340},
-	    {"foodName":"Small Fries", "calories":230},
+            {"foodName":"Medium Fry", "calories":340},
+	    {"foodName":"Small Fries", "calories":230}, 
+            {"foodName":"Small Fry", "calories":230},
 	    {"foodName":"Large Fries", "calories":510},
-            {"foodName":"Large Fry", "calories":510}
+            {"foodName":"Large Fry", "calories":510},
+	    {"foodName":"McFlurry", "calories":370},
+	    {"foodName":"Oreo McFlurry", "calories":510},
+	    {"foodName":"M and M McFlurry", "calories":630}
+
         ]
     },
     {
