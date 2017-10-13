@@ -329,8 +329,16 @@ function calculateCalories(intentRequest, callback) {
         var totalCalories = foodValidationResult.calories + drinkValidationResult.calories;
 
         // this attribute is what the chatbot will respond back with
-        var counterResponse = 'At ' + restaurantName + ' eating a ' + foodName + 
-            ' and drinking a ' + drinkName + '. That is ' + totalCalories + ' calories.';
+	
+        var counterResponse = "At " + restaurantName + " eating a " + foodName;
+
+	// alter response based on if a drink was provided
+	if (drinkName.toLowerCase() === "nothing") {
+	    counterResponse = counterResponse + ". ";
+	} else {
+	    counterResponse = counterResponse + " and drinking a " + drinkName + ". ";
+	}
+	    counterResponse = counterResponse + "That is " + totalCalories + " calories.";
 
         callback(close(sessionAttributes, 'Fulfilled',
             { contentType: 'PlainText', content: counterResponse }));
