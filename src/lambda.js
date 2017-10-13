@@ -77,7 +77,6 @@ function validateRestaurant(slots) {
 
     // correct common mistakes for restaurant names
     if (slots.Restaurant) {
-	console.log("checking restaurant name:" + slots.Restaurant.toLowerCase());
         if (slots.Restaurant.toLowerCase() === "mcdonald’s" ||
             slots.Restaurant.toLowerCase() === "mcdonald" ||
 	    slots.Restaurant.toLowerCase() === "mcdonald's") {
@@ -89,7 +88,8 @@ function validateRestaurant(slots) {
             console.log("corrected restaurant name apostrophie");
             slots.Restaurant = "Wendys";
         } else if (slots.Restaurant.toLowerCase() === "chik-fil-a" ||
-		   slots.Restaurant.toLowerCase() === "chick fil a") {
+		   slots.Restaurant.toLowerCase() === "chick fil a") ||
+                   slots.Restaurant.toLowerCase() === "chikfila") {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "Chick-fil-A";
         } else if (slots.Restaurant.toLowerCase() === "arby's" ||
@@ -198,7 +198,7 @@ function validateFood(slots) {
 	    return buildValidationResult(false, 'Food', 'Can you just start by saying just the first item?');
 	// this is the generic error message where a match can't be found
 	} else {
-            return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + '. Please try again.');
+            return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + ' at ' + slots.Restaurant + ' . Please try again.');
 	}
     } else {
         console.log("no food items provided yet.");
