@@ -187,6 +187,7 @@
 	    {"foodName":"Creamy Chicken & Wild Rice Soup", "calories":190},
 	    {"foodName":"French Onion Soup", "calories":150},
 	    {"foodName":"Homestyle Chicken Noodle Soup", "calories":110},
+            {"foodName":"Chicken Noodle Soup", "calories":110},
 	    {"foodName":"Loaded Baked Potato with Bacon Soup", "calories":210},
 	    {"foodName":"Tomato Basil Soup", "calories":130}
             ]
@@ -456,8 +457,11 @@
             {"foodName":"Spicy Double Chalupa","calories":600},
             {"foodName":"Beefy Mini Quesadilla","calories":210},
             {"foodName":"Beef Chalupa Supreme","calories":350},
+            {"foodName":"Beef Chalupa","calories":350},
             {"foodName":"Chicken Chalupa Supreme","calories":330},
+            {"foodName":"Chicken Chalupa","calories":330},
             {"foodName":"Steak Chalupa Supreme","calories":330},
+            {"foodName":"Steak Chalupa","calories":330},
             {"foodName":"Cheese Roll-Up","calories":180},
             {"foodName":"Cheesy Gordita Crunch","calories":500},
             {"foodName":"Cheesy Gordita Crunch Supreme","calories":520},
@@ -515,6 +519,7 @@
             {"foodName":"Half Pound Roast Beef","calories":610},
             {"foodName":"Classic Beef and Cheddar","calories":450},
             {"foodName":"Beef and Cheddar","calories":450},
+            {"foodName":"Mid Beef and Cheddar","calories":450},
             {"foodName":"Double Beef and Cheddar","calories":630},
             {"foodName":"Half Pound Beef and Cheddar","calories":740},
             {"foodName":"Classic French Dip and Swiss","calories":540},
