@@ -154,7 +154,17 @@
             {"foodName":"Subway Club Salad", "calories":140},
             {"foodName":"Sweet Onion Chicken Teriyaki Salad", "calories":230},
             {"foodName":"Turkey Breast Salad", "calories":110},
-            {"foodName":"Veggie Delite Salad", "calories":60}
+            {"foodName":"Veggie Delite Salad", "calories":60},
+	    {"foodName":"Bacon, Egg & Cheese", "calories":460},
+            {"foodName":"Bacon, Egg & Cheese Sandwich", "calories":460},
+	    {"foodName":"Ham, Egg & Cheese", "calories":410},
+            {"foodName":"Ham, Egg & Cheese Sandwich", "calories":410},
+            {"foodName":"Black Forest Ham, Egg & Cheese", "calories":410},
+            {"foodName":"Black Forest Ham, Egg & Cheese Sandwich", "calories":410},
+	    {"foodName":"Egg & Cheese", "calories":380},
+            {"foodName":"Egg & Cheese Sandwich", "calories":380},
+	    {"foodName":"Steak, Egg & Cheese", "calories":450},
+            {"foodName":"Steak, Egg & Cheese Sandwich", "calories":450}
             ]
     },
     {
@@ -239,6 +249,7 @@
             {"foodName":"Crispy Chicken Sandwich", "calories":570},
 	    {"foodName":"Artisan Grilled Chicken Sandwich", "calories":380},
             {"foodName":"Grilled Chicken Sandwich", "calories":380},
+            {"foodName":"Grilled Chicken", "calories":380},
             {"foodName":"Four Piece Chicken Nuggets", "calories":180},
             {"foodName":"Six Piece Chicken Nuggets", "calories":270},
             {"foodName":"Ten Piece Chicken Nuggets", "calories":440},
