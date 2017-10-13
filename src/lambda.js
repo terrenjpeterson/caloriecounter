@@ -122,8 +122,24 @@ function validateRestaurant(slots) {
 	    "Say, List of restaurants for details.";
         return buildValidationResult(false, 'Restaurant', botResponse);
     } else {
-        console.log("no restaurant provided yet.");
-        return { isValid: true };
+        // check if a food item has been entered. this might allow for restaurant to be defaulted.
+        if (slots.Food) {
+            console.log("checking for a default of " + slots.Food);
+            var defaultRestaurant = false;
+            for (var i = 0; i < foodChoices.length; i++) {
+                for (var j = 0; j < foodChoices[i].foodItems.length; j++) {
+                    if (slots.Food.toLowerCase() === foodChoices[i].foodItems[j].foodName.toLowerCase()) {
+                        console.log("default set to " + foodChoices[i].restaurant);
+                        slots.Restaurant = foodChoices[i].restaurant;
+                        defaultRestaurant = true;
+                    }
+                }
+            }
+            return { isValid: true };
+        } else {
+            console.log("no restaurant provided yet.");
+            return { isValid: true };
+	}
     }
 }
 
