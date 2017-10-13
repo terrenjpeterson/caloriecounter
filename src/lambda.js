@@ -132,6 +132,7 @@ function validateRestaurant(slots) {
                         console.log("default set to " + foodChoices[i].restaurant);
                         slots.Restaurant = foodChoices[i].restaurant;
                         defaultRestaurant = true;
+			slots.Food = foodChoices[i].foodItems[j].foodName;
                     }
                 }
             }
@@ -170,6 +171,7 @@ function validateFood(slots) {
                 console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
                 validFood = true;
                 foodCalories = foodItems[j].calories;
+		slots.Food = foodItems[j].foodName;
             }
         }
     }
@@ -207,7 +209,6 @@ function validateFood(slots) {
 // this function will validate that the drink provided is something that calorie detail is available for
 function validateDrink(slots) {
     var validDrink = false;
-    //var foodItems = [];
     var drinkCalories = 0;
 
     console.log("validating drink entered " + slots.Drink);
@@ -268,6 +269,25 @@ function getRestaurants(intentRequest, callback) {
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
         
+}
+
+// this function looks up the drink size when given a drink name
+
+function getDrinkSize(drinkName) {
+    var drinkSize = 0;
+
+    console.log("get drink size");
+
+    for (var j = 0; j < drinks.length; j++) {
+	if (drinkName.toLowerCase() === drinks[j].drinkName.toLowerCase()) {
+            console.log("found a match for " + drinks[j].drinkName + " size " + drinks[j].size);
+	    drinkSize = drinks[j].size;
+	}
+    }
+
+    return {
+	drinkSize
+    };
 }
 
 // this function is what builds the wrap-up of a conversation
@@ -336,7 +356,13 @@ function calculateCalories(intentRequest, callback) {
 	if (drinkName.toLowerCase() === "nothing") {
 	    counterResponse = counterResponse + ". ";
 	} else {
-	    counterResponse = counterResponse + " and drinking a " + drinkName + ". ";
+	    // find the drink size to add specificity to the response
+	    const drinkSize = getDrinkSize(drinkName).drinkSize;
+	    if (drinkSize > 0) {
+		counterResponse = counterResponse + " and drinking a " + drinkSize + " oz. " + drinkName + ". ";
+	    } else {
+		counterResponse = counterResponse + " and drinking a " + drinkName + ". ";
+	    }
 	}
 	    counterResponse = counterResponse + "That is " + totalCalories + " calories.";
 
