@@ -16,6 +16,18 @@ rm foodbot.zip
 
 # update the lambda function with the binaries that have been staged
 aws lambda update-function-code --function-name myCalorieCounterGreen --s3-bucket fastfoodchatbot --s3-key binaries/foodbot.zip
+echo 'new version has been deployed'
+
+# read in test data required for a request
+request=$(<request.json)
+
+# invoke the new lambda function
+aws lambda invoke --function-name myCalorieCounterGreen --payload "$request" testOutput.json
+
+# read response file into local variable then print on the console
+response=$(<testOutput.json)
+echo $response
+rm testOutput.json
 
 # wrap-up
 echo 'completed new deployment'

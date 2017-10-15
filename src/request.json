@@ -1,0 +1,36 @@
+{
+    "messageVersion": "1.0",
+    "invocationSource": "DialogCodeHook",
+    "userId": "1712299768809980",
+    "sessionAttributes": {},
+    "bot": {
+        "name": "FastFoodChecker",
+        "alias": null,
+        "version": "6"
+    },
+    "outputDialogMode": "Text",
+    "currentIntent": {
+        "name": "GetCalories",
+        "slots": {
+            "Restaurant": "Arby’s",
+            "Drink": null,
+            "Food": "roast beef"
+        },
+        "slotDetails": {
+            "Restaurant": {
+                "resolutions": [],
+                "originalValue": "Arby’s"
+            },
+            "Drink": {
+                "resolutions": [],
+                "originalValue": null
+            },
+            "Food": {
+                "resolutions": [],
+                "originalValue": "roast beef"
+            }
+        },
+        "confirmationStatus": "None"
+    },
+    "inputTranscript": "How many calories in a roast beef at Arby’s"
+}
