@@ -6,7 +6,7 @@
 
 // variables that contain lookup information including restaurant name and calories by food
 
-var restaurants = ["Chipotle", "Burger King", "Subway", "Panera", "Chick-fil-A", "McDonalds", "Wendys", "Taco Bell", "Arbys"];
+var restaurants = ["Chipotle", "Burger King", "Subway", "Panera", "Chick-fil-A", "McDonalds", "Wendys", "Taco Bell", "Arbys","Hardees"];
 
 // these are the valid choices based on website scraping
 var foodChoices = require("foods.json");
@@ -87,8 +87,13 @@ function validateRestaurant(slots) {
                    slots.Restaurant.toLowerCase() === "wendy's") {
             console.log("corrected restaurant name apostrophie");
             slots.Restaurant = "Wendys";
+        } else if (slots.Restaurant.toLowerCase() === "hardee’s" ||
+                   slots.Restaurant.toLowerCase() === "hardee" ||
+                   slots.Restaurant.toLowerCase() === "hardee's") {
+            console.log("corrected restaurant name apostrophie");
+            slots.Restaurant = "Hardees";
         } else if (slots.Restaurant.toLowerCase() === "chik-fil-a" ||
-		   slots.Restaurant.toLowerCase() === "chick fil a") ||
+		   slots.Restaurant.toLowerCase() === "chick fil a" ||
                    slots.Restaurant.toLowerCase() === "chikfila") {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "Chick-fil-A";
@@ -184,7 +189,9 @@ function validateFood(slots) {
         console.log("failed food validation");
 	// this is for the *too value* error condition
 	if (slots.Food.toLowerCase() === "taco" || 
-	    slots.Food.toLowerCase() === "salad" || 
+	    slots.Food.toLowerCase() === "burrito" || 
+            slots.Food.toLowerCase() === "soup" ||
+            slots.Food.toLowerCase() === "salad" ||
 	    slots.Food.toLowerCase() === "chicken") {
 	    return buildValidationResult(false, 'Food', 'Can you be more specific? There are many types of ' + slots.Food + ' to choose from.');
 	// this is for the *quantity required* error condition
