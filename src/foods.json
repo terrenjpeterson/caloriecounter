@@ -271,6 +271,7 @@
             {"foodName":"Filet-o-Fish", "calories":390},
             {"foodName":"Filet-o-Fish Sandwich", "calories":390},
             {"foodName":"Fish Sandwich", "calories":390},
+            {"foodName":"Mc Chicken", "calories":350},
             {"foodName":"McChicken", "calories":350},
             {"foodName":"McChicken Sandwich", "calories":350},
             {"foodName":"Buttermilk Crispy Chicken Sandwich", "calories":570},
