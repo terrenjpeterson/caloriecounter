@@ -112,8 +112,8 @@ function validateRestaurant(slots) {
             if (slots.Restaurant.toLowerCase() === restaurants[i].toLowerCase()) {
                 console.log("found a match for " + restaurants[i]);
                 validRestaurant = true;
+		slots.Restaurant = restaurants[i];
             }
-            //console.log("Checking: " + restaurants[i]);
         }
     }
     
@@ -167,7 +167,7 @@ function validateFood(slots) {
         }
     }
 
-    // make sure a Restaurant has been provided before attempting to validate
+    // attempt to match the food with the restaurant menu
     if (slots.Food) {
         console.log("validating food: " + slots.Food);
         for (var j = 0; j < foodItems.length; j++) {
@@ -177,7 +177,18 @@ function validateFood(slots) {
                 validFood = true;
                 foodCalories = foodItems[j].calories;
 		slots.Food = foodItems[j].foodName;
-            }
+            } else if (slots.Extra) {
+		// make sure that the parsing hasn't separated a combo food term - i.e. Ham and Swiss
+		console.log("checking word parsing of " + slots.Extra);
+		const combineFoodWords = slots.Food + " and " + slots.Extra;
+		if (combineFoodWords.toLowerCase() === foodItems[j].foodName.toLowerCase()) {
+		    console.log("Found a match for " + combineFoodWords + " calories " + foodItems[j].calories);
+		    slots.Extra = "";
+		    slots.Food = combineFoodWords;
+                    validFood = true;
+                    foodCalories = foodItems[j].calories;
+		}
+	    }
         }
     }
     
@@ -189,6 +200,7 @@ function validateFood(slots) {
         console.log("failed food validation");
 	// this is for the *too value* error condition
 	if (slots.Food.toLowerCase() === "taco" || 
+	    slots.Food.toLowerCase() === "tacos" ||
 	    slots.Food.toLowerCase() === "burrito" || 
             slots.Food.toLowerCase() === "soup" ||
             slots.Food.toLowerCase() === "salad" ||
