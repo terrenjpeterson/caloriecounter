@@ -113,7 +113,7 @@ function validateRestaurant(slots) {
                 console.log("found a match for " + restaurants[i]);
                 validRestaurant = true;
             }
-            console.log("Checking: " + restaurants[i]);
+            //console.log("Checking: " + restaurants[i]);
         }
     }
     
@@ -160,7 +160,7 @@ function validateFood(slots) {
 
     // sort through the food choices and pull out those relating to the restaraunt that has already been validated
     for (var i = 0; i < foodChoices.length; i++) {
-        console.log("checking: " + JSON.stringify(foodChoices[i]));
+        //console.log("checking: " + JSON.stringify(foodChoices[i]));
         if (slots.Restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
             foodItems = foodChoices[i].foodItems;
             console.log("match restaurant - food items: " + JSON.stringify(foodItems));
@@ -213,6 +213,45 @@ function validateFood(slots) {
     }
 }
 
+// this function will validate if the extra is another type of food
+function validateExtra(slots) {
+    var validExtra = false;
+    var extraCalories = 0;
+    var restaurant = slots.Restaurant;
+    var foodItems = [];
+
+    console.log("validated extra item " + slots.Extra);
+
+    // sort through the food choices and pull out those relating to the restaraunt that has already been validated
+    for (var i = 0; i < foodChoices.length; i++) {
+        //console.log("checking: " + JSON.stringify(foodChoices[i]));
+        if (slots.Restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+            foodItems = foodChoices[i].foodItems;
+            console.log("match restaurant - food items: " + JSON.stringify(foodItems));
+        }
+    }
+
+    // take the array of food items from the matching restaurant, and attempt to match the extra item
+    for (var j = 0; j < foodItems.length; j++) {
+        //console.log("food item: " + JSON.stringify(foodItems[j]));
+        if (slots.Extra.toLowerCase() == foodItems[j].foodName.toLowerCase()) {
+            console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
+            validExtra = true;
+            extraCalories = foodItems[j].calories;
+            slots.Extra = foodItems[j].foodName;
+        }
+    }    
+
+    // create response. if extra food item didn't match, respond as such, else pass back as supported.
+    if (validExtra) {
+        console.log("passed extra validation");
+        return { isValid: true, calories: extraCalories };
+    } else {
+	console.log("failed extra validation");
+	return { isValid: false };
+    }
+}
+
 // this function will validate that the drink provided is something that calorie detail is available for
 function validateDrink(slots) {
     var validDrink = false;
@@ -233,13 +272,30 @@ function validateDrink(slots) {
         }
     }
     
-    // create response. if food item didn't match, respond as such, else pass back as supported.
+    // create response. if the drink item didn't match, respond as such, else pass back as supported.
     if (validDrink) {
         console.log("passed drink validation");
         return { isValid: true, calories: drinkCalories };
     } else if (slots.Drink) {
-        console.log("failed drink validation");
-        return buildValidationResult(false, 'Drink', `Sorry, I dont have information for ` + slots.Drink + '. Please try again.');
+        console.log("failed drink validation" + JSON.stringify(slots.Drink));
+	if (slots.Drink.toLowerCase() === "drink") {
+	    // in this case, the response was too vague - so instruct the user to be more specific
+            return buildValidationResult(false, 'Drink', 'Please say a drink name, for example, Coke.');
+	} else {
+	    // check to see if the extra food item is in the drink slot
+	    slots.Extra = slots.Drink;
+            const extraValidationResult = validateExtra(slots);
+            console.log("Validation Result: " + JSON.stringify(extraValidationResult));
+            if (extraValidationResult.isValid) {
+		// in this case, the attribute has been moved to the Extra slot, so overlay Drink as nothing and pass validation
+		slots.Drink = "Nothing";
+		return { isValid: true, calories: 0 };
+	    } else {
+		// in this case, the drink value wasn't an extra food - just a bad entry
+		slots.Extra = "";
+                return buildValidationResult(false, 'Drink', `Sorry, I dont have information for ` + slots.Drink + '. Please try again.');
+	    }
+	}
     } else {
         console.log("no drink items provided yet.");
         return { isValid: true };
@@ -272,6 +328,8 @@ function getRestaurants(intentRequest, callback) {
     for (var i = 0; i < restaurants.length; i++) {
         counterResponse = counterResponse + restaurants[i] + ', ';
     }
+
+	counterResponse = counterResponse + 'Say something like, eating at McDonalds, to begin.';
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
@@ -334,7 +392,8 @@ function calculateCalories(intentRequest, callback) {
     const restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
     const drinkName      = intentRequest.currentIntent.slots.Drink;
-    
+    const extraName	 = intentRequest.currentIntent.slots.Extra;    
+
     console.log("processing user response");
 
     // check to see if in validation mode or final confirmation
@@ -359,8 +418,19 @@ function calculateCalories(intentRequest, callback) {
 	
         var counterResponse = "At " + restaurantName + " eating a " + foodName;
 
+	if (extraName) {
+	    const extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
+	    console.log("Validation Result: " + JSON.stringify(extraValidationResult));
+	    if (extraValidationResult.isValid) {
+		console.log("Adding extra calories for " + extraName);
+		totalCalories += extraValidationResult.calories;
+	        counterResponse = counterResponse + " and a " + extraName;
+	    }
+	}
+
 	// alter response based on if a drink was provided
-	if (drinkName.toLowerCase() === "nothing") {
+	if (drinkName.toLowerCase() === "nothing" ||
+	    drinkName.toLowerCase() === "no" ) {
 	    counterResponse = counterResponse + ". ";
 	} else {
 	    // find the drink size to add specificity to the response
