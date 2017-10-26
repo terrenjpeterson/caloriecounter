@@ -395,6 +395,67 @@ function getHelp(intentRequest, callback) {
         
 }
 
+function getFoodOptions(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var restaurant = intentRequest.currentIntent.slots.Restaurant;
+    var foodType = intentRequest.currentIntent.slots.FoodType;
+
+    var botResponse = '';
+
+    // clean up different spellings of food types
+    if (foodType.toLowerCase === "Burritos") {
+	foodType = "Burrito"
+    } else if (foodType.toLowerCase === "Salads") {
+	foodType = "Salad"
+    }
+
+    if (restaurant) {
+	// validate that the restaurant name is valid
+	const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
+	var foodItems = [];
+	if (validationResult.isValid) {
+	    // find the restaurant food items for the restaurant provided
+    	    for (var i = 0; i < foodChoices.length; i++) {
+        	if (restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+            	    foodItems = foodChoices[i].foodItems;
+		    restaurant = foodChoices[i].restaurant;
+        	} 
+    	    }
+	    // go through the food items, and list those matching the food type
+	    var foodTypeMatch = false;
+	    var foodNameExample = "";
+		botResponse = "Here are the types of " + foodType + " at " + restaurant + ". ";
+	    for (var j = 0; j < foodItems.length; j++) {
+		// first make sure a food type exists for the item
+		if (foodItems[j].foodType) {
+		    if (foodItems[j].foodType.toLowerCase() === foodType.toLowerCase()) {
+		    	botResponse = botResponse + foodItems[j].foodName + ", ";
+			foodNameExample = foodItems[j].foodName;
+		    	foodTypeMatch = true;
+		    }
+		}
+	    }
+	    if (foodTypeMatch) {
+		botResponse = botResponse + " Want calorie details? Say something like " +
+		    "How many calories in a " + foodNameExample + " at " + restaurant + ".";
+	    } else {
+		botResponse = "Sorry, I don't have information for types of " + foodType + " at " +
+		    restaurant + ".";
+	    }
+	} else {
+	    botResponse = "Sorry, I dont have information for " + restaurant + ". " +
+		"Say, List of restaurants for details.";
+	}
+    } else {
+	botResponse = "No restaurant provided";
+    }
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: botResponse }));
+
+}
+
 // this function is what builds the main response around checking for calories
 
 function calculateCalories(intentRequest, callback) {
@@ -563,6 +624,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'HelpRequest') {
         console.log("user requested help.");
         return getHelp(intentRequest, callback);
+    } else if (intentName === 'FoodTypeOptions') {
+	console.log("user requested food types");
+	return getFoodOptions(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
