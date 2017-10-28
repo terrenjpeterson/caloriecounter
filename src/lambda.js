@@ -94,6 +94,8 @@ function validateRestaurant(slots) {
             slots.Restaurant = "Hardees";
         } else if (slots.Restaurant.toLowerCase() === "chik-fil-a" ||
 		   slots.Restaurant.toLowerCase() === "chick fil a" ||
+                   slots.Restaurant.toLowerCase() === "chic fil a" ||
+                   slots.Restaurant.toLowerCase() === "chik fil a" ||
                    slots.Restaurant.toLowerCase() === "chikfila") {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "Chick-fil-A";
@@ -198,14 +200,11 @@ function validateFood(slots) {
         return { isValid: true, calories: foodCalories };
     } else if (slots.Food) {
         console.log("failed food validation");
+	var vagueFoodEval = vagueFood(slots.Food, slots.Restaurant).vagueFoodResponse;
+	console.log(JSON.stringify(vagueFoodEval));
 	// this is for the *too value* error condition
-	if (slots.Food.toLowerCase() === "taco" || 
-	    slots.Food.toLowerCase() === "tacos" ||
-	    slots.Food.toLowerCase() === "burrito" || 
-            slots.Food.toLowerCase() === "soup" ||
-            slots.Food.toLowerCase() === "salad" ||
-	    slots.Food.toLowerCase() === "chicken") {
-	    return buildValidationResult(false, 'Food', 'Can you be more specific? There are many types of ' + slots.Food + ' to choose from.');
+	if (vagueFoodEval.assessment) {
+	    return buildValidationResult(false, 'Food', vagueFoodEval.msg);
 	// this is for the *quantity required* error condition
 	} else if (slots.Food.toLowerCase() === "chicken nuggets" || 
                    slots.Food.toLowerCase() === "chicken tenders" ||
@@ -223,6 +222,31 @@ function validateFood(slots) {
         console.log("no food items provided yet.");
         return { isValid: true };
     }
+}
+
+// this evaluates if the request was too vague, and formulates a response for the user to be more specific
+
+function vagueFood(foodName, restaurantName) {
+    var vagueFoodResponse = {};
+
+    console.log("checking for vague food request");
+
+    if (foodName.toLowerCase() === "taco" ||
+        foodName.toLowerCase() === "tacos" ||
+        foodName.toLowerCase() === "burrito" ||
+        foodName.toLowerCase() === "sub" ||
+        foodName.toLowerCase() === "sandwich" ||
+        foodName.toLowerCase() === "soup" ||
+        foodName.toLowerCase() === "salad" ||
+        foodName.toLowerCase() === "chicken") {
+
+	vagueFoodResponse.assessment = true;
+        vagueFoodResponse.msg = "Can you be more specific? There are many types of " + foodName + " to choose from.";
+    }
+
+    return {
+        vagueFoodResponse
+    };
 }
 
 // this function will validate if the extra is another type of food
@@ -290,9 +314,10 @@ function validateDrink(slots) {
         return { isValid: true, calories: drinkCalories };
     } else if (slots.Drink) {
         console.log("failed drink validation" + JSON.stringify(slots.Drink));
-	if (slots.Drink.toLowerCase() === "drink") {
+	if (slots.Drink.toLowerCase() === "drink" || 
+	    slots.Drink.toLowerCase() === "yes" ) {
 	    // in this case, the response was too vague - so instruct the user to be more specific
-            return buildValidationResult(false, 'Drink', 'Please say a drink name, for example, Coke.');
+            return buildValidationResult(false, 'Drink', 'Please say a drink name, for example, Small Coke.');
 	} else {
 	    // check to see if the extra food item is in the drink slot
 	    slots.Extra = slots.Drink;
