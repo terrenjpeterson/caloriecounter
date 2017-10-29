@@ -238,12 +238,49 @@ function vagueFood(foodName, restaurantName) {
         foodName.toLowerCase() === "salad" ||
         foodName.toLowerCase() === "chicken") {
 
+	var foodItems = getFoodItems(foodName, restaurantName).foodItems;
+
+	console.log("Potential Food Items: " + JSON.stringify(foodItems)); 
+
 	vagueFoodResponse.assessment = true;
         vagueFoodResponse.msg = "Can you be more specific? There are many types of " + foodName + " to choose from.";
     }
 
     return {
         vagueFoodResponse
+    };
+}
+
+
+// this retrieves the food items for a given restaurant and food type
+
+function getFoodItems(foodType, restaurantName) {
+    var restaurantFoodItems = [];
+    var foodItems = [];
+
+    console.log("Finding potential food items for " + foodType + " at " + restaurantName + ".");
+
+    // sort through the food choices and pull out those relating to the restaraunt that has already been validated
+    for (var i = 0; i < foodChoices.length; i++) {
+        if (restaurantName.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+            restaurantFoodItems = foodChoices[i].foodItems;
+        }
+    } 
+
+    console.log(JSON.stringify(restaurantFoodItems));
+
+    // sort through the food choices, and pull out just those that match the food type
+    for (var j = 0; j < restaurantFoodItems.length; j++) {
+	if (restaurantFoodItems[j].foodType) {
+	    if (foodType.toLowerCase() === restaurantFoodItems[j].foodType.toLowerCase()) {
+	        console.log("matched recommendation for " + restaurantFoodItems[j].foodName);
+	        foodItems.push(restaurantFoodItems[j].foodName);
+	    }
+	}
+    }
+
+    return {
+	foodItems
     };
 }
 
