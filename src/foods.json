@@ -134,6 +134,11 @@
             {"foodName":"Small Fry","calories":320},
             {"foodName":"Value Fry","calories":220},
             {"foodName":"Large Fry","calories":430},
+	    {"foodName":"Onion Rings","calories":410},
+            {"foodName":"Medium Onion Rings","calories":410},
+            {"foodName":"Value Onion Rings","calories":150},
+            {"foodName":"Small Onion Rings","calories":320},
+            {"foodName":"Large Onion Rings","calories":500},
 	    {"foodName":"Side Salad", "calories":60}
             ]
     },
@@ -313,6 +318,10 @@
             {"foodName":"6 Piece Nuggets", "calories":270},
             {"foodName":"10 Piece Nuggets", "calories":440},
             {"foodName":"20 Piece Nuggets", "calories":890},
+            {"foodName":"Buttermilk Crispy Tenders", "calories":490},
+            {"foodName":"4 Piece Buttermilk Crispy Tenders", "calories":490},
+            {"foodName":"6 Piece Buttermilk Crispy Tenders", "calories":730},
+            {"foodName":"10 Piece Buttermilk Crispy Tenders", "calories":1210},
 	    {"foodName":"McRib", "calories":500},
 	    {"foodName":"Mc Rib", "calories":500},
             {"foodName":"Small Fries", "calories":230},
