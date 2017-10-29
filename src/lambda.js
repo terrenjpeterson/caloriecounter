@@ -173,7 +173,6 @@ function validateFood(slots) {
     if (slots.Food) {
         console.log("validating food: " + slots.Food);
         for (var j = 0; j < foodItems.length; j++) {
-            //console.log("food item: " + JSON.stringify(foodItems[j]));
             if (slots.Food.toLowerCase() == foodItems[j].foodName.toLowerCase()) {
                 console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
                 validFood = true;
@@ -181,7 +180,6 @@ function validateFood(slots) {
 		slots.Food = foodItems[j].foodName;
             } else if (slots.Extra) {
 		// make sure that the parsing hasn't separated a combo food term - i.e. Ham and Swiss
-		console.log("checking word parsing of " + slots.Extra);
 		const combineFoodWords = slots.Food + " and " + slots.Extra;
 		if (combineFoodWords.toLowerCase() === foodItems[j].foodName.toLowerCase()) {
 		    console.log("Found a match for " + combineFoodWords + " calories " + foodItems[j].calories);
@@ -282,9 +280,16 @@ function validateExtra(slots) {
     if (validExtra) {
         console.log("passed extra validation");
         return { isValid: true, calories: extraCalories };
+    } else if (slots.Extra.toLowerCase() === "nothing" ||
+	       slots.Extra.toLowerCase() === "no" ) {
+	console.log("no extra provided");
+	return { isValid: true, calories: 0 };
+    } else if (slots.Extra.toLowerCase() === "yes" ) {
+	console.log("extra question answered with a yes - clarify");
+	return buildValidationResult(false, 'Extra', "What side item would you like to add?");
     } else {
 	console.log("failed extra validation");
-	return { isValid: false };
+	return buildValidationResult(false, 'Extra', `Sorry, I dont have information for ` + slots.Extra + '. Please try again.');
     }
 }
 
@@ -554,6 +559,7 @@ function validateUserEntry(intentRequest, callback) {
 
     const restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
+    const extraName      = intentRequest.currentIntent.slots.Extra;
     const drinkName      = intentRequest.currentIntent.slots.Drink;
 
     const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
@@ -579,6 +585,7 @@ function validateUserEntry(intentRequest, callback) {
 
                 // check if food was valid
                 if (!foodValidationResult.isValid) {
+		    // food name provided not valid
                     console.log("Invalid food name " + foodName + ". Pass back failed validation");
                     slots[`${foodValidationResult.violatedSlot}`] = null;
                         
@@ -586,24 +593,42 @@ function validateUserEntry(intentRequest, callback) {
                     callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                         slots, foodValidationResult.violatedSlot, foodValidationResult.message));
                 } else {
+		    // food name was valid - now check extra name
                     console.log("Valid food name " + foodName + " was provided.");
-                    if (drinkName) {
-                        const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
-                        if (!drinkValidationResult.isValid) {
-                            console.log("Invalid drink name " + drinkName + ". Pass back failed validation.");
-                            slots[`${drinkValidationResult.violatedSlot}`] = null;
+		    if (extraName) {
+			console.log("Check Extra Name: " + extraName);
+			const extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
+			if (!extraValidationResult.isValid) {
+			    // extra name provided failed validation
+			    console.log("Invalid extra name " + extraName);
+			    slots[`${extraValidationResult.violatedSlot}`] = null;
+                    	    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                        	slots, extraValidationResult.violatedSlot, extraValidationResult.message));
+			} else {
+			    // extra name passed validation - now check the drink
+                	    if (drinkName) {
+                            	const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
+                            	if (!drinkValidationResult.isValid) {
+                                    console.log("Invalid drink name " + drinkName + ". Pass back failed validation.");
+                                    slots[`${drinkValidationResult.violatedSlot}`] = null;
                                 
-                            console.log("Validation Result: " + JSON.stringify(drinkValidationResult));
-                            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                                slots, drinkValidationResult.violatedSlot, drinkValidationResult.message));
-                        } else {
-                            console.log("Validated drink choice.");
-                            callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-                        }
-                    } else {
-                        console.log("No drink name provided yet.");
-                        callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-                    }
+                                    console.log("Validation Result: " + JSON.stringify(drinkValidationResult));
+                                    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                                    	slots, drinkValidationResult.violatedSlot, drinkValidationResult.message));
+                                } else {
+                                    console.log("Validated drink choice.");
+                                    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+                            	}
+                    	    } else {
+                                console.log("No drink name provided yet.");
+                                callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+                    	    }
+			}
+		    } else {
+			// No extra response provided yet
+			console.log("No extra name provided yet.");
+			callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+		    }
                 }
             } else {
                 console.log("No food name entered yet, but restaurant name is valid.");
