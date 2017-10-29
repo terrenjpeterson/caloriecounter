@@ -232,18 +232,34 @@ function vagueFood(foodName, restaurantName) {
     if (foodName.toLowerCase() === "taco" ||
         foodName.toLowerCase() === "tacos" ||
         foodName.toLowerCase() === "burrito" ||
+	foodName.toLowerCase() === "chalupa" ||
         foodName.toLowerCase() === "sub" ||
+	foodName.toLowerCase() === "burger" ||
         foodName.toLowerCase() === "sandwich" ||
         foodName.toLowerCase() === "soup" ||
         foodName.toLowerCase() === "salad" ||
+	foodName.toLowerCase() === "nuggets" ||
+        foodName.toLowerCase() === "chicken tenders" ||
         foodName.toLowerCase() === "chicken") {
 
+        vagueFoodResponse.assessment = true;
+
+	// check to see if any food items match the terms above
 	var foodItems = getFoodItems(foodName, restaurantName).foodItems;
 
 	console.log("Potential Food Items: " + JSON.stringify(foodItems)); 
 
-	vagueFoodResponse.assessment = true;
-        vagueFoodResponse.msg = "Can you be more specific? There are many types of " + foodName + " to choose from.";
+	// format response message that will be related to the user
+	vagueFoodResponse.msg = "Can you be more specific? Say something like ";
+
+	// if any recommendations come from the food array, explicitly suggest
+	if (foodItems.length > 0) {
+	    for (var i = 0; i < foodItems.length; i++) {
+	        vagueFoodResponse.msg = vagueFoodResponse.msg + foodItems[i] + ", ";
+	    }
+	} else {
+            vagueFoodResponse.msg = "Can you be more specific? There are many types of " + foodName + " to choose from.";
+	}
     }
 
     return {
