@@ -79,6 +79,8 @@ function validateRestaurant(slots) {
     if (slots.Restaurant) {
         if (slots.Restaurant.toLowerCase() === "mcdonald’s" ||
             slots.Restaurant.toLowerCase() === "mcdonald" ||
+            slots.Restaurant.toLowerCase() === "mc donald" ||
+            slots.Restaurant.toLowerCase() === "mc donalds" ||
 	    slots.Restaurant.toLowerCase() === "mcdonald's") {
             console.log("corrected restaurant name typo");
             slots.Restaurant = "McDonalds";
@@ -236,10 +238,14 @@ function vagueFood(foodName, restaurantName) {
         foodName.toLowerCase() === "sub" ||
 	foodName.toLowerCase() === "burger" ||
         foodName.toLowerCase() === "sandwich" ||
+	foodName.toLowerCase() === "footlong" ||
         foodName.toLowerCase() === "soup" ||
+	foodName.toLowerCase() === "turkey" ||
         foodName.toLowerCase() === "salad" ||
 	foodName.toLowerCase() === "nuggets" ||
+        foodName.toLowerCase() === "chicken nuggets" ||
         foodName.toLowerCase() === "chicken tenders" ||
+        foodName.toLowerCase() === "chicken strips" ||
         foodName.toLowerCase() === "chicken") {
 
         vagueFoodResponse.assessment = true;
@@ -329,6 +335,13 @@ function validateExtra(slots) {
         }
     }    
 
+    // find out if someone entered multiple items for the extra started by the word fries
+    if (!validExtra && slots.Extra.substring(0,5).toLowerCase() === "fries") {
+        slots.Drink = slots.Extra.substring(6,slots.Extra.length);
+	slots.Extra = "fries";
+	validExtra = true;
+    }
+
     // create response. if extra food item didn't match, respond as such, else pass back as supported.
     if (validExtra) {
         console.log("passed extra validation");
@@ -376,7 +389,7 @@ function validateDrink(slots) {
 	    slots.Drink.toLowerCase() === "yes" ) {
 	    // in this case, the response was too vague - so instruct the user to be more specific
             return buildValidationResult(false, 'Drink', 'Please say a drink name, for example, Small Coke.');
-	} else {
+	} else if (!slots.Extra) {
 	    // check to see if the extra food item is in the drink slot
 	    slots.Extra = slots.Drink;
             const extraValidationResult = validateExtra(slots);
@@ -390,6 +403,8 @@ function validateDrink(slots) {
 		slots.Extra = "";
                 return buildValidationResult(false, 'Drink', `Sorry, I dont have information for ` + slots.Drink + '. Please try again.');
 	    }
+	} else {
+            return buildValidationResult(false, 'Drink', `Sorry, I dont have information for ` + slots.Drink + '. Please try again.');
 	}
     } else {
         console.log("no drink items provided yet.");
@@ -574,7 +589,10 @@ function calculateCalories(intentRequest, callback) {
 	
         var counterResponse = "At " + restaurantName + " eating a " + foodName;
 
-	if (extraName) {
+	if (extraName.toLowerCase() === "nothing" ||
+	    extraName.toLowerCase() === "no" ) {
+	    console.log("Skipping extra as nothing selected");
+	} else if (extraName) {
 	    const extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
 	    console.log("Validation Result: " + JSON.stringify(extraValidationResult));
 	    if (extraValidationResult.isValid) {
