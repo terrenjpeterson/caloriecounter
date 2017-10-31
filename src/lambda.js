@@ -1,3 +1,4 @@
+
 'use strict';
 
  /**
@@ -75,42 +76,12 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
 function validateRestaurant(slots) {
     var validRestaurant = false;
 
-    // correct common mistakes for restaurant names
+    // correct common mistakes for restaurant names, then attempt to match
     if (slots.Restaurant) {
-        if (slots.Restaurant.toLowerCase() === "mcdonald’s" ||
-            slots.Restaurant.toLowerCase() === "mcdonald" ||
-            slots.Restaurant.toLowerCase() === "mc donald" ||
-            slots.Restaurant.toLowerCase() === "mc donalds" ||
-	    slots.Restaurant.toLowerCase() === "mcdonald's") {
-            console.log("corrected restaurant name typo");
-            slots.Restaurant = "McDonalds";
-        } else if (slots.Restaurant.toLowerCase() === "wendy’s" ||
-	           slots.Restaurant.toLowerCase() === "wendy" ||
-                   slots.Restaurant.toLowerCase() === "wendy's") {
-            console.log("corrected restaurant name apostrophie");
-            slots.Restaurant = "Wendys";
-        } else if (slots.Restaurant.toLowerCase() === "hardee’s" ||
-                   slots.Restaurant.toLowerCase() === "hardee" ||
-                   slots.Restaurant.toLowerCase() === "hardee's") {
-            console.log("corrected restaurant name apostrophie");
-            slots.Restaurant = "Hardees";
-        } else if (slots.Restaurant.toLowerCase() === "chik-fil-a" ||
-		   slots.Restaurant.toLowerCase() === "chick fil a" ||
-                   slots.Restaurant.toLowerCase() === "chic fil a" ||
-                   slots.Restaurant.toLowerCase() === "chik fil a" ||
-                   slots.Restaurant.toLowerCase() === "chikfila") {
-            console.log("corrected restaurant name typo");
-            slots.Restaurant = "Chick-fil-A";
-        } else if (slots.Restaurant.toLowerCase() === "arby's" ||
-		   slots.Restaurant.toLowerCase() === "arby" ||
-                   slots.Restaurant.toLowerCase() === "arby’s") {
-	    console.log("corrected restaurant name apostrophie");
-	    slots.Restaurant = "Arbys";
+	var updatedName = scrubRestaurantName(slots.Restaurant).scrubData.restaurantName;
+	if (updatedName) {
+	    slots.Restaurant = updatedName;
 	}
-    }
-
-    // make sure a Restaurant has been provided before attempting to validate
-    if (slots.Restaurant) {
         console.log("validating restaurant:" + slots.Restaurant);
         for (var i = 0; i < restaurants.length; i++) {
             if (slots.Restaurant.toLowerCase() === restaurants[i].toLowerCase()) {
@@ -151,6 +122,48 @@ function validateRestaurant(slots) {
             return { isValid: true };
 	}
     }
+}
+
+// this function will scrub the restaurant name to get it to a standard
+function scrubRestaurantName(restaurantName) {
+    var scrubData = {};
+
+    console.log("attempting data scrub of :" + restaurantName);
+
+    if (restaurantName.toLowerCase() === "mcdonald’s" ||
+        restaurantName.toLowerCase() === "mcdonald" ||
+        restaurantName.toLowerCase() === "mc donald" ||
+        restaurantName.toLowerCase() === "mc donalds" ||
+        restaurantName.toLowerCase() === "mcdonald's") {
+        console.log("corrected restaurant name typo");
+        scrubData.restaurantName = "McDonalds";
+    } else if (restaurantName.toLowerCase() === "wendy’s" ||
+               restaurantName.toLowerCase() === "wendy" ||
+               restaurantName.toLowerCase() === "wendy's") {
+        console.log("corrected restaurant name apostrophie");
+        scrubData.restaurantName = "Wendys";
+    } else if (restaurantName.toLowerCase() === "hardee’s" ||
+               restaurantName.toLowerCase() === "hardee" ||
+               restaurantName.toLowerCase() === "hardee's") {
+        console.log("corrected restaurant name apostrophie");
+        scrubData.restaurantName = "Hardees";
+    } else if (restaurantName.toLowerCase() === "chik-fil-a" ||
+               restaurantName.toLowerCase() === "chick fil a" ||
+               restaurantName.toLowerCase() === "chic fil a" ||
+               restaurantName.toLowerCase() === "chik fil a" ||
+               restaurantName.toLowerCase() === "chikfila") {
+        console.log("corrected restaurant name typo");
+        scrubData.restaurantName = "Chick-fil-A";
+    } else if (restaurantName.toLowerCase() === "arby's" ||
+               restaurantName.toLowerCase() === "arby" ||
+               restaurantName.toLowerCase() === "arby’s") {
+        console.log("corrected restaurant name apostrophie");
+        scrubData.restaurantName = "Arbys";
+    }
+
+    return {
+	scrubData
+    };
 }
 
 // this function will validate that the restaurant provided by the user matches what data we have
@@ -214,9 +227,28 @@ function validateFood(slots) {
 	// this is trying to catch where the user has replied with more than one food item
 	} else if (slots.Food.length > 25) {
 	    return buildValidationResult(false, 'Food', 'Can you just start by saying just the first item?');
-	// this is the generic error message where a match can't be found
 	} else {
-            return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + ' at ' + slots.Restaurant + ' . Please try again.');
+	    // check to see if the user is entering another restaurant name vs. a food name - this is a common usability issue
+	    var switchRestaurant = false;
+            var updatedName = scrubRestaurantName(slots.Restaurant).scrubData.restaurantName;
+            if (updatedName) {
+                slots.Restaurant = updatedName;
+            }
+            for (var i = 0; i < restaurants.length; i++) {
+                if (slots.Food.toLowerCase() === restaurants[i].toLowerCase()) {
+                    console.log("found a match for " + restaurants[i]);
+                    switchRestaurant = true;
+                    slots.Restaurant = restaurants[i];
+                }
+            }
+	    if (switchRestaurant) {
+		slots.Restaurant = slots.Food;
+		slots.Food = "";
+		return buildValidationResult(false, 'Food', 'Switching to restaurant ' + slots.Restaurant + '. What food are you looking for?');
+	    } else {
+                // this is the generic error message where a match can't be found
+                return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + ' at ' + slots.Restaurant + ' . Please try again.');
+	    }
 	}
     } else {
         console.log("no food items provided yet.");
@@ -233,6 +265,7 @@ function vagueFood(foodName, restaurantName) {
 
     if (foodName.toLowerCase() === "taco" ||
         foodName.toLowerCase() === "tacos" ||
+	foodName.toLowerCase() === "soft taco" ||
         foodName.toLowerCase() === "burrito" ||
 	foodName.toLowerCase() === "chalupa" ||
         foodName.toLowerCase() === "sub" ||
@@ -241,6 +274,7 @@ function vagueFood(foodName, restaurantName) {
 	foodName.toLowerCase() === "footlong" ||
         foodName.toLowerCase() === "soup" ||
 	foodName.toLowerCase() === "turkey" ||
+        foodName.toLowerCase() === "steak" ||
         foodName.toLowerCase() === "salad" ||
 	foodName.toLowerCase() === "nuggets" ||
         foodName.toLowerCase() === "chicken nuggets" ||
@@ -347,6 +381,7 @@ function validateExtra(slots) {
         console.log("passed extra validation");
         return { isValid: true, calories: extraCalories };
     } else if (slots.Extra.toLowerCase() === "nothing" ||
+	       slots.Extra.toLowerCase() === "none" ||
 	       slots.Extra.toLowerCase() === "no" ) {
 	console.log("no extra provided");
 	return { isValid: true, calories: 0 };
@@ -590,6 +625,7 @@ function calculateCalories(intentRequest, callback) {
         var counterResponse = "At " + restaurantName + " eating a " + foodName;
 
 	if (extraName.toLowerCase() === "nothing" ||
+	    extraName.toLowerCase() === "none" ||
 	    extraName.toLowerCase() === "no" ) {
 	    console.log("Skipping extra as nothing selected");
 	} else if (extraName) {
@@ -604,6 +640,7 @@ function calculateCalories(intentRequest, callback) {
 
 	// alter response based on if a drink was provided
 	if (drinkName.toLowerCase() === "nothing" ||
+	    drinkName.toLowerCase() === "none" ||
 	    drinkName.toLowerCase() === "no" ) {
 	    counterResponse = counterResponse + ". ";
 	} else {
