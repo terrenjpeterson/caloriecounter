@@ -88,6 +88,8 @@
             {"foodName":"Double Whopper with Cheese", "calories":930},
 	    {"foodName":"Bacon King", "calories":1150},
             {"foodName":"Farmhouse King", "calories":1220},
+	    {"foodName":"Rodeo King", "calories":1250},
+            {"foodName":"Rodeo Burger", "calories":1250},
             {"foodName":"Big King", "calories":530},
             {"foodName":"Junior Whopper", "calories":310},
             {"foodName":"Whopper Junior", "calories":310},
@@ -412,6 +414,8 @@
             {"foodName":"Southwest Buttermilk Crispy Chicken Salad", "foodType":"Salad", "calories":520},
             {"foodName":"Southwest Grilled Chicken Salad", "foodType":"Salad", "calories":350},
             {"foodName":"Southwest Salad", "calories":350},
+	    {"foodName":"Grilled Chicken Snack Wrap", "calories":270},
+            {"foodName":"Chicken Snack Wrap", "calories":270},
             {"foodName":"Fruit 'N Yogurt Parfait", "calories":150},
             {"foodName":"Egg McMuffin", "calories":300},
             {"foodName":"Egg White Delight McMuffin", "calories":260},
@@ -615,7 +619,9 @@
             {"foodName":"Chicken Soft Taco","calories":170},
             {"foodName":"Beef Soft Taco Supreme","calories":210},
 	    {"foodName":"Soft Shell Taco Supreme","calories":210},
-            {"foodName":"Spicy Potato Soft Taco","calories":230}
+            {"foodName":"Spicy Potato Soft Taco","calories":230},
+	    {"foodName":"Cheesy Fiesta Potatoes", "calories":230},
+            {"foodName":"Fiesta Potatoes", "calories":230}
         ]
     },
     {

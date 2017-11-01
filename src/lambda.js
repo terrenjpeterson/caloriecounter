@@ -278,6 +278,7 @@ function vagueFood(foodName, restaurantName) {
         foodName.toLowerCase() === "salad" ||
 	foodName.toLowerCase() === "nuggets" ||
         foodName.toLowerCase() === "chicken nuggets" ||
+        foodName.toLowerCase() === "chicken nugget" ||
         foodName.toLowerCase() === "chicken tenders" ||
         foodName.toLowerCase() === "chicken strips" ||
         foodName.toLowerCase() === "chicken") {
