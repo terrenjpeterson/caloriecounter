@@ -167,18 +167,19 @@ function scrubRestaurantName(restaurantName) {
 }
 
 // this function will validate that the restaurant provided by the user matches what data we have
-function validateFood(slots) {
+function validateFood(intentRequest) {
     var validFood = false;
-    var restaurant = slots.Restaurant;
+    var restaurant = intentRequest.currentIntent.slots.Restaurant;
     var foodItems = [];
     var foodCalories = 0;
+    var slots = intentRequest.currentIntent.slots;
 
     console.log("validating food entered " + slots.Food);
 
     // sort through the food choices and pull out those relating to the restaraunt that has already been validated
     for (var i = 0; i < foodChoices.length; i++) {
         //console.log("checking: " + JSON.stringify(foodChoices[i]));
-        if (slots.Restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+        if (restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
             foodItems = foodChoices[i].foodItems;
             console.log("match restaurant - food items: " + JSON.stringify(foodItems));
         }
@@ -197,9 +198,10 @@ function validateFood(slots) {
 		// make sure that the parsing hasn't separated a combo food term - i.e. Ham and Swiss
 		const combineFoodWords = slots.Food + " and " + slots.Extra;
 		if (combineFoodWords.toLowerCase() === foodItems[j].foodName.toLowerCase()) {
-		    console.log("Found a match for " + combineFoodWords + " calories " + foodItems[j].calories);
-		    slots.Extra = "";
-		    slots.Food = combineFoodWords;
+		    console.log("Found a match by creating combo term " + combineFoodWords + " calories " + foodItems[j].calories);
+		    intentRequest.currentIntent.slots.Extra = "";
+		    //slots[`${extraValidationResult.violatedSlot}`] = null;
+		    intentRequest.currentIntent.slots.Food = combineFoodWords;
                     validFood = true;
                     foodCalories = foodItems[j].calories;
 		}
@@ -230,15 +232,16 @@ function validateFood(slots) {
 	} else {
 	    // check to see if the user is entering another restaurant name vs. a food name - this is a common usability issue
 	    var switchRestaurant = false;
-            var updatedName = scrubRestaurantName(slots.Restaurant).scrubData.restaurantName;
+            var updatedName = scrubRestaurantName(slots.Food).scrubData.restaurantName;
+	    // update food name with the correct restaurant spelling if applicable
             if (updatedName) {
-                slots.Restaurant = updatedName;
-            }
+		console.log("Scrubbed name to: " + updatedName);
+                slots.Food = updatedName;
+            } 
             for (var i = 0; i < restaurants.length; i++) {
                 if (slots.Food.toLowerCase() === restaurants[i].toLowerCase()) {
                     console.log("found a match for " + restaurants[i]);
                     switchRestaurant = true;
-                    slots.Restaurant = restaurants[i];
                 }
             }
 	    if (switchRestaurant) {
@@ -598,8 +601,6 @@ function calculateCalories(intentRequest, callback) {
 
     const restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
-    const drinkName      = intentRequest.currentIntent.slots.Drink;
-    const extraName	 = intentRequest.currentIntent.slots.Extra;    
 
     console.log("processing user response");
 
@@ -613,7 +614,7 @@ function calculateCalories(intentRequest, callback) {
         // this is the processing for the final confirmation. calculate calories and format message
         console.log("confirm final response - now calculating calories");
         
-        const foodValidationResult = validateFood(intentRequest.currentIntent.slots);
+        const foodValidationResult = validateFood(intentRequest);
         console.log("Validation Result: " + JSON.stringify(foodValidationResult));
 
         const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
@@ -624,6 +625,8 @@ function calculateCalories(intentRequest, callback) {
         // this attribute is what the chatbot will respond back with
 	
         var counterResponse = "At " + restaurantName + " eating a " + foodName;
+
+    	var extraName = intentRequest.currentIntent.slots.Extra;
 
 	if (extraName.toLowerCase() === "nothing" ||
 	    extraName.toLowerCase() === "none" ||
@@ -638,6 +641,8 @@ function calculateCalories(intentRequest, callback) {
 	        counterResponse = counterResponse + " and a " + extraName;
 	    }
 	}
+
+    	var drinkName = intentRequest.currentIntent.slots.Drink;
 
 	// alter response based on if a drink was provided
 	if (drinkName.toLowerCase() === "nothing" ||
@@ -668,7 +673,6 @@ function validateUserEntry(intentRequest, callback) {
 
     const restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
-    const extraName      = intentRequest.currentIntent.slots.Extra;
     const drinkName      = intentRequest.currentIntent.slots.Drink;
 
     const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
@@ -689,7 +693,7 @@ function validateUserEntry(intentRequest, callback) {
             if (foodName) {
                 // food name exists, so validate it
                 console.log("Validate Food Name: " + foodName);                
-                const foodValidationResult = validateFood(intentRequest.currentIntent.slots);
+                const foodValidationResult = validateFood(intentRequest);
                 console.log("Validation Result: " + JSON.stringify(foodValidationResult));
 
                 // check if food was valid
@@ -704,12 +708,13 @@ function validateUserEntry(intentRequest, callback) {
                 } else {
 		    // food name was valid - now check extra name
                     console.log("Valid food name " + foodName + " was provided.");
-		    if (extraName) {
-			console.log("Check Extra Name: " + extraName);
-			const extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
+    		    var extraName = intentRequest.currentIntent.slots.Extra;
+		    if (extraName && extraName !== "") {
+			console.log("Check Extra Name: " + intentRequest.currentIntent.slots.Extra);
+			var extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
 			if (!extraValidationResult.isValid) {
 			    // extra name provided failed validation
-			    console.log("Invalid extra name " + extraName);
+			    console.log("Invalid extra name " + intentRequest.currentIntent.slots.Extra);
 			    slots[`${extraValidationResult.violatedSlot}`] = null;
                     	    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                         	slots, extraValidationResult.violatedSlot, extraValidationResult.message));
