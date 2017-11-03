@@ -570,6 +570,13 @@ function getFoodOptions(intentRequest, callback) {
     var restaurant = intentRequest.currentIntent.slots.Restaurant;
     var foodType = intentRequest.currentIntent.slots.FoodType;
 
+    // first scrub restaurant name
+    var updatedName = scrubRestaurantName(restaurant).scrubData.restaurantName;
+
+    if (updatedName) {
+	restaurant = updatedName;
+    }
+
     var botResponse = '';
 
     // clean up different spellings of food types
