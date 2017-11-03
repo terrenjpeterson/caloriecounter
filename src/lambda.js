@@ -532,6 +532,37 @@ function getHelp(intentRequest, callback) {
         
 }
 
+function getMealDetails(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    console.log("Session Attributes: " + JSON.stringify(intentRequest.sessionAttributes));
+
+    if (sessionAttributes.foodName) {
+	var detailResponse = sessionAttributes.foodName + " is " + 
+	    sessionAttributes.foodCalories + " calories. ";
+        if (sessionAttributes.extraName) {
+            detailResponse = detailResponse + sessionAttributes.extraName + " is " +
+                sessionAttributes.extraCalories + " calories. ";
+        }
+	if (sessionAttributes.drinkName) {
+	    detailResponse = detailResponse + sessionAttributes.drinkName + " is " +
+		sessionAttributes.drinkCalories + " calories. ";
+	}
+	if (sessionAttributes.extraName || sessionAttributes.drinkName) {
+	    detailResponse = detailResponse + "Total Calories are " + 
+		sessionAttributes.totalCalories + ".";
+	}
+
+    } else {
+	var detailResponse = "Sorry, first start by telling me more about the meal. " +
+	    "For example, say something like Eating at Burger King.";
+    }
+
+    callback(close(sessionAttributes, 'Fulfilled',
+	{ contentType: 'PlainText', content: detailResponse }));
+
+}
+
 function getFoodOptions(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
@@ -615,10 +646,7 @@ function calculateCalories(intentRequest, callback) {
         console.log("confirm final response - now calculating calories");
         
         const foodValidationResult = validateFood(intentRequest);
-        console.log("Validation Result: " + JSON.stringify(foodValidationResult));
-
         const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
-        console.log("Validation Result: " + JSON.stringify(drinkValidationResult));
 
         var totalCalories = foodValidationResult.calories + drinkValidationResult.calories;
 
@@ -626,6 +654,7 @@ function calculateCalories(intentRequest, callback) {
 	
         var counterResponse = "At " + restaurantName + " eating a " + foodName;
 
+	// process details related to the extra food item
     	var extraName = intentRequest.currentIntent.slots.Extra;
 
 	if (extraName.toLowerCase() === "nothing" ||
@@ -634,15 +663,19 @@ function calculateCalories(intentRequest, callback) {
 	    console.log("Skipping extra as nothing selected");
 	} else if (extraName) {
 	    const extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
-	    console.log("Validation Result: " + JSON.stringify(extraValidationResult));
 	    if (extraValidationResult.isValid) {
-		console.log("Adding extra calories for " + extraName);
 		totalCalories += extraValidationResult.calories;
 	        counterResponse = counterResponse + " and a " + extraName;
+                sessionAttributes.extraName = extraName;
+                sessionAttributes.extraCalories = extraValidationResult.calories;
 	    }
 	}
 
+	// process details related to the drink
     	var drinkName = intentRequest.currentIntent.slots.Drink;
+
+            sessionAttributes.drinkName = intentRequest.currentIntent.slots.Drink; 
+            sessionAttributes.drinkCalories = drinkValidationResult.calories;
 
 	// alter response based on if a drink was provided
 	if (drinkName.toLowerCase() === "nothing" ||
@@ -658,7 +691,19 @@ function calculateCalories(intentRequest, callback) {
 		counterResponse = counterResponse + " and drinking a " + drinkName + ". ";
 	    }
 	}
-	    counterResponse = counterResponse + "That is " + totalCalories + " calories.";
+	    counterResponse = counterResponse + "That is " + totalCalories + " calories. ";
+
+	if (totalCalories > foodValidationResult.calories) {
+	    counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout.";
+	}
+
+	    // save session attributes for later reference
+            sessionAttributes.restaurantName = restaurantName;
+            sessionAttributes.foodName       = foodName;
+            sessionAttributes.foodCalories   = foodValidationResult.calories;
+            sessionAttributes.totalCalories  = totalCalories;
+
+	console.log("saving session data: " + JSON.stringify(sessionAttributes));
 
         callback(close(sessionAttributes, 'Fulfilled',
             { contentType: 'PlainText', content: counterResponse }));
@@ -791,6 +836,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'FoodTypeOptions') {
 	console.log("user requested food types");
 	return getFoodOptions(intentRequest, callback);
+    } else if (intentName === 'MoreDetails') {
+	console.log("user requested details on meal");
+	return getMealDetails(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
