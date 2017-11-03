@@ -99,7 +99,7 @@ function validateRestaurant(slots) {
     } else if (slots.Restaurant) {
         console.log("failed restaurant validation");
 	var botResponse = "Sorry, I dont have information for " + slots.Restaurant + ". " +
-	    "Say, List of restaurants for details.";
+	    "Say, List of restaurants for what I know about.";
         return buildValidationResult(false, 'Restaurant', botResponse);
     } else {
         // check if a food item has been entered. this might allow for restaurant to be defaulted.
@@ -414,6 +414,7 @@ function validateDrink(slots) {
                 console.log("found a match for " + drinks[j].drinkName + " calories " + drinks[j].calories);
                 validDrink = true;
                 drinkCalories = drinks[j].calories;
+  		slots.Drink = drinks[j].drinkName;
             }
         }
     }
