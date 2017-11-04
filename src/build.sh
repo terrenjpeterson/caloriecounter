@@ -2,8 +2,8 @@
 # create build package for Lex chatbot, stage in s3 bucket, and deploy package.
 
 # create temp zip file with all the json data objects
-zip foodbot.zip lambda.js foods.json drinks.json package.json
-zip pizzabot.zip pizza.js pizzas.json
+zip -r foodbot.zip lambda.js data/foods.json data/drinks.json package.json
+zip -r pizzabot.zip pizza.js data/pizzas.json
 
 # copy the build file and source files to a staging bucket in case need for research
 aws s3 cp lambda.js s3://fastfoodchatbot/binaries/
@@ -11,9 +11,9 @@ aws s3 cp pizza.js s3://fastfoodchatbot/binaries/
 aws s3 cp foodbot.zip s3://fastfoodchatbot/binaries/
 aws s3 cp pizzabot.zip s3://fastfoodchatbot/binaries/
 
-aws s3 cp foods.json s3://fastfoodchatbot/data/
-aws s3 cp drinks.json s3://fastfoodchatbot/data/
-aws s3 cp pizzas.json s3://fastfoodchatbot/data/
+aws s3 cp data/foods.json s3://fastfoodchatbot/data/
+aws s3 cp data/drinks.json s3://fastfoodchatbot/data/
+aws s3 cp data/pizzas.json s3://fastfoodchatbot/data/
 
 # cleanup temporary file
 echo 'removed temp files'
