@@ -1,0 +1,61 @@
+[
+    {
+        "restaurant":"Pappa Johns",
+        "pizzaSelections":[
+            {"name":"BBQ Chicken and Bacon",
+	     "sizes": [
+		{"size":"Eight Inch", "diameter":8, "slicesPerPizza":4, "sliceCalories":240},
+            	{"size":"Small", "diameter":10, "slicesPerPizza":6, "sliceCalories":230},
+            	{"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":240},
+            	{"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":340},
+            	{"size":"Extra Large", "diameter":16, "slicesPerPizza":10, "sliceCalories":360}
+	     ]
+	    },
+            {"name":"Cheese", 
+             "sizes": [ 
+		{"size":"Eight Inch", "diameter":8, "slicesPerPizza":4, "sliceCalories":200},
+            	{"size":"Small", "diameter":10, "slicesPerPizza":6, "sliceCalories":180},
+            	{"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":210},
+            	{"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":290},
+            	{"size":"Extra Large", "diameter":16, "slicesPerPizza":10, "sliceCalories":300}
+             ]
+            },
+            {"name":"Pepperoni", 
+             "sizes": [ 
+		{"size":"Eight Inch", "diameter":8, "slicesPerPizza":4, "sliceCalories":220},
+            	{"size":"Small", "diameter":10, "slicesPerPizza":6, "sliceCalories":210},
+            	{"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":220},
+            	{"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":320},
+            	{"size":"Extra Large", "diameter":16, "slicesPerPizza":10, "sliceCalories":330}
+             ]
+            },
+            {"name":"Pepperoni and Sausage", 
+             "sizes": [ 
+		{"size":"Eight Inch", "diameter":8, "slicesPerPizza":4, "sliceCalories":250},
+            	{"size":"Small", "diameter":10, "slicesPerPizza":6, "sliceCalories":240},
+            	{"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":260},
+            	{"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":360},
+            	{"size":"Extra Large", "diameter":16, "slicesPerPizza":10, "sliceCalories":370}
+             ]
+            },
+            {"name":"Sausage", 
+             "sizes": [ 
+		{"size":"Eight Inch", "diameter":8, "slicesPerPizza":4, "sliceCalories":230},
+            	{"size":"Small", "diameter":10, "slicesPerPizza":6, "sliceCalories":220},
+            	{"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":240},
+            	{"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":330},
+            	{"size":"Extra Large", "diameter":16, "slicesPerPizza":10, "sliceCalories":340}
+             ]
+            },
+            {"name":"Garden Fresh", 
+             "sizes": [ 
+		{"size":"Eight Inch", "diameter":8, "slicesPerPizza":4, "sliceCalories":210},
+            	{"size":"Small", "diameter":10, "slicesPerPizza":6, "sliceCalories":200},
+            	{"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":220},
+            	{"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":300},
+            	{"size":"Extra Large", "diameter":16, "slicesPerPizza":10, "sliceCalories":320}
+             ]
+            }
+	]
+    }
+]

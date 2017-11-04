@@ -2,7 +2,7 @@
 # create build package for Lex chatbot, stage in s3 bucket, and deploy package.
 
 # create temp zip file with all the json data objects
-zip foodbot.zip lambda.js foods.json drinks.json package.json
+zip foodbot.zip lambda.js foods.json drinks.json pizzas.json package.json
 
 # copy the build file and source files to a staging bucket in case need for research
 aws s3 cp lambda.js s3://fastfoodchatbot/binaries/

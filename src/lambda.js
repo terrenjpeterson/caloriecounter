@@ -12,6 +12,7 @@ var restaurants = ["Chipotle", "Burger King", "Subway", "Panera", "Chick-fil-A",
 // these are the valid choices based on website scraping
 var foodChoices = require("foods.json");
 var drinks = require("drinks.json");
+var pizzas = require("pizzas.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -159,6 +160,10 @@ function scrubRestaurantName(restaurantName) {
                restaurantName.toLowerCase() === "arby’s") {
         console.log("corrected restaurant name apostrophie");
         scrubData.restaurantName = "Arbys";
+    } else if (restaurantName.toLowerCase() === "pappa john's" ||
+	       restaurantName.toLowerCase() === "pappa john’s") {
+	console.log("removed apostrophie from restaurant name for matching");
+	scrubData.restaurantName = "pappa johns";
     }
 
     return {
@@ -311,6 +316,40 @@ function vagueFood(foodName, restaurantName) {
     };
 }
 
+// this retrieves the different types of pizza for a given restaurant
+function getPizzaTypes(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    // first scrub the restaurant name
+    var updatedName = scrubRestaurantName(intentRequest.currentIntent.slots.PizzaRestaurant).scrubData.restaurantName;
+    if (updatedName) {
+        intentRequest.currentIntent.slots.PizzaRestaurant = updatedName;
+    }
+
+    const restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
+
+    var botResponse = "Here are the pizza types at " + restaurantName + " : ";
+
+    // check if the restaurant is one that the bot has data for
+    if (restaurantName === "pappa johns") {
+    	// sort through the pizza choices and pull out those relating to the restaraunt that has already been validated
+        for (var i = 0; i < pizzas.length; i++) {
+            if (restaurantName.toLowerCase() === pizzas[i].restaurant.toLowerCase()) {
+		for (var j = 0; j < pizzas[i].pizzaSelections.length; j++) {
+		    botResponse = botResponse + pizzas[i].pizzaSelections[j].name + ", ";
+		} 
+		botResponse = botResponse + "To check calories, say something like " +
+		    "'How many calories in one slice of " + pizzas[i].pizzaSelections[0].name +
+		    " at " + pizzas[i].restaurant + "'.";
+            }
+	}
+    } else {
+	botResponse = "Sorry, I don't have pizza types for " + restaurantName + ".";
+    }
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: botResponse }));
+}
 
 // this retrieves the food items for a given restaurant and food type
 
@@ -632,6 +671,26 @@ function getFoodOptions(intentRequest, callback) {
 
 }
 
+// this function handles the flow for pizza places checking for calories
+
+function calculatePizzaCalories(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+    const slots = intentRequest.currentIntent.slots;
+
+    const restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
+
+    var botResponse = "Working on finding calories at " + restaurantName + ".";
+
+    // save session attributes for later reference
+    sessionAttributes.restaurantName = restaurantName;
+    sessionAttributes.pizzaRestaurant = true;
+
+    console.log("saving session data: " + JSON.stringify(sessionAttributes));
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: botResponse }));
+}
+
 // this function is what builds the main response around checking for calories
 
 function calculateCalories(intentRequest, callback) {
@@ -826,6 +885,9 @@ function dispatch(intentRequest, callback) {
     if (intentName === 'GetCalories') {
         console.log("now getting ready to count calories.");
         return calculateCalories(intentRequest, callback);
+    } else if (intentName === 'GetPizzaCalories') {
+	console.log("checking on pizza places.");
+	return calculatePizzaCalories(intentRequest, callback);
     } else if (intentName === 'Introduction') {
         console.log("friendly introduction.");
         return getIntroduction(intentRequest, callback);
@@ -844,6 +906,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'FoodTypeOptions') {
 	console.log("user requested food types");
 	return getFoodOptions(intentRequest, callback);
+    } else if (intentName === 'WhatPizzaTypes') {
+	console.log("user requested types of pizza");
+	return getPizzaTypes(intentRequest, callback);
     } else if (intentName === 'MoreDetails') {
 	console.log("user requested details on meal");
 	return getMealDetails(intentRequest, callback);
