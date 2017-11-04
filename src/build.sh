@@ -26,7 +26,9 @@ aws lambda update-function-code --function-name myPizzaCalorieCounterGreen --s3-
 echo 'new version has been deployed'
 
 # read in test data required for a basic food request
+cd testing
 request=$(<request.json)
+cd ..
 
 # invoke the new lambda function
 aws lambda invoke --function-name myCalorieCounterGreen --payload "$request" testOutput.json
@@ -36,7 +38,9 @@ response=$(<testOutput.json)
 echo $response
 
 # read in test data required for the second request
+cd testing
 request=$(<pizzaRequest.json)
+cd ..
 
 # invoke the new lambda function
 aws lambda invoke --function-name myPizzaCalorieCounterGreen --payload "$request" testOutput.json

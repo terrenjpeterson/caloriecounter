@@ -1,0 +1,31 @@
+{
+    "messageVersion": "1.0",
+    "invocationSource": "FulfillmentCodeHook",
+    "userId": "f9j9qdqixu8xc6lolobd9eud6cpn9p80",
+    "sessionAttributes": {},
+    "requestAttributes": null,
+    "bot": {
+        "name": "FastFoodChecker",
+        "alias": null,
+        "version": "$LATEST"
+    },
+    "outputDialogMode": "Text",
+    "currentIntent": {
+        "name": "WhatPizzaTypes",
+        "slots": {
+            "PizzaRestaurant": "pappa johns"
+        },
+        "slotDetails": {
+            "PizzaRestaurant": {
+                "resolutions": [
+                    {
+                        "value": "Pappa Johns"
+                    }
+                ],
+                "originalValue": "pappa johns"
+            }
+        },
+        "confirmationStatus": "None"
+    },
+    "inputTranscript": "what types of pizza at pappa johns"
+}
