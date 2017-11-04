@@ -7,11 +7,9 @@
 
 // variables that contain lookup information including restaurant name and calories by food
 
-var restaurants = ["Chipotle", "Burger King", "Subway", "Panera", "Chick-fil-A", "McDonalds", "Wendys", "Taco Bell", "Arbys","Hardees"];
-
-// these are the valid choices based on website scraping
-var foodChoices = require("foods.json");
-var drinks = require("drinks.json");
+var foodChoices = require("data/foods.json");
+var drinks = require("data/drinks.json");
+var restaurants = require("data/restaurants.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
