@@ -7,10 +7,10 @@
 
 // variables that contain lookup information including restaurant name and calories by food
 
-var restaurants = ["Chipotle", "Burger King", "Subway", "Panera", "Chick-fil-A", "McDonalds", "Wendys", "Taco Bell", "Arbys","Hardees"];
+var restaurants = ["Papa Johns", "Dominos"];
 
 // these are the valid choices based on website scraping
-var pizzas = require("pizzas.json");
+var pizzas = require("data/pizzas.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -72,21 +72,18 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
 }
 
 // this function will validate that the restaurant provided by the user matches what data we have
-function validateRestaurant(slots) {
+function validateRestaurant(restaurantName) {
     var validRestaurant = false;
+    var matchName = restaurantName;
 
     // correct common mistakes for restaurant names, then attempt to match
-    if (slots.Restaurant) {
-	var updatedName = scrubRestaurantName(slots.Restaurant).scrubData.restaurantName;
-	if (updatedName) {
-	    slots.Restaurant = updatedName;
-	}
-        console.log("validating restaurant:" + slots.Restaurant);
+    if (restaurantName) {
+        console.log("validating restaurant:" + restaurantName);
         for (var i = 0; i < restaurants.length; i++) {
-            if (slots.Restaurant.toLowerCase() === restaurants[i].toLowerCase()) {
+            if (restaurantName.toLowerCase() === restaurants[i].toLowerCase()) {
                 console.log("found a match for " + restaurants[i]);
                 validRestaurant = true;
-		slots.Restaurant = restaurants[i];
+		matchName = restaurants[i];
             }
         }
     }
@@ -94,32 +91,10 @@ function validateRestaurant(slots) {
     // create response. if restaurant didn't match, respond as such, else pass back as supported.
     if (validRestaurant) {
         console.log("passed restaurant validation");
-        return { isValid: true };
-    } else if (slots.Restaurant) {
-        console.log("failed restaurant validation");
-	var botResponse = "Sorry, I dont have information for " + slots.Restaurant + ". " +
-	    "Say, List of restaurants for what I know about.";
-        return buildValidationResult(false, 'Restaurant', botResponse);
+        return { isValid: true, restaurantName: matchName };
     } else {
-        // check if a food item has been entered. this might allow for restaurant to be defaulted.
-        if (slots.Food) {
-            console.log("checking for a default of " + slots.Food);
-            var defaultRestaurant = false;
-            for (var i = 0; i < foodChoices.length; i++) {
-                for (var j = 0; j < foodChoices[i].foodItems.length; j++) {
-                    if (slots.Food.toLowerCase() === foodChoices[i].foodItems[j].foodName.toLowerCase()) {
-                        console.log("default set to " + foodChoices[i].restaurant);
-                        slots.Restaurant = foodChoices[i].restaurant;
-                        defaultRestaurant = true;
-			slots.Food = foodChoices[i].foodItems[j].foodName;
-                    }
-                }
-            }
-            return { isValid: true };
-        } else {
-            console.log("no restaurant provided yet.");
-            return { isValid: true };
-	}
+        console.log("failed restaurant validation");
+        return { isValid: false };
     }
 }
 
@@ -129,41 +104,16 @@ function scrubRestaurantName(restaurantName) {
 
     console.log("attempting data scrub of :" + restaurantName);
 
-    if (restaurantName.toLowerCase() === "mcdonald’s" ||
-        restaurantName.toLowerCase() === "mcdonald" ||
-        restaurantName.toLowerCase() === "mc donald" ||
-        restaurantName.toLowerCase() === "mc donalds" ||
-        restaurantName.toLowerCase() === "mcdonald's") {
-        console.log("corrected restaurant name typo");
-        scrubData.restaurantName = "McDonalds";
-    } else if (restaurantName.toLowerCase() === "wendy’s" ||
-               restaurantName.toLowerCase() === "wendy" ||
-               restaurantName.toLowerCase() === "wendy's") {
-        console.log("corrected restaurant name apostrophie");
-        scrubData.restaurantName = "Wendys";
-    } else if (restaurantName.toLowerCase() === "hardee’s" ||
-               restaurantName.toLowerCase() === "hardee" ||
-               restaurantName.toLowerCase() === "hardee's") {
-        console.log("corrected restaurant name apostrophie");
-        scrubData.restaurantName = "Hardees";
-    } else if (restaurantName.toLowerCase() === "chik-fil-a" ||
-               restaurantName.toLowerCase() === "chick fil a" ||
-               restaurantName.toLowerCase() === "chic fil a" ||
-               restaurantName.toLowerCase() === "chik fil a" ||
-               restaurantName.toLowerCase() === "chikfila") {
-        console.log("corrected restaurant name typo");
-        scrubData.restaurantName = "Chick-fil-A";
-    } else if (restaurantName.toLowerCase() === "arby's" ||
-               restaurantName.toLowerCase() === "arby" ||
-               restaurantName.toLowerCase() === "arby’s") {
-        console.log("corrected restaurant name apostrophie");
-        scrubData.restaurantName = "Arbys";
-    } else if (restaurantName.toLowerCase() === "papa john's" ||
+    if (restaurantName.toLowerCase() === "papa john's" ||
 	       restaurantName.toLowerCase() === "pappa johns" ||
 	       restaurantName.toLowerCase() === "pappa john's" || 
 	       restaurantName.toLowerCase() === "papa john’s") {
 	console.log("removed apostrophie or fixed spelling to help matching");
 	scrubData.restaurantName = "papa johns";
+    } else if (restaurantName.toLowerCase() === "domino's" ||
+	       restaurantName.toLowerCase() === "domino’s") {
+	console.log("removed apostrophie to help matching");
+	scrubData.restaurantName = "dominos";
     }
 
     return {
@@ -178,6 +128,7 @@ function getPizzaTypes(intentRequest, callback) {
     // first scrub the restaurant name
     var updatedName = scrubRestaurantName(intentRequest.currentIntent.slots.PizzaRestaurant).scrubData.restaurantName;
     if (updatedName) {
+	console.log("Updated Restaurant Name to : " + updatedName);
         intentRequest.currentIntent.slots.PizzaRestaurant = updatedName;
     }
 
@@ -186,7 +137,8 @@ function getPizzaTypes(intentRequest, callback) {
     var botResponse = "Here are the pizza types at " + restaurantName + " : ";
 
     // check if the restaurant is one that the bot has data for
-    if (restaurantName === "papa johns") {
+    if (restaurantName === "papa johns" ||
+	restaurantName === "dominos") {
     	// sort through the pizza choices and pull out those relating to the restaraunt that has already been validated
         for (var i = 0; i < pizzas.length; i++) {
             if (restaurantName.toLowerCase() === pizzas[i].restaurant.toLowerCase()) {
@@ -211,20 +163,54 @@ function getPizzaTypes(intentRequest, callback) {
 function calculatePizzaCalories(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
-    const restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
+    // first scrub the restaurant name
+    var updatedName = scrubRestaurantName(intentRequest.currentIntent.slots.PizzaRestaurant).scrubData.restaurantName;
+    if (updatedName) {
+        console.log("Updated Restaurant Name to : " + updatedName);
+        intentRequest.currentIntent.slots.PizzaRestaurant = updatedName;
+    }
 
-    var botResponse = "Working on finding calories at " + restaurantName + ".";
+    var botResponse = "Working on finding calories at " + intentRequest.currentIntent.slots.PizzaRestaurant + ".";
 
+    // check if size was provided - if not, default to medium size pizza
+    if (!intentRequest.currentIntent.slots.PizzaSize) {
+	console.log("Default Pizza Size to Medium");
+	intentRequest.currentIntent.slots.PizzaSize = "Medium";
+    } 
+
+    // validate the pizza type and get the calorie data for use in the response
+    var pizzaTypeData = [];
+    for (var i = 0; i < pizzas.length; i++) {
+        if (intentRequest.currentIntent.slots.PizzaRestaurant.toLowerCase() === pizzas[i].restaurant.toLowerCase()) {
+	    for (var j = 0; j < pizzas[i].pizzaSelections.length; j++) {
+		if (intentRequest.currentIntent.slots.PizzaType.toLowerCase() === pizzas[i].pizzaSelections[j].name.toLowerCase()) {
+		    console.log("Found a match for " + intentRequest.currentIntent.slots.PizzaType);
+		    pizzaTypeData = pizzas[i].pizzaSelections[j].sizes;
+		}
+	    }
+	}
+    }
+
+    console.log(JSON.stringify(pizzaTypeData));
+    // check if the pizza type was valid by looking for data in the array
+    if (pizzaTypeData.length === 0) {
+	console.log("Invalid Pizza Type");
+	botResponse = "Sorry, I can't find " + intentRequest.currentIntent.slots.PizzaType + " as a valid type of pizza at " +
+	    intentRequest.currentIntent.slots.PizzaRestaurant + ". Say 'what types of pizza are there' " +
+	    "for valid types.";
     // check if the quantity of slices has been provided, or if it is for a full pizza
-    if (intentRequest.currentIntent.slots.Quantity) {
-	const quantityPieces = intentRequest.currentIntent.slots.Quantity;
-	botResponse = botResponse + "Checking for " + quantityPieces + " pieces.";
     } else {
-	botResponse = botResponse + "Checking for an entire pizza.";
+	if (intentRequest.currentIntent.slots.Quantity) {
+	    const quantityPieces = intentRequest.currentIntent.slots.Quantity;
+	    botResponse = botResponse + "Checking for " + quantityPieces + " pieces.";
+    	} else {
+	    // request is for the calories in an entire pizza
+	    botResponse = botResponse + "Checking for an entire pizza.";
+	}
     }
 
     // save session attributes for later reference
-    sessionAttributes.restaurantName = restaurantName;
+    sessionAttributes.restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
     sessionAttributes.pizzaRestaurant = true;
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
