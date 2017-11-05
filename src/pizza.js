@@ -192,6 +192,11 @@ function calculatePizzaCalories(intentRequest, callback) {
     }
 
     console.log(JSON.stringify(pizzaTypeData));
+    // variables for pizza based on lookup
+    var pizzaDiameter = 0;
+    var slicesPerPizza = 0;
+    var caloriesPerSlice = 0;
+
     // check if the pizza type was valid by looking for data in the array
     if (pizzaTypeData.length === 0) {
 	console.log("Invalid Pizza Type");
@@ -200,12 +205,32 @@ function calculatePizzaCalories(intentRequest, callback) {
 	    "for valid types.";
     // check if the quantity of slices has been provided, or if it is for a full pizza
     } else {
-	if (intentRequest.currentIntent.slots.Quantity) {
-	    const quantityPieces = intentRequest.currentIntent.slots.Quantity;
-	    botResponse = botResponse + "Checking for " + quantityPieces + " pieces.";
-    	} else {
-	    // request is for the calories in an entire pizza
-	    botResponse = botResponse + "Checking for an entire pizza.";
+	console.log("Searching for match of pizza size: " + intentRequest.currentIntent.slots.PizzaSize);
+	for (var k = 0; k < pizzaTypeData.length; k++) {
+	    if (pizzaTypeData[k].size.toLowerCase() === intentRequest.currentIntent.slots.PizzaSize.toLowerCase()) {
+		console.log(JSON.stringify(pizzaTypeData[k]));
+		pizzaDiameter = pizzaTypeData[k].diameter;
+		slicesPerPizza = pizzaTypeData[k].slicesPerPizza;
+		caloriesPerSlice = pizzaTypeData[k].sliceCalories;
+	    }
+	}
+	if (caloriesPerSlice > 0) {
+	    if (intentRequest.currentIntent.slots.Quantity) {
+	    	botResponse = "At " + intentRequest.currentIntent.slots.PizzaRestaurant + ", " +
+		    intentRequest.currentIntent.slots.Quantity + " slices of a " + 
+		    intentRequest.currentIntent.slots.PizzaSize + " " + intentRequest.currentIntent.slots.PizzaType +
+		    " pizza is " + (intentRequest.currentIntent.slots.Quantity * caloriesPerSlice) + " calories.";
+    	    } else {
+	    	// request is for the calories in an entire pizza
+	    	botResponse = "At " + intentRequest.currentIntent.slots.PizzaRestaurant + 
+		    ", a " + intentRequest.currentIntent.slots.PizzaSize + " (" + pizzaDiameter + " inch) " +
+		    intentRequest.currentIntent.slots.PizzaType + " pizza " +
+		    " is " + (slicesPerPizza * caloriesPerSlice) + " calories. The pizza comes cut in " +
+		    slicesPerPizza + " slices.";
+	    } 
+	} else {
+	    botResponse = intentRequest.currentIntent.slots.PizzaSize + " is not a valid size of pizza " +
+		"found at " + intentRequest.currentIntent.slots.PizzaRestaurant + ".";
 	}
     }
 
