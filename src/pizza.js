@@ -172,8 +172,8 @@ function getPizzaTypes(intentRequest, callback) {
     var botResponse = "Here are the pizza types at " + restaurantName + " : ";
 
     // check if the restaurant is one that the bot has data for
-    if (restaurantName === "papa johns" ||
-	restaurantName === "dominos") {
+    if (restaurantName.toLowerCase() === "papa johns" ||
+	restaurantName.toLowerCase() === "dominos") {
     	// sort through the pizza choices and pull out those relating to the restaraunt that has already been validated
         for (var i = 0; i < pizzas.length; i++) {
             if (restaurantName.toLowerCase() === pizzas[i].restaurant.toLowerCase()) {
