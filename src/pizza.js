@@ -71,6 +71,41 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
     };
 }
 
+// this funciton is called during intial field validation
+function validateFields(intentRequest, callback) {
+    var sessionAttributes = {};
+
+    console.log("First check if restaurant needs to be defaulted.");
+    // check if no restaurant name has been provided yet, but one is in the session - if so - fill in for user
+    if (intentRequest.sessionAttributes) {
+	console.log("Prior session exists.");
+    	if (intentRequest.sessionAttributes.restaurantName && !intentRequest.currentIntent.slots.PizzaRestaurant) {
+	    intentRequest.currentIntent.slots.PizzaRestaurant = intentRequest.sessionAttributes.restaurantName;
+	}
+    }
+
+    console.log("Then check if the restaurant name has been provided.");
+    // validate restaurant name if provided in the slot
+    if (intentRequest.currentIntent.slots.PizzaRestaurant) {
+	console.log("Restaurant name provided, now scrub and validate.");
+    	// first scrub the restaurant name
+    	var updatedName = scrubRestaurantName(intentRequest.currentIntent.slots.PizzaRestaurant).scrubData.restaurantName;
+    	if (updatedName) {
+            console.log("Updated Restaurant Name to : " + updatedName);
+            intentRequest.currentIntent.slots.PizzaRestaurant = updatedName;
+    	}
+	// validate restaurant name
+	const validationResult = validateRestaurant(intentRequest.currentIntent.slots.PizzaRestaurant)
+	if (validationResult.isValid) {
+	    intentRequest.currentIntent.slots.PizzaRestaurant = validationResult.restaurantName;
+	    sessionAttributes.restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
+	}
+    }
+
+    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+
+}
+
 // this function will validate that the restaurant provided by the user matches what data we have
 function validateRestaurant(restaurantName) {
     var validRestaurant = false;
@@ -258,7 +293,10 @@ function dispatch(intentRequest, callback) {
     console.log("Data Provided: " + JSON.stringify(intentRequest));
 
     // Dispatch to the skill's intent handlers
-    if (intentName === 'GetPizzaCalories') {
+    if (intentRequest.invocationSource === 'DialogCodeHook') {
+	console.log("validation mode");
+	return validateFields(intentRequest, callback);
+    } else if (intentName === 'GetPizzaCalories') {
 	console.log("checking on pizza places.");
 	return calculatePizzaCalories(intentRequest, callback);
     } else if (intentName === 'WhatPizzaTypes') {
