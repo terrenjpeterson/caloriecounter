@@ -555,7 +555,11 @@
 	    {"foodName":"Caesar Chicken Salad", "foodType":"Salad", "calories":720},
 	    {"foodName":"Caesar Side Salad", "calories":230},
 	    {"foodName":"Garden Side Salad", "foodType":"Salad", "calories":260},
-	    {"foodName":"Frosty", "calories":393}
+	    {"foodName":"Frosty", "calories":393},
+	    {"foodName":"Chocolate Chip Cookie", "calories":310},
+	    {"foodName":"Chocolate Chunk Cookie", "calories":310},
+	    {"foodName":"Sugar Cookie", "calories":330},
+	    {"foodName":"Double Chocolate Chip Cookie", "calories":290}
         ]
     },
     {
@@ -777,12 +781,12 @@
             {"foodName":"Made from Scratch Biscuit", "calories":430},
             {"foodName":"Grass-Fed All-Natural Burger", "calories":780},
 	    {"foodName":"Thick Burger", "calories":780},
-	    {"foodName":"Thickburger", "calories":780},
+	    {"foodName":"Thickburger", "foodType":"Burger", "calories":780},
 	    {"foodName":"Original Thickburger", "calories":780},
             {"foodName":"Cheeseburger", "calories":640},
             {"foodName":"Mushroom & Swiss Thickburger", "calories":680},
-            {"foodName":"Bacon Cheese Thickburger", "calories":850},
-            {"foodName":"Frisco Thickburger", "calories":840},
+            {"foodName":"Bacon Cheese Thickburger", "foodType":"Burger", "calories":850},
+            {"foodName":"Frisco Thickburger", "foodType":"Burger", "calories":840},
             {"foodName":"Double Thickburger", "calories":1130},
             {"foodName":"Monster Thickburger", "calories":1300},
             {"foodName":"Quarter Pound Thickburger", "calories":530},
@@ -798,7 +802,7 @@
             {"foodName":"Jumbo Chili Dog", "calories":390},
             {"foodName":"Double Cheeseburger", "calories":380},
             {"foodName":"Small Cheeseburger", "calories":300},
-            {"foodName":"Small Hamburger", "calories":250},
+            {"foodName":"Small Hamburger", "foodType":"Burger", "calories":250},
             {"foodName":"3 Piece Hand Breaded Chicken Tenders", "calories":260},
             {"foodName":"3 Piece Chicken Tenders", "calories":260},
             {"foodName":"5 Piece Hand Breaded Chicken Tenders", "calories":440},
