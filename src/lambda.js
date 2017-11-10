@@ -482,6 +482,93 @@ function validateNuggets(nuggets, restaurantName) {
     }
 }
 
+// this function checks requests from mexican food restaurants
+
+function validateMexicanFood(intentRequest) {
+    console.log("Running Validation for Mexican Food Types");
+    const restaurant = intentRequest.currentIntent.slots.Restaurant;
+    var foodType = intentRequest.currentIntent.slots.MexicanFoodType;
+
+    // start by checking for a restaurant. can't do any matching without it
+    if (restaurant) {
+	// first make sure that this is getting invoked for a mexican restaurant
+	if (restaurant.toLowerCase() !== 'taco bell' &&
+	    restaurant.toLowerCase() !== 'chipotle') {
+	    console.log("Restaurant doesn't have Mexican food");
+	    return buildValidationResult(false, 'Restaurant', 'Sorry No types of ' + foodType + ' at ' + restaurant + '.');
+	} else {
+	    // get the list of food items for the mexican restaurant
+	    var restaurantFoodItems = [];
+            for (var i = 0; i < foodChoices.length; i++) {
+            	//console.log("checking: " + JSON.stringify(foodChoices[i]));
+            	if (restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+                    restaurantFoodItems = foodChoices[i].foodItems;
+                    console.log("match restaurant - food items: " + JSON.stringify(restaurantFoodItems));
+	    	}
+	    }
+	    // now attempt to match the food item with what is available at the restaurant
+	    if (restaurantFoodItems.length > 0) {
+		// first check if a protein type was provided. If not, the request is too generic (i.e. taco, burrito)
+		const protein = intentRequest.currentIntent.slots.Protein;
+                var botResponse = "";
+		if (protein) {
+		    // both a food item and protein were provided - so potentially a match can be found
+		    const foodPrep = intentRequest.currentIntent.slots.Preparation;
+		    var foodRequest = "";
+		    if (foodPrep) {
+			foodRequest = foodPrep + " " + protein + " " + foodType;
+		    } else {
+			foodRequest = protein + " " + foodType;
+		    }
+		    console.log("Attempt to match: " + foodRequest);
+		    var foundFoodMatch = false;
+		    var altFood = [];
+		    for (var j = 0; j < restaurantFoodItems.length; j++) {
+			// this looks for an exact match
+			if (foodRequest.toLowerCase() === restaurantFoodItems[j].foodName.toLowerCase()) {
+			    foundFoodMatch = true;
+			}
+			// this builds an array of alternative foods with matching food type - and potentially protein
+			if (restaurantFoodItems[j].foodType) {
+			    if (foodType.toLowerCase() === restaurantFoodItems[j].foodType.toLowerCase()) {
+				if (restaurantFoodItems[j].protein) {
+				    if (protein.toLowerCase() === restaurantFoodItems[j].protein.toLowerCase()) {
+					altFood.push(restaurantFoodItems[j].foodName);
+				    }
+				} else {
+			   	    altFood.push(restaurantFoodItems[j].foodName);
+				}
+			    }
+			}
+		    }
+		    // if an exact match was found, return valid response
+		    if (foundFoodMatch) {
+                    	return { isValid: true };
+		    } else {
+			// an exact match wasn't found - but leverage alternatives that were a close match
+			botResponse = "Sorry, I couldn't find " + foodRequest + " at " + restaurant + ".";
+			if (altFood.length > 0) {
+			    botResponse = "Can you be more specific? For example, say ";
+			    for (var k = 0; k < altFood.length; k++) {
+			    	botResponse = botResponse + altFood[k] + ", ";
+			    }
+			}
+			return buildValidationResult(false, 'Protein', botResponse);
+		    }
+		} else {
+		    // no protein was provided, so provide message requesting it to be provided
+		    botResponse = "What type of a " + foodType + " are you eating?";
+		    return buildValidationResult(false, 'Protein', botResponse);
+		}
+	    } else {
+		return buildValidationResult(false, 'Restaurant', 'Sorry No types of ' + foodType + ' at ' + restaurant + '.');
+	    }
+	}
+    } else {
+	return buildValidationResult(false, 'Restaurant', 'Which restaurant are you at (i.e. Taco Bell, Chipotle)?');
+    }
+}
+
 // this function is what builds the introduction
 
 function getIntroduction(intentRequest, callback) {
@@ -554,7 +641,8 @@ function getHelp(intentRequest, callback) {
 
     var counterResponse = 'This is the Fast Food Calorie Checker chatbot. ' +
         'I am a resource to reference how many calories are in different fast foods. ' +
-        'To get started, just say How many calories, and I will ask a few additional ' +
+        'To get started, just say something like How many calories in a Big Mac, ' +
+	'or Eating one slice of Peperroni Pizza, and I will ask a few additional ' +
         'questions and calculate the amount for you. For the latest list of fast food ' +
         'restaurants I know about, just say List of restaurants.';
 
@@ -824,6 +912,23 @@ function validateUserEntry(intentRequest, callback) {
 
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                 slots, nuggetsValidationResult.violatedSlot, nuggetsValidationResult.message));
+	}
+    }
+
+    // validate Mexican Food Types
+    var mexicanFoodType = intentRequest.currentIntent.slots.MexicanFoodType;
+    if (mexicanFoodType && !invalidSlot) {
+	const mexicanFoodValidationResult = validateMexicanFood(intentRequest);
+	if (!mexicanFoodValidationResult.isValid) {
+	    console.log("Invalid combination of mexican food entries");
+            slots[`${mexicanFoodValidationResult.violatedSlot}`] = null;
+            invalidSlot = true;
+
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                slots, mexicanFoodValidationResult.violatedSlot, mexicanFoodValidationResult.message));
+
+	} else {	    
+	    console.log("Passed validation for Mexican food combinations.");
 	}
     }
 
