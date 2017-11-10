@@ -175,11 +175,13 @@ function validateFood(intentRequest) {
     console.log("validating food entered " + slots.Food);
 
     // sort through the food choices and pull out those relating to the restaraunt that has already been validated
-    for (var i = 0; i < foodChoices.length; i++) {
-        //console.log("checking: " + JSON.stringify(foodChoices[i]));
-        if (restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
-            foodItems = foodChoices[i].foodItems;
-            console.log("match restaurant - food items: " + JSON.stringify(foodItems));
+    if (restaurant) {
+        for (var i = 0; i < foodChoices.length; i++) {
+            //console.log("checking: " + JSON.stringify(foodChoices[i]));
+            if (restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+                foodItems = foodChoices[i].foodItems;
+                console.log("match restaurant - food items: " + JSON.stringify(foodItems));
+	    }
         }
     }
 
@@ -449,6 +451,37 @@ function validateDrink(slots) {
     }
 }
 
+// this function will validate chicken nugget entry
+function validateNuggets(nuggets, restaurantName) {
+    console.log("validating " + nuggets + " nuggets at " + restaurantName);
+
+    // first make sure it is a restaurant that sells nuggets
+    if (restaurantName.toLowerCase() === "mcdonalds" ||
+	restaurantName.toLowerCase() === "burger king" ||
+	restaurantName.toLowerCase() === "chick-fil-a") {
+        // food type is nuggets, so build food name and validate it
+        console.log("Valid restaurant for nuggets, now validate " + nuggets + " chicken nuggets");
+
+        // check if quantity of nuggets is correct
+        if (nuggets == 20 ||
+	    nuggets == 10 ||
+	    nuggets == 6 ||
+	    nuggets == 4) {
+            return { isValid: true };
+	    console.log("valid nuggets quantity of " + nuggets + ".");
+        } else {
+            console.log("Invalid nuggets quantity " + nuggets + ". Pass back failed validation");
+	    return buildValidationResult(false, 'Quantity', 'Sorry ' + nuggets + ' is not a valid number of nuggets.');
+	}
+    } else if (restaurantName)  {
+	console.log("Restaurant doesnt have nuggets");
+	return buildValidationResult(false, 'Restaurant', 'Sorry ' + restaurantName + ' does not sell nuggets.');
+    } else {
+	console.log("No restaurant name provided to find nuggets at.");
+        return buildValidationResult(false, 'Restaurant', 'Please provide a restaurant name.');
+    }
+}
+
 // this function is what builds the introduction
 
 function getIntroduction(intentRequest, callback) {
@@ -457,7 +490,7 @@ function getIntroduction(intentRequest, callback) {
 
     var counterResponse = 'Hello. I am a chatbot that can assist you in calculating ' +
         'calories for different fast food restaurants. To get started, please say ' +
-        'something like How many calories, and I will do all the work!';
+        'something like How many calories in a Big Mac, and I will do all the work!';
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
@@ -638,81 +671,71 @@ function calculateCalories(intentRequest, callback) {
     const restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
 
-    console.log("processing user response");
-
-    // check to see if in validation mode or final confirmation
-    if (intentRequest.invocationSource === 'DialogCodeHook') {
-        console.log("Validation in progress.");
-
-        validateUserEntry(intentRequest, callback);
+    // this is the processing for the final confirmation. calculate calories and format message
+    console.log("confirm final response - now calculating calories");
         
-    } else {
-        // this is the processing for the final confirmation. calculate calories and format message
-        console.log("confirm final response - now calculating calories");
-        
-        const foodValidationResult = validateFood(intentRequest);
-        const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
+    const foodValidationResult = validateFood(intentRequest);
+    const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
 
-        var totalCalories = foodValidationResult.calories + drinkValidationResult.calories;
+    var totalCalories = foodValidationResult.calories + drinkValidationResult.calories;
 
-        // this attribute is what the chatbot will respond back with
+    // this attribute is what the chatbot will respond back with
 	
-        var counterResponse = "At " + restaurantName + " eating a " + foodName;
+    var counterResponse = "At " + restaurantName + " eating a " + foodName;
 
-	// process details related to the extra food item
-    	var extraName = intentRequest.currentIntent.slots.Extra;
+    // process details related to the extra food item
+    var extraName = intentRequest.currentIntent.slots.Extra;
 
-	if (extraName.toLowerCase() === "nothing" ||
-	    extraName.toLowerCase() === "none" ||
-	    extraName.toLowerCase() === "no" ) {
-	    console.log("Skipping extra as nothing selected");
-	} else if (extraName) {
-	    const extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
-	    if (extraValidationResult.isValid) {
-		totalCalories += extraValidationResult.calories;
-	        counterResponse = counterResponse + " and a " + extraName;
-                sessionAttributes.extraName = extraName;
-                sessionAttributes.extraCalories = extraValidationResult.calories;
-	    }
+    if (extraName.toLowerCase() === "nothing" ||
+	extraName.toLowerCase() === "none" ||
+	extraName.toLowerCase() === "no" ) {
+	console.log("Skipping extra as nothing selected");
+    } else if (extraName) {
+	const extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
+	if (extraValidationResult.isValid) {
+	    totalCalories += extraValidationResult.calories;
+	    counterResponse = counterResponse + " and a " + extraName;
+            sessionAttributes.extraName = extraName;
+            sessionAttributes.extraCalories = extraValidationResult.calories;
 	}
-
-	// process details related to the drink
-    	var drinkName = intentRequest.currentIntent.slots.Drink;
-
-            sessionAttributes.drinkName = intentRequest.currentIntent.slots.Drink; 
-            sessionAttributes.drinkCalories = drinkValidationResult.calories;
-
-	// alter response based on if a drink was provided
-	if (drinkName.toLowerCase() === "nothing" ||
-	    drinkName.toLowerCase() === "none" ||
-	    drinkName.toLowerCase() === "no" ) {
-	    counterResponse = counterResponse + ". ";
-	} else {
-	    // find the drink size to add specificity to the response
-	    const drinkSize = getDrinkSize(drinkName).drinkSize;
-	    if (drinkSize > 0) {
-		counterResponse = counterResponse + " and drinking a " + drinkSize + " oz. " + drinkName + ". ";
-	    } else {
-		counterResponse = counterResponse + " and drinking a " + drinkName + ". ";
-	    }
-	}
-	    counterResponse = counterResponse + "That is " + totalCalories + " calories. ";
-
-	if (totalCalories > foodValidationResult.calories) {
-	    counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout.";
-	}
-
-	    // save session attributes for later reference
-            sessionAttributes.restaurantName = restaurantName;
-            sessionAttributes.foodName       = foodName;
-            sessionAttributes.foodCalories   = foodValidationResult.calories;
-            sessionAttributes.totalCalories  = totalCalories;
-
-	console.log("saving session data: " + JSON.stringify(sessionAttributes));
-
-        callback(close(sessionAttributes, 'Fulfilled',
-            { contentType: 'PlainText', content: counterResponse }));
     }
+
+    // process details related to the drink
+    var drinkName = intentRequest.currentIntent.slots.Drink;
+
+    sessionAttributes.drinkName = intentRequest.currentIntent.slots.Drink; 
+    sessionAttributes.drinkCalories = drinkValidationResult.calories;
+
+    // alter response based on if a drink was provided
+    if (drinkName.toLowerCase() === "nothing" ||
+	drinkName.toLowerCase() === "none" ||
+	drinkName.toLowerCase() === "no" ) {
+	counterResponse = counterResponse + ". ";
+    } else {
+	// find the drink size to add specificity to the response
+	const drinkSize = getDrinkSize(drinkName).drinkSize;
+	if (drinkSize > 0) {
+	    counterResponse = counterResponse + " and drinking a " + drinkSize + " oz. " + drinkName + ". ";
+	} else {
+	    counterResponse = counterResponse + " and drinking a " + drinkName + ". ";
+	}
+    }
+
+    counterResponse = counterResponse + "That is " + totalCalories + " calories. ";
+
+    if (totalCalories > foodValidationResult.calories) {
+	counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout.";
+    }
+
+    // save session attributes for later reference
+    sessionAttributes.restaurantName = restaurantName;
+    sessionAttributes.foodName       = foodName;
+    sessionAttributes.foodCalories   = foodValidationResult.calories;
+    sessionAttributes.totalCalories  = totalCalories;
+
+    console.log("saving session data: " + JSON.stringify(sessionAttributes));
+
+    callback(close(sessionAttributes, 'Fulfilled',{ contentType: 'PlainText', content: counterResponse }));
 }
 
 // this function is what validates what information has been provided
@@ -720,13 +743,15 @@ function calculateCalories(intentRequest, callback) {
 function validateUserEntry(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
     const slots = intentRequest.currentIntent.slots;
+    var invalidSlot = false;
+
+    console.log("validating user entry");
 
     const restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
     const drinkName      = intentRequest.currentIntent.slots.Drink;
 
     const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
-    console.log("Validation Result: " + JSON.stringify(validationResult));
 
     // if a restaurant name has been provided, then validate it. If not, its too early and return.
     if (restaurantName) {
@@ -734,74 +759,80 @@ function validateUserEntry(intentRequest, callback) {
         if (!validationResult.isValid) {
             console.log("Invalid restaurant name. Pass back failed validation");
             slots[`${validationResult.violatedSlot}`] = null;
+	    invalidSlot = true;
             
             console.log("Validation Result: " + JSON.stringify(validationResult));
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                 slots, validationResult.violatedSlot, validationResult.message));
-        } else {
-            // Restaurant name is valid, now check if a food name was provided.
-            if (foodName) {
-                // food name exists, so validate it
-                console.log("Validate Food Name: " + foodName);                
-                const foodValidationResult = validateFood(intentRequest);
-
-                // check if food was valid
-                if (!foodValidationResult.isValid) {
-		    // food name provided not valid
-                    console.log("Invalid food name " + foodName + ". Pass back failed validation");
-                    slots[`${foodValidationResult.violatedSlot}`] = null;
-                        
-                    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                        slots, foodValidationResult.violatedSlot, foodValidationResult.message));
-                } else {
-		    // food name was valid - now check extra name
-                    console.log("Valid food name " + foodName + " was provided.");
-    		    var extraName = intentRequest.currentIntent.slots.Extra;
-		    if (extraName && extraName !== "") {
-			console.log("Check Extra Name: " + intentRequest.currentIntent.slots.Extra);
-			var extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
-			if (!extraValidationResult.isValid) {
-			    // extra name provided failed validation
-			    console.log("Invalid extra name " + intentRequest.currentIntent.slots.Extra);
-			    slots[`${extraValidationResult.violatedSlot}`] = null;
-                    	    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                        	slots, extraValidationResult.violatedSlot, extraValidationResult.message));
-			} else {
-			    // extra name passed validation - now check the drink
-                	    if (drinkName) {
-                            	const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
-                            	if (!drinkValidationResult.isValid) {
-                                    console.log("Invalid drink name " + drinkName + ". Pass back failed validation.");
-                                    slots[`${drinkValidationResult.violatedSlot}`] = null;
-                                
-                                    console.log("Validation Result: " + JSON.stringify(drinkValidationResult));
-                                    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                                    	slots, drinkValidationResult.violatedSlot, drinkValidationResult.message));
-                                } else {
-                                    console.log("Validated drink choice.");
-                                    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-                            	}
-                    	    } else {
-                                console.log("No drink name provided yet.");
-                                callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-                    	    }
-			}
-		    } else {
-			// No extra response provided yet
-			console.log("No extra name provided yet.");
-			callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-		    }
-                }
-            } else {
-                console.log("No food name entered yet, but restaurant name is valid.");
-                callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-            }
         }
-    } else {
-        // nothing has been entered - so pass through a success message
-        console.log("Nothing entered yet, so continue without alerts.");
+    }
+
+    if (foodName && !invalidSlot) {
+        // food name exists, so validate it
+        console.log("Validate Food Name: " + foodName);                
+        const foodValidationResult = validateFood(intentRequest);
+
+        // check if food was valid
+        if (!foodValidationResult.isValid) {
+	    // food name provided not valid
+            console.log("Invalid food name " + foodName + ". Pass back failed validation");
+            slots[`${foodValidationResult.violatedSlot}`] = null;
+	    invalidSlot = true;
+                        
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                slots, foodValidationResult.violatedSlot, foodValidationResult.message));
+        }
+    }
+
+    // check if extra name was provided then validate
+    var extraName = intentRequest.currentIntent.slots.Extra;
+    if (extraName && extraName !== "" && !invalidSlot) {
+	console.log("Check Extra Name: " + intentRequest.currentIntent.slots.Extra);
+	var extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
+	if (!extraValidationResult.isValid) {
+	    // extra name provided failed validation
+	    invalidSlot = true;
+	    console.log("Invalid extra name " + intentRequest.currentIntent.slots.Extra);
+	    slots[`${extraValidationResult.violatedSlot}`] = null;
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+            	slots, extraValidationResult.violatedSlot, extraValidationResult.message));
+	}
+    }
+
+    // validate drink name if provided
+    if (drinkName && !invalidSlot) {
+	const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
+        if (!drinkValidationResult.isValid) {
+            console.log("Invalid drink name " + drinkName + ". Pass back failed validation.");
+            slots[`${drinkValidationResult.violatedSlot}`] = null;
+	    invalidSlot = true;
+
+            console.log("Validation Result: " + JSON.stringify(drinkValidationResult));
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+            	slots, drinkValidationResult.violatedSlot, drinkValidationResult.message));
+        }
+    } 
+
+    // validate nuggets if provided
+    var nuggets = intentRequest.currentIntent.slots.Quantity;
+    if (nuggets && !invalidSlot) {
+	const nuggetsValidationResult = validateNuggets(nuggets, intentRequest.currentIntent.slots.Restaurant);
+	if (!nuggetsValidationResult.isValid) {
+            console.log("Invalid nuggets quantity " + nuggets + ". Pass back failed validation");
+            slots[`${nuggetsValidationResult.violatedSlot}`] = null;
+            invalidSlot = true;
+
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                slots, nuggetsValidationResult.violatedSlot, nuggetsValidationResult.message));
+	}
+    }
+
+    // all slots provided have been validated return positive response
+    if (!invalidSlot) {
+	console.log("all validation passed.");
         callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
     }
+    
 }
 
 // --------------- Intents -----------------------
@@ -818,9 +849,18 @@ function dispatch(intentRequest, callback) {
     console.log("Data Provided: " + JSON.stringify(intentRequest));
 
     // Dispatch to the skill's intent handlers
-    if (intentName === 'GetCalories') {
+    if (intentRequest.invocationSource === 'DialogCodeHook') {
+        console.log("Validation in progress.");
+        validateUserEntry(intentRequest, callback);
+    } else if (intentName === 'GetCalories') {
         console.log("now getting ready to count calories.");
         return calculateCalories(intentRequest, callback);
+    } else if (intentName === 'GetNuggetsCalories') {
+        console.log("getting nuggets calories.");
+        return calculateCalories(intentRequest, callback);
+    } else if (intentName === 'GetMexicanFoodCalories') {
+        console.log("get mexican food calories.");
+        return getIntroduction(intentRequest, callback);
     } else if (intentName === 'Introduction') {
         console.log("friendly introduction.");
         return getIntroduction(intentRequest, callback);
