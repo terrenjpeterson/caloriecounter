@@ -3,8 +3,11 @@ Calorie Counter Chatbot
 
 This is a Lex based chatbot that will calculate calories made by trips to different fast food restaurants.
 
-Source code for caloriecountbot.com is located in the /website folder.
+There are two different lambda functions called by Lex - lambda.js and pizza.js
+- These files are located in the /src folder.
+- Also within this folder is a data folder which contains the lookup values for the different food and drinks.
+- A build script is also in this folder. It stages the zip files to a S3 bucket, deploys the new lambda functions, and runs a test.
 
-Configurations for Lex service are the botDefnFile.json file.
+Source code for caloriecountbot.com website is located in the /website folder.
 
-Lambda function that is executed by the Lex service is the lambda.js file.
+Configurations for Lex service are the botDefnFile.json file. (this is outdated and needs to be extracted again)
