@@ -754,76 +754,113 @@ function getFoodOptions(intentRequest, callback) {
 
 function calculateCalories(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
-    const slots = intentRequest.currentIntent.slots;
 
     const restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
+    const drinkName	 = intentRequest.currentIntent.slots.Drink;
+    const extraName 	 = intentRequest.currentIntent.slots.Extra;
+
+    var totalCalories 	 = 0;
+    var counterResponse  = "";
 
     // this is the processing for the final confirmation. calculate calories and format message
     console.log("confirm final response - now calculating calories");
-        
-    const foodValidationResult = validateFood(intentRequest);
-    const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
 
-    var totalCalories = foodValidationResult.calories + drinkValidationResult.calories;
-
-    // this attribute is what the chatbot will respond back with
-	
-    var counterResponse = "At " + restaurantName + " eating a " + foodName;
+    // if the food name was provided, calculate the calories related to it and save
+    if (foodName) {
+	var foodCalories = getFoodCalories(foodName, restaurantName).foodCalories;
+	totalCalories += foodCalories;
+    	sessionAttributes.foodName     = foodName;
+	sessionAttributes.foodCalories = foodCalories;
+	counterResponse = "At " + restaurantName + " eating a " + foodName;
+	console.log("returned food calories: " + JSON.stringify(foodCalories));
+    }
 
     // process details related to the extra food item
-    var extraName = intentRequest.currentIntent.slots.Extra;
-
     if (extraName.toLowerCase() === "nothing" ||
-	extraName.toLowerCase() === "none" ||
-	extraName.toLowerCase() === "no" ) {
-	console.log("Skipping extra as nothing selected");
+        extraName.toLowerCase() === "none" ||
+        extraName.toLowerCase() === "no" ) {
+        console.log("Skipping extra as nothing selected");
     } else if (extraName) {
-	const extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
-	if (extraValidationResult.isValid) {
-	    totalCalories += extraValidationResult.calories;
-	    counterResponse = counterResponse + " and a " + extraName;
-            sessionAttributes.extraName = extraName;
-            sessionAttributes.extraCalories = extraValidationResult.calories;
-	}
+        var extraCalories = getFoodCalories(extraName, restaurantName).foodCalories;
+        totalCalories += extraCalories;
+        counterResponse = counterResponse + " and a " + extraName;
+        sessionAttributes.extraName     = extraName;
+        sessionAttributes.extraCalories = extraCalories;
     }
 
     // process details related to the drink
-    var drinkName = intentRequest.currentIntent.slots.Drink;
-
-    sessionAttributes.drinkName = intentRequest.currentIntent.slots.Drink; 
-    sessionAttributes.drinkCalories = drinkValidationResult.calories;
-
-    // alter response based on if a drink was provided
     if (drinkName.toLowerCase() === "nothing" ||
-	drinkName.toLowerCase() === "none" ||
-	drinkName.toLowerCase() === "no" ) {
-	counterResponse = counterResponse + ". ";
+        drinkName.toLowerCase() === "none" ||
+        drinkName.toLowerCase() === "no" ) {
+        counterResponse = counterResponse + ". ";
     } else {
-	// find the drink size to add specificity to the response
-	const drinkSize = getDrinkSize(drinkName).drinkSize;
-	if (drinkSize > 0) {
-	    counterResponse = counterResponse + " and drinking a " + drinkSize + " oz. " + drinkName + ". ";
-	} else {
-	    counterResponse = counterResponse + " and drinking a " + drinkName + ". ";
-	}
-    }
-
-    counterResponse = counterResponse + "That is " + totalCalories + " calories. ";
-
-    if (totalCalories > foodValidationResult.calories) {
-	counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout.";
+	// get the number of calories in the drink and add to the total
+	var drinkCalories = getDrinkCalories(drinkName).drinkCalories;
+	totalCalories += drinkCalories;
+    	sessionAttributes.drinkName     = drinkName;
+    	sessionAttributes.drinkCalories = drinkCalories;
+        // find the drink size to add specificity to the response
+        const drinkSize = getDrinkSize(drinkName).drinkSize;
+        if (drinkSize > 0) {
+            counterResponse = counterResponse + " and drinking a " + drinkSize + " oz. " + drinkName + ". ";
+        } else {
+            counterResponse = counterResponse + " and drinking a " + drinkName + ". ";
+        }
     }
 
     // save session attributes for later reference
     sessionAttributes.restaurantName = restaurantName;
-    sessionAttributes.foodName       = foodName;
-    sessionAttributes.foodCalories   = foodValidationResult.calories;
+
+    counterResponse = counterResponse + "That is " + totalCalories + " calories. ";
     sessionAttributes.totalCalories  = totalCalories;
+
+    if (totalCalories > sessionAttributes.foodCalories) {
+	counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout.";
+    }
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
 
     callback(close(sessionAttributes, 'Fulfilled',{ contentType: 'PlainText', content: counterResponse }));
+}
+
+// this function looks up food calories based on a food name
+function getFoodCalories(foodName, restaurantName) {
+    var restaurantFoodItems = [];
+    var foodCalories = 0;
+
+    for (var i = 0; i < foodChoices.length; i++) {
+        if (restaurantName.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+            restaurantFoodItems = foodChoices[i].foodItems;
+        }
+    } 
+
+    for (var j = 0; j < restaurantFoodItems.length; j++) {
+	if (foodName.toLowerCase() === restaurantFoodItems[j].foodName.toLowerCase()) {
+	    console.log("matched recommendation for " + restaurantFoodItems[j].foodName);
+	    foodCalories = restaurantFoodItems[j].calories;
+	}
+    }
+
+    return {
+	foodCalories
+    };
+}
+
+// this function looks up drink calories based on a drink name
+function getDrinkCalories(drinkName) {
+    var drinkItems = [];
+    var drinkCalories = 0;
+
+    for (var j = 0; j < drinks.length; j++) {
+        if (drinkName.toLowerCase() === drinks[j].drinkName.toLowerCase()) {
+            drinkCalories = drinks[j].calories;
+        }
+    }
+
+    return {
+        drinkCalories
+    };
 }
 
 // this function is what validates what information has been provided
