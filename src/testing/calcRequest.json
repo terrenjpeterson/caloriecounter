@@ -1,0 +1,33 @@
+{
+    "messageVersion": "1.0",
+    "invocationSource": "FulfillmentCodeHook",
+    "userId": "r1ryqlfk900vpii4wrtf2gswk9hy873r",
+    "sessionAttributes": {},
+    "requestAttributes": null,
+    "bot": {
+        "name": "FastFoodChecker",
+        "alias": "$LATEST",
+        "version": "$LATEST"
+    },
+    "outputDialogMode": "Text",
+    "currentIntent": {
+        "name": "GetCalories",
+        "slots": {
+            "Restaurant": "McDonalds",
+            "Extra": "Fries",
+            "Drink": "Coke",
+            "Food": "Big Mac"
+        },
+        "slotDetails": {
+            "Restaurant": null,
+            "Extra": null,
+            "Drink": {
+                "resolutions": [],
+                "originalValue": "coke"
+            },
+            "Food": null
+        },
+        "confirmationStatus": "None"
+    },
+    "inputTranscript": "coke"
+}
