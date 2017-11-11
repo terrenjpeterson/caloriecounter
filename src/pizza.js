@@ -7,7 +7,7 @@
 
 // variables that contain lookup information including restaurant name and calories by food
 
-var restaurants = ["Papa Johns", "Dominos"];
+var restaurants = ["Papa Johns", "Dominos", "Little Caesars"];
 
 // these are the valid choices based on website scraping
 var pizzas = require("data/pizzas.json");
@@ -149,6 +149,13 @@ function scrubRestaurantName(restaurantName) {
 	       restaurantName.toLowerCase() === "domino’s") {
 	console.log("removed apostrophie to help matching");
 	scrubData.restaurantName = "dominos";
+    } else if (restaurantName.toLowerCase() === "little caesar" ||
+	       restaurantName.toLowerCase() === "little ceasers" ||
+	       restaurantName.toLowerCase() === "little caesers" ||
+               restaurantName.toLowerCase() === "little caesar’s" ||
+	       restaurantName.toLowerCase() === "little caesar's") {
+        console.log("removed apostrophie to help matching");
+        scrubData.restaurantName = "little caesars";
     }
 
     return {
@@ -173,6 +180,7 @@ function getPizzaTypes(intentRequest, callback) {
 
     // check if the restaurant is one that the bot has data for
     if (restaurantName.toLowerCase() === "papa johns" ||
+	restaurantName.toLowerCase() === "little caesars" ||
 	restaurantName.toLowerCase() === "dominos") {
     	// sort through the pizza choices and pull out those relating to the restaraunt that has already been validated
         for (var i = 0; i < pizzas.length; i++) {

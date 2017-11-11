@@ -515,17 +515,22 @@ function validateMexicanFood(intentRequest) {
 		    // both a food item and protein were provided - so potentially a match can be found
 		    const foodPrep = intentRequest.currentIntent.slots.Preparation;
 		    var foodRequest = "";
+		    // altRequest is a different ordering of the same characteristics
+		    var altRequest = "";
 		    if (foodPrep) {
 			foodRequest = foodPrep + " " + protein + " " + foodType;
+			altRequest  = protein + " " + foodPrep + " " + foodType;
 		    } else {
 			foodRequest = protein + " " + foodType;
+			altRequest  = "not applicable";
 		    }
 		    console.log("Attempt to match: " + foodRequest);
 		    var foundFoodMatch = false;
 		    var altFood = [];
 		    for (var j = 0; j < restaurantFoodItems.length; j++) {
 			// this looks for an exact match
-			if (foodRequest.toLowerCase() === restaurantFoodItems[j].foodName.toLowerCase()) {
+			if (foodRequest.toLowerCase() === restaurantFoodItems[j].foodName.toLowerCase() || 
+                             altRequest.toLowerCase() === restaurantFoodItems[j].foodName.toLowerCase()) {
 			    foundFoodMatch = true;
 			}
 			// this builds an array of alternative foods with matching food type - and potentially protein
@@ -683,6 +688,8 @@ function getFoodOptions(intentRequest, callback) {
 	foodType = "Burrito"
     } else if (foodType.toLowerCase === "Salads") {
 	foodType = "Salad"
+    } else if (foodType.toLowerCase === "Chalupas") {
+	foodType = "Chalupa"
     }
 
     if (restaurant) {
@@ -779,7 +786,7 @@ function validateUserEntry(intentRequest, callback) {
 
     // check if extra name was provided then validate
     var extraName = intentRequest.currentIntent.slots.Extra;
-    if (extraName && extraName !== "" && !invalidSlot) {
+    if (extraName && extraName !== "" && !invalidSlot && restaurantName) {
 	console.log("Check Extra Name: " + intentRequest.currentIntent.slots.Extra);
 	var extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
 	if (!extraValidationResult.isValid) {
@@ -808,7 +815,7 @@ function validateUserEntry(intentRequest, callback) {
 
     // validate nuggets if provided
     var nuggets = intentRequest.currentIntent.slots.Quantity;
-    if (nuggets && !invalidSlot) {
+    if (nuggets && !invalidSlot && restaurantName) {
 	const nuggetsValidationResult = validateNuggets(nuggets, intentRequest.currentIntent.slots.Restaurant);
 	if (!nuggetsValidationResult.isValid) {
             console.log("Invalid nuggets quantity " + nuggets + ". Pass back failed validation");

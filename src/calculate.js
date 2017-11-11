@@ -98,6 +98,8 @@ function calculateCalories(intentRequest, callback) {
     const foodName       = intentRequest.currentIntent.slots.Food;
     const drinkName	 = intentRequest.currentIntent.slots.Drink;
     const extraName 	 = intentRequest.currentIntent.slots.Extra;
+    const nuggetQty	 = intentRequest.currentIntent.slots.Quantity;
+    const mexFoodType	 = intentRequest.currentIntent.slots.MexicanFoodType;
 
     var totalCalories 	 = 0;
     var counterResponse  = "";
@@ -113,6 +115,41 @@ function calculateCalories(intentRequest, callback) {
 	sessionAttributes.foodCalories = foodCalories;
 	counterResponse = "At " + restaurantName + " eating a " + foodName;
 	console.log("returned food calories: " + JSON.stringify(foodCalories));
+    } else if (nuggetQty) {
+	const nuggetName = nuggetQty + " piece chicken nuggets";
+        var nuggetCalories = getFoodCalories(nuggetName, restaurantName).foodCalories;
+        totalCalories += nuggetCalories;
+        sessionAttributes.foodName     = nuggetName;
+        sessionAttributes.foodCalories = nuggetCalories;
+        counterResponse = "At " + restaurantName + " eating a " + nuggetName;
+        console.log("returned food calories: " + JSON.stringify(nuggetCalories));
+    } else if (mexFoodType) {
+	const protein = intentRequest.currentIntent.slots.Protein;
+	const preparation = intentRequest.currentIntent.slots.Preparation;
+	// the food name to lookup is a combination of slots assembled
+	var mexFoodName = "";
+	var altMexFoodName = "";
+	if (protein && preparation) {
+	    mexFoodName = preparation + " " + protein + " " + mexFoodType;
+	    altMexFoodName = protein + " " + preparation + " " + mexFoodType;
+	} else if (protein) {
+	    mexFoodName = protein + " " + mexFoodType;
+	} else if (preparation) {
+	    mexFoodName = preparation + " " + mexFoodType;
+	} else {
+	    mexFoodName = mexFoodType;
+	}
+        var mexFoodCalories = getFoodCalories(mexFoodName, restaurantName).foodCalories;
+	// this condition is where the combination food name is alternate form (i.e. protein first)
+	if (mexFoodCalories === 0) {
+	    mexFoodCalories = getFoodCalories(altMexFoodName, restaurantName).foodCalories;
+	    mexFoodName = altMexFoodName;
+	}
+        totalCalories += mexFoodCalories;
+        sessionAttributes.foodName     = mexFoodName;
+        sessionAttributes.foodCalories = mexFoodCalories;
+        counterResponse = "At " + restaurantName + " eating a " + mexFoodName;
+        console.log("returned food calories: " + JSON.stringify(mexFoodCalories));
     }
 
     // process details related to the extra food item
@@ -137,14 +174,15 @@ function calculateCalories(intentRequest, callback) {
 	// get the number of calories in the drink and add to the total
 	var drinkCalories = getDrinkCalories(drinkName).drinkCalories;
 	totalCalories += drinkCalories;
-    	sessionAttributes.drinkName     = drinkName;
     	sessionAttributes.drinkCalories = drinkCalories;
         // find the drink size to add specificity to the response
         const drinkSize = getDrinkSize(drinkName).drinkSize;
         if (drinkSize > 0) {
             counterResponse = counterResponse + " and drinking a " + drinkSize + " oz. " + drinkName + ". ";
+	    sessionAttributes.drinkName = drinkSize + " oz. " + drinkName;
         } else {
             counterResponse = counterResponse + " and drinking a " + drinkName + ". ";
+	    sessionAttributes.drinkName = drinkName;
         }
     }
 
@@ -224,7 +262,7 @@ function dispatch(intentRequest, callback) {
         return calculateCalories(intentRequest, callback);
     } else if (intentName === 'GetMexicanFoodCalories') {
         console.log("get mexican food calories.");
-        return getIntroduction(intentRequest, callback);
+        return calculateCalories(intentRequest, callback);
     } 
     
     throw new Error(`Intent with name ${intentName} not supported`);
