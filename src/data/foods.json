@@ -361,7 +361,15 @@
             {"foodName":"Chicken Soup", "calories":250},
             {"foodName":"Chicken Noodle Soup", "calories":250},
             {"foodName":"Large Chicken Soup", "calories":250},
-            {"foodName":"Large Chicken Noodle Soup", "calories":250}
+            {"foodName":"Large Chicken Noodle Soup", "calories":250},
+	    {"foodName":"Chicken Biscuit", "calories":450},
+	    {"foodName":"Chicken Minis", "calories":350},
+	    {"foodName":"Bacon Egg and Cheese Biscuit", "calories":420},
+	    {"foodName":"Sausage Egg and Cheese Biscuit", "calories":600},
+	    {"foodName":"Hash Browns", "calories":240},
+	    {"foodName":"Fruit Cup", "calories":45},
+	    {"foodName":"Buttered Biscuit", "calories":300},
+	    {"foodName":"Greek Yogurt Parfait", "calories":230}
         ]
     },
     {
@@ -532,6 +540,12 @@
             {"foodName":"Junior Cheeseburger", "calories":280},
             {"foodName":"Jr Cheeseburger", "calories":280},
             {"foodName":"Jr. Cheeseburger", "calories":280},
+	    {"foodName":"10 Piece Crispy Chicken Nuggets", "calories":420},
+	    {"foodName":"10 Piece Chicken Nuggets", "calories":420},
+            {"foodName":"6 Piece Crispy Chicken Nuggets", "calories":250},
+            {"foodName":"6 Piece Chicken Nuggets", "calories":250},
+            {"foodName":"4 Piece Crispy Chicken Nuggets", "calories":170},
+            {"foodName":"4 Piece Chicken Nuggets", "calories":170},
             {"foodName":"Fries", "calories":420},
             {"foodName":"Fry", "calories":420},
             {"foodName":"French Fries", "calories":420},

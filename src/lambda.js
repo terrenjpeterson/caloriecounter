@@ -406,9 +406,7 @@ function validateDrink(slots) {
 
     // make sure a Drink has been provided, then attempt to validate
     if (slots.Drink) {
-        console.log("attempting to find drink: " + slots.Drink);
         for (var j = 0; j < drinks.length; j++) {
-            //console.log("drink item: " + JSON.stringify(drinks[j]));
             if (slots.Drink.toLowerCase() === drinks[j].drinkName.toLowerCase()) {
                 console.log("found a match for " + drinks[j].drinkName + " calories " + drinks[j].calories);
                 validDrink = true;
@@ -425,6 +423,9 @@ function validateDrink(slots) {
     } else if (slots.Drink) {
         console.log("failed drink validation" + JSON.stringify(slots.Drink));
 	if (slots.Drink.toLowerCase() === "drink" || 
+	    slots.Drink.toLowerCase() === "small drink" ||
+	    slots.Drink.toLowerCase() === "medium drink" ||
+            slots.Drink.toLowerCase() === "large drink" ||
 	    slots.Drink.toLowerCase() === "yes" ) {
 	    // in this case, the response was too vague - so instruct the user to be more specific
             return buildValidationResult(false, 'Drink', 'Please say a drink name, for example, Small Coke.');
@@ -457,13 +458,15 @@ function validateNuggets(nuggets, restaurantName) {
 
     // first make sure it is a restaurant that sells nuggets
     if (restaurantName.toLowerCase() === "mcdonalds" ||
+	restaurantName.toLowerCase() === "wendys" ||
 	restaurantName.toLowerCase() === "burger king" ||
 	restaurantName.toLowerCase() === "chick-fil-a") {
         // food type is nuggets, so build food name and validate it
         console.log("Valid restaurant for nuggets, now validate " + nuggets + " chicken nuggets");
 
         // check if quantity of nuggets is correct
-        if (nuggets == 20 ||
+        if (nuggets == 20 && restaurantName.toLowerCase() === "mcdonalds" ||
+	    nuggets == 20 && restaurantName.toLowerCase() === "burger king" ||
 	    nuggets == 10 ||
 	    nuggets == 6 ||
 	    nuggets == 4) {
@@ -471,7 +474,7 @@ function validateNuggets(nuggets, restaurantName) {
 	    console.log("valid nuggets quantity of " + nuggets + ".");
         } else {
             console.log("Invalid nuggets quantity " + nuggets + ". Pass back failed validation");
-	    return buildValidationResult(false, 'Quantity', 'Sorry ' + nuggets + ' is not a valid number of nuggets.');
+	    return buildValidationResult(false, 'Quantity', 'Sorry ' + nuggets + ' is not a valid number of nuggets at ' + restaurantName + '.');
 	}
     } else if (restaurantName)  {
 	console.log("Restaurant doesnt have nuggets");
