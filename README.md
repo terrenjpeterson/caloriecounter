@@ -30,6 +30,8 @@ Currently there are twelve different intents that the NLU process sorts into.
 ## Rules logic in lambda
 All of the logic in formulating responses to different intents is processed in a series of lambda functions. Which lambda function to invoke is managed within Lex, and set at the intent level. This enables modularity to be built within the application, keeping the functions lightweight.
 
+There are two different spots within Lex that can invoke a lambda function. The first is through basic validation, and the attribute name that identifies it is called invocationSource. There are two potential values for this - DialogCodeHook and FulfillmentCodeHook.
+
 Here is an overview of each function.
 
 1) lambda.js - the main function that handles the basic validation for queries, sourced by DialogCodeHook.
@@ -37,6 +39,8 @@ Here is an overview of each function.
 2) calculate.js - calculating the response for the actual calories in a meal is handled by this funciton, and is sourced by a FulfillmentCodeHook.
 
 3) pizza.js - handles intents around calculating calories in a pizza, including the intent - WhatPizzaTypes.
+
+4) misc.js - handles simple intents like help, the introduction, and more details around a meal.
 
 ## Data lookup tables
 The core functionality of this bot is to be able to answer queries of how many calories are in different meals. While the slots that Lex uses are helpful in training the NLU models, they don't have the ability to serve as lookup files. 
