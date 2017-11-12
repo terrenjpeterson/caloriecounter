@@ -250,7 +250,14 @@ function validateFood(intentRequest) {
 		return buildValidationResult(false, 'Food', 'Switching to restaurant ' + slots.Restaurant + '. What food are you looking for?');
 	    } else {
                 // this is the generic error message where a match can't be found
-                return buildValidationResult(false, 'Food', `Sorry, I dont have information for ` + slots.Food + ' at ' + slots.Restaurant + ' . Please try again.');
+		var botResponse = "Sorry, I don't have information for " + slots.Food;
+		if (slots.Restaurant) {
+		    botResponse = botResponse + " at " + slots.Restaurant + 
+			". Please say 'What are my food options at " + slots.Restaurant + " for help.";
+		} else {
+		    botResponse = botResponse + ". Please try another restaurant, or say list restaurants.";
+		}
+                return buildValidationResult(false, 'Food', botResponse);
 	    }
 	}
     } else {
@@ -693,6 +700,8 @@ function getFoodOptions(intentRequest, callback) {
 	foodType = "Salad"
     } else if (foodType.toLowerCase === "Chalupas") {
 	foodType = "Chalupa"
+    } else if (foodType.toLowerCase === "Sandwiches") {
+	foodType = "Sandwich"
     }
 
     if (restaurant) {
@@ -750,7 +759,7 @@ function validateUserEntry(intentRequest, callback) {
 
     console.log("validating user entry");
 
-    const restaurantName = intentRequest.currentIntent.slots.Restaurant;
+    var restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
     const drinkName      = intentRequest.currentIntent.slots.Drink;
 
@@ -767,7 +776,10 @@ function validateUserEntry(intentRequest, callback) {
             console.log("Validation Result: " + JSON.stringify(validationResult));
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                 slots, validationResult.violatedSlot, validationResult.message));
-        }
+	} else {
+            // save session attributes for later reference
+            sessionAttributes.restaurantName = restaurantName;
+	}
     }
 
     if (foodName && !invalidSlot) {
@@ -818,7 +830,13 @@ function validateUserEntry(intentRequest, callback) {
 
     // validate nuggets if provided
     var nuggets = intentRequest.currentIntent.slots.Quantity;
-    if (nuggets && !invalidSlot && restaurantName) {
+    if (nuggets && !invalidSlot) {
+    	// check for a context switch - if session has restaurant, but not in the query
+	if (sessionAttributes.restaurantName && !restaurantName) {
+            console.log("remembered restaurant from session was " + restaurantName);
+            restaurantName = sessionAttributes.restaurantName;
+            intentRequest.currentIntent.slots.Restaurant = sessionAttributes.restaurantName;
+	}
 	const nuggetsValidationResult = validateNuggets(nuggets, intentRequest.currentIntent.slots.Restaurant);
 	if (!nuggetsValidationResult.isValid) {
             console.log("Invalid nuggets quantity " + nuggets + ". Pass back failed validation");
