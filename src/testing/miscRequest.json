@@ -1,0 +1,20 @@
+{
+    "messageVersion": "1.0",
+    "invocationSource": "FulfillmentCodeHook",
+    "userId": "yy2vbsnwdlt9bqec053t5a22crj470n7",
+    "sessionAttributes": {},
+    "requestAttributes": null,
+    "bot": {
+        "name": "FastFoodChecker",
+        "alias": "$LATEST",
+        "version": "$LATEST"
+    },
+    "outputDialogMode": "Text",
+    "currentIntent": {
+        "name": "WhichRestaurants",
+        "slots": {},
+        "slotDetails": {},
+        "confirmationStatus": "None"
+    },
+    "inputTranscript": "list restaurants"
+}
