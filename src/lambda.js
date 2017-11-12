@@ -584,37 +584,6 @@ function validateMexicanFood(intentRequest) {
     }
 }
 
-function getMealDetails(intentRequest, callback) {
-    const sessionAttributes = intentRequest.sessionAttributes || {};
-
-    console.log("Session Attributes: " + JSON.stringify(intentRequest.sessionAttributes));
-
-    if (sessionAttributes.foodName) {
-	var detailResponse = sessionAttributes.foodName + " is " + 
-	    sessionAttributes.foodCalories + " calories. ";
-        if (sessionAttributes.extraName) {
-            detailResponse = detailResponse + sessionAttributes.extraName + " is " +
-                sessionAttributes.extraCalories + " calories. ";
-        }
-	if (sessionAttributes.drinkName) {
-	    detailResponse = detailResponse + sessionAttributes.drinkName + " is " +
-		sessionAttributes.drinkCalories + " calories. ";
-	}
-	if (sessionAttributes.extraName || sessionAttributes.drinkName) {
-	    detailResponse = detailResponse + "Total Calories are " + 
-		sessionAttributes.totalCalories + ".";
-	}
-
-    } else {
-	var detailResponse = "Sorry, first start by telling me more about the meal. " +
-	    "For example, say something like Eating at Burger King.";
-    }
-
-    callback(close(sessionAttributes, 'Fulfilled',
-	{ contentType: 'PlainText', content: detailResponse }));
-
-}
-
 // this function is what validates what information has been provided
 
 function validateUserEntry(intentRequest, callback) {
