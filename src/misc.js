@@ -198,7 +198,8 @@ function getFoodOptions(intentRequest, callback) {
 	foodType = "Chalupa";
     } else if (foodType.toLowerCase() === "sandwiches") {
 	foodType = "Sandwich";
-    } else if (foodType.toLowerCase() === "burgers") {
+    } else if (foodType.toLowerCase() === "burgers" ||
+	       foodType.toLowerCase() === "whopper") {
 	foodType = "Burger";
     }
 
