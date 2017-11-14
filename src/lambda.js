@@ -286,6 +286,7 @@ function vagueFood(foodName, restaurantName) {
 	foodName.toLowerCase() === "turkey" ||
         foodName.toLowerCase() === "steak" ||
         foodName.toLowerCase() === "salad" ||
+	foodName.toLowerCase() === "snack wrap" ||
 	foodName.toLowerCase() === "nuggets" ||
         foodName.toLowerCase() === "chicken nuggets" ||
         foodName.toLowerCase() === "chicken nugget" ||
@@ -614,6 +615,9 @@ function validateUserEntry(intentRequest, callback) {
             // save session attributes for later reference
             sessionAttributes.restaurantName = restaurantName;
 	}
+    } else if (intentRequest.sessionAttributes.restaurantName) {
+	restaurantName = intentRequest.sessionAttributes.restaurantName;
+	intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
     }
 
     if (foodName && !invalidSlot) {
