@@ -512,6 +512,7 @@
             {"foodName":"Big Breakfast", "calories":750},
             {"foodName":"Big Breakfast with Hotcakes", "calories":1350},
             {"foodName":"Hotcakes", "calories":600},
+            {"foodName":"Hot Cakes", "calories":600},
             {"foodName":"Hotcakes and Sausage", "calories":790},
             {"foodName":"Sausage Burrito", "calories":290},
             {"foodName":"Hash Browns", "calories":150},
