@@ -351,6 +351,40 @@ function getFoodItems(foodType, restaurantName) {
     };
 }
 
+// this retrieves the types of food at a given restaurant
+function getFoodTypes(restaurantName) {
+    var foodOptions = [];
+    var foodItems = [];
+
+    console.log("finding food options at " + restaurantName);
+
+    for (var i = 0; i < foodChoices.length; i++) {
+        if (restaurantName.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+            foodItems = foodChoices[i].foodItems;
+            console.log("match restaurant - food items: " + JSON.stringify(foodItems));
+	}
+    }
+
+    for (var j = 0; j < foodItems.length; j++) {
+	if (foodItems[j].foodType) {
+	    var newEntry = true;
+	    for (var k = 0; k < foodOptions.length; k++) {
+		if (foodItems[j].foodType.toLowerCase() === foodOptions[k].toLowerCase()) {
+		    newEntry = false;
+	        }
+	    }
+	    if (newEntry) {
+	    	console.log("Food Type: " + foodItems[j].foodType);
+	    	foodOptions.push(foodItems[j].foodType);
+	    }
+	}
+    }
+
+    return {
+	foodOptions
+    };
+}
+
 // this function will validate if the extra is another type of food
 function validateExtra(slots) {
     var validExtra = false;
@@ -585,6 +619,57 @@ function validateMexicanFood(intentRequest) {
     }
 }
 
+// this function is what determines food types
+function validateFoodTypes(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+    const slots = intentRequest.currentIntent.slots;
+    var invalidSlot = false;
+
+    // if a restaurant name has been provided, then validate it. If not, its too early and return.
+    if (intentRequest.currentIntent.slots.Restaurant) {
+	const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
+
+        // restaurant name has been provided. if failed validation, return with error message.
+        if (!validationResult.isValid) {
+            console.log("Invalid restaurant name. Pass back failed validation");
+            slots[`${validationResult.violatedSlot}`] = null;
+            invalidSlot = true;
+
+            console.log("Validation Result: " + JSON.stringify(validationResult));
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                slots, validationResult.violatedSlot, validationResult.message));
+        } else {
+            // save session attributes for later reference
+            sessionAttributes.restaurantName = intentRequest.currentIntent.slots.Restaurant;
+	    // get available food types for the restaurant
+            const foodTypes = getFoodTypes(intentRequest.currentIntent.slots.Restaurant).foodOptions;
+	    if (foodTypes.length > 0 && !intentRequest.currentIntent.slots.FoodType) {
+		var botMessage = "Okay, at " + intentRequest.currentIntent.slots.Restaurant + ". " +
+		   "Pick one of the following food groups: ";
+		// this array has all of the food types at the given restaurant
+		for (var i = 0; i < foodTypes.length; i++) {
+		    botMessage = botMessage + foodTypes[i] + ", ";
+		}
+		// send back the message
+		const optionValidationResult = buildValidationResult(false, 'FoodType', botMessage);
+            	callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                    slots, optionValidationResult.violatedSlot, optionValidationResult.message));
+	    } else {
+		console.log("No food types at " + intentRequest.currentIntent.slots.Restaurant);
+	    }
+        }
+    } else if (intentRequest.sessionAttributes.restaurantName) {
+        restaurantName = intentRequest.sessionAttributes.restaurantName;
+        intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
+    }
+
+    // all slots provided have been validated return positive response
+    if (!invalidSlot) {
+        console.log("all validation passed.");
+        callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+    }
+}
+
 // this function is what validates what information has been provided
 
 function validateUserEntry(intentRequest, callback) {
@@ -725,7 +810,10 @@ function dispatch(intentRequest, callback) {
     console.log("Data Provided: " + JSON.stringify(intentRequest));
 
     // Dispatch to the skill's intent handlers
-    if (intentRequest.invocationSource === 'DialogCodeHook') {
+    if (intentName === 'FoodTypeOptions') {
+	console.log("Check Food Type Options");
+	validateFoodTypes(intentRequest, callback);
+    } else if (intentRequest.invocationSource === 'DialogCodeHook') {
         console.log("Validation in progress.");
         validateUserEntry(intentRequest, callback);
     } else if (intentName === 'WhichRestaurants') {
