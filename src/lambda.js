@@ -625,8 +625,12 @@ function validateFoodTypes(intentRequest, callback) {
     const slots = intentRequest.currentIntent.slots;
     var invalidSlot = false;
 
+    console.log("Validate Food Types");
+
     // if a restaurant name has been provided, then validate it. If not, its too early and return.
     if (intentRequest.currentIntent.slots.Restaurant) {
+	console.log("Restaurant provided so validate.");
+
 	const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
 
         // restaurant name has been provided. if failed validation, return with error message.
@@ -659,7 +663,6 @@ function validateFoodTypes(intentRequest, callback) {
 	    }
         }
     } else if (intentRequest.sessionAttributes.restaurantName) {
-        restaurantName = intentRequest.sessionAttributes.restaurantName;
         intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
     }
 
