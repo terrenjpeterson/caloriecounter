@@ -74,6 +74,7 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
 // this funciton is called during intial field validation
 function validateFields(intentRequest, callback) {
     var sessionAttributes = {};
+    const slots = intentRequest.currentIntent.slots;
 
     console.log("First check if restaurant needs to be defaulted.");
     // check if no restaurant name has been provided yet, but one is in the session - if so - fill in for user
@@ -99,11 +100,14 @@ function validateFields(intentRequest, callback) {
 	if (validationResult.isValid) {
 	    intentRequest.currentIntent.slots.PizzaRestaurant = validationResult.restaurantName;
 	    sessionAttributes.restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
+	    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+	} else {
+	    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                    slots, validationResult.violatedSlot, validationResult.message));
 	}
+    } else {
+    	callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
     }
-
-    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-
 }
 
 // this function will validate that the restaurant provided by the user matches what data we have
@@ -129,7 +133,8 @@ function validateRestaurant(restaurantName) {
         return { isValid: true, restaurantName: matchName };
     } else {
         console.log("failed restaurant validation");
-        return { isValid: false };
+	var botResponse = "Sorry, I don't have nutrition information for " + restaurantName + ".";
+        return buildValidationResult(false, 'PizzaRestaurant', botResponse);
     }
 }
 
@@ -151,6 +156,7 @@ function scrubRestaurantName(restaurantName) {
 	scrubData.restaurantName = "dominos";
     } else if (restaurantName.toLowerCase() === "little caesar" ||
 	       restaurantName.toLowerCase() === "little ceasers" ||
+               restaurantName.toLowerCase() === "little ceaser's" ||
 	       restaurantName.toLowerCase() === "little caesers" ||
                restaurantName.toLowerCase() === "little caesar’s" ||
 	       restaurantName.toLowerCase() === "little caesar's") {
@@ -269,7 +275,7 @@ function calculatePizzaCalories(intentRequest, callback) {
 		    ", a " + intentRequest.currentIntent.slots.PizzaSize + " (" + pizzaDiameter + " inch) " +
 		    intentRequest.currentIntent.slots.PizzaType + " pizza " +
 		    " is " + (slicesPerPizza * caloriesPerSlice) + " calories. The pizza comes cut in " +
-		    slicesPerPizza + " slices.";
+		    slicesPerPizza + " slices, and each slice is " + caloriesPerSlice + " calories.";
 	    } 
 	} else {
 	    botResponse = intentRequest.currentIntent.slots.PizzaSize + " is not a valid size of pizza " +
