@@ -104,6 +104,38 @@ function getRestaurants(intentRequest, callback) {
         
 }
 
+// this function calculates how much a given meal covers for daily calories
+function getBasicDailyAnalysis(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+    const maleAverage = 2500;
+    const femaleAverage = 2000;
+
+    // change response depending on if a prior food calculation was saved in the session
+    if (intentRequest.sessionAttributes.totalCalories) {
+    	const mealEstimate = sessionAttributes.totalCalories;
+	const restaurantName = intentRequest.sessionAttributes.restaurantName;
+
+    	var botResponse = "This meal of " + mealEstimate + " calories at " + restaurantName +
+	    " is " + ((mealEstimate * 100) /maleAverage) + "% of a daily average male diet, or " +
+	    ((mealEstimate * 100) /femaleAverage) + "% of a daily average female diet based on " +
+	    "guidelines set by nutrition experts.";
+
+    	callback(close(sessionAttributes, 'Fulfilled',
+            { contentType: 'PlainText', content: botResponse }));
+
+    } else {
+	var defaultResponse = "An average daily diet requires " + maleAverage + " calories " +
+	    " for a male, and " + femaleAverage + " for a female. For how this compares to a " +
+	    "fast food meal, please describe what you would eat. Start by saying something " +
+	    "like, 'Eating at McDonalds.'";
+
+        callback(close(sessionAttributes, 'Fulfilled',
+            { contentType: 'PlainText', content: defaultResponse }));
+
+    }
+
+}
+
 // this function is what builds the wrap-up of a conversation
 
 function endConversation(intentRequest, callback) {
@@ -278,6 +310,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'FoodTypeOptions') {
 	console.log("user requested food types");
 	return getFoodOptions(intentRequest, callback);
+    } else if (intentName === 'DailyIntakeAnalysis') {
+        console.log("user requested daily intake summary");
+        return getBasicDailyAnalysis(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
