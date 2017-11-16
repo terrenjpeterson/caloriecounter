@@ -270,6 +270,7 @@ function validateFood(intentRequest) {
 
 function vagueFood(foodName, restaurantName) {
     var vagueFoodResponse = {};
+    var foodItems = [];
 
     console.log("checking for vague food request");
 
@@ -297,7 +298,9 @@ function vagueFood(foodName, restaurantName) {
         vagueFoodResponse.assessment = true;
 
 	// check to see if any food items match the terms above
-	var foodItems = getFoodItems(foodName, restaurantName).foodItems;
+	if (restaurantName) {
+	    foodItems = getFoodItems(foodName, restaurantName).foodItems;
+	}
 
 	console.log("Potential Food Items: " + JSON.stringify(foodItems)); 
 
