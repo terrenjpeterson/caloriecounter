@@ -196,8 +196,10 @@ function getMealDetails(intentRequest, callback) {
 	}
 	if (sessionAttributes.extraName || sessionAttributes.drinkName) {
 	    detailResponse = detailResponse + "Total Calories are " + 
-		sessionAttributes.totalCalories + ".";
+		sessionAttributes.totalCalories + ". ";
 	}
+	detailResponse = detailResponse + "To analyze this meal vs. your daily recommended " +
+	    "calorie intake, please say 'analyze my meal'.";
 
     } else {
 	var detailResponse = "Sorry, first start by telling me more about the meal. " +

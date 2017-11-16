@@ -194,6 +194,9 @@ function calculateCalories(intentRequest, callback) {
 
     if (totalCalories > sessionAttributes.foodCalories) {
 	counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout.";
+    } else {
+	counterResponse = counterResponse + "To analyze this meal vs. your daily recommended calorie intake, " +
+	    "please say 'analyze my meal'.";
     }
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
