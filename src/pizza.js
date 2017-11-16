@@ -133,7 +133,8 @@ function validateRestaurant(restaurantName) {
         return { isValid: true, restaurantName: matchName };
     } else {
         console.log("failed restaurant validation");
-	var botResponse = "Sorry, I don't have nutrition information for " + restaurantName + ".";
+	var botResponse = "Sorry, I don't have nutrition information for " + restaurantName + ". " +
+	    "I do have information about Domino's, Little Caesars, and Papa John's.";
         return buildValidationResult(false, 'PizzaRestaurant', botResponse);
     }
 }
