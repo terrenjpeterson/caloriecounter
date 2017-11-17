@@ -661,8 +661,27 @@ function validateFoodTypes(intentRequest, callback) {
 		const optionValidationResult = buildValidationResult(false, 'FoodType', botMessage);
             	callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                     slots, optionValidationResult.violatedSlot, optionValidationResult.message));
-	    } else {
-		console.log("No food types at " + intentRequest.currentIntent.slots.Restaurant);
+	    } else if (foodTypes.length > 0) {
+		// food type entered by user - validate
+		var foodTypeMatch = false;
+		for (var j = 0; j < foodTypes.length; j++) {
+		    if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === foodTypes[j].toLowerCase()) {
+			foodTypeMatch = true;
+		    }
+		}
+		if (!foodTypeMatch) {
+		    // throw exception message and let the user try again
+		    console.log("No food types at " + intentRequest.currentIntent.slots.Restaurant);
+		    var botMessage = "Sorry, " + intentRequest.currentIntent.slots.FoodType + " is " +
+		        "not a valid food type at " + intentRequest.currentIntent.slots.Restaurant + 
+			". Please try again.";
+                    const optionValidationResult = buildValidationResult(false, 'FoodType', botMessage);
+		    invalidSlot = true;
+                    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                        slots, optionValidationResult.violatedSlot, optionValidationResult.message));
+		} else {
+		    console.log("valid food type entered");
+		}
 	    }
         }
     } else if (intentRequest.sessionAttributes.restaurantName) {
