@@ -512,14 +512,16 @@ function validateNuggets(nuggets, restaurantName) {
         // check if quantity of nuggets is correct
         if (nuggets == 20 && restaurantName.toLowerCase() === "mcdonalds" ||
 	    nuggets == 20 && restaurantName.toLowerCase() === "burger king" ||
-	    nuggets == 10 ||
+	    nuggets == 12 && restaurantName.toLowerCase() === "chick-fil-a" ||
+	    nuggets == 10 && restaurantName.toLowerCase() !== "chick-fil-a" ||
 	    nuggets == 6 ||
 	    nuggets == 4) {
             return { isValid: true };
 	    console.log("valid nuggets quantity of " + nuggets + ".");
         } else {
             console.log("Invalid nuggets quantity " + nuggets + ". Pass back failed validation");
-	    return buildValidationResult(false, 'Quantity', 'Sorry ' + nuggets + ' is not a valid number of nuggets at ' + restaurantName + '.');
+	    var botMessage = "Hmmm, " + nuggets + " is not a valid number of nuggets at " + restaurantName + ". Please try again.";
+	    return buildValidationResult(false, 'Quantity', botMessage);
 	}
     } else if (restaurantName)  {
 	console.log("Restaurant doesnt have nuggets");
@@ -785,14 +787,20 @@ function validateUserEntry(intentRequest, callback) {
             restaurantName = sessionAttributes.restaurantName;
             intentRequest.currentIntent.slots.Restaurant = sessionAttributes.restaurantName;
 	}
-	const nuggetsValidationResult = validateNuggets(nuggets, intentRequest.currentIntent.slots.Restaurant);
-	if (!nuggetsValidationResult.isValid) {
-            console.log("Invalid nuggets quantity " + nuggets + ". Pass back failed validation");
-            slots[`${nuggetsValidationResult.violatedSlot}`] = null;
-            invalidSlot = true;
+	if (intentRequest.currentIntent.slots.Restaurant) {
+	    const nuggetsValidationResult = validateNuggets(nuggets, intentRequest.currentIntent.slots.Restaurant);
+	    if (!nuggetsValidationResult.isValid) {
+                console.log("Invalid nuggets quantity " + nuggets + ". Pass back failed validation");
+                slots[`${nuggetsValidationResult.violatedSlot}`] = null;
+                invalidSlot = true;
 
-            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                slots, nuggetsValidationResult.violatedSlot, nuggetsValidationResult.message));
+                callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                    slots, nuggetsValidationResult.violatedSlot, nuggetsValidationResult.message));
+	    }
+	}
+	// check if a sauce has been added
+	if (intentRequest.currentIntent.slots.Sauce) {
+	    console.log("Received sauce:" + intentRequest.currentIntent.slots.Sauce)
 	}
     }
 
