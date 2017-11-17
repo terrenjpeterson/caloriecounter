@@ -76,9 +76,9 @@ function getIntroduction(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
     const slots = intentRequest.currentIntent.slots;
 
-    var counterResponse = 'Hello. I am a chatbot that can assist you in calculating ' +
-        'calories for different fast food restaurants. To get started, please say ' +
-        'something like How many calories in a Big Mac, and I will do all the work!';
+    var counterResponse = "Hello, my name is Chuck. I am a chatbot that can calculate " +
+        "calories for fast food restaurants. To get started, please ask me " +
+        "something like 'How many calories in a Big Mac' or 'What are my food options at Taco Bell'.";
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
@@ -90,7 +90,7 @@ function getIntroduction(intentRequest, callback) {
 function getRestaurants(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
-    var counterResponse = 'Here are the fast food restaurants that I have ' +
+    var counterResponse = 'Okay, here are the fast food restaurants that I have ' +
         'information on. ';
 
     for (var i = 0; i < restaurants.length; i++) {
@@ -146,6 +146,19 @@ function endConversation(intentRequest, callback) {
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
         
+}
+
+// this function is what builds the response to a request for help
+
+function getBotName(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var botResponse = "My name is Chuck. I'm a chatbot that helps people sort out " +
+	"fast food options. Talking about food all day makes me hungry!!!";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: botResponse }));
+
 }
 
 // this function is what builds the response to a request for help
@@ -315,6 +328,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'DailyIntakeAnalysis') {
         console.log("user requested daily intake summary");
         return getBasicDailyAnalysis(intentRequest, callback);
+    } else if (intentName === 'MyName') {
+	console.log("user requested bot name");
+	return getBotName(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
