@@ -12,14 +12,17 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 
 ## Using NLU Models
 This bot uses AWS Lex - a service that contains the intelligence to be able to decipher user requests and trigger intents based on data provided in the models.
+![](https://s3.amazonaws.com/fastfoodchatbot/media/LexArchitecture.png)
 
-Currently there are many different intents that the NLU process sorts into.
-- EndConversation (Built-in intent - uses AWS sample utterances like - Stop)
+Currently there are many different intents that the NLU process sorts into.  Here are the "core functions" of the bot.
 - FoodTypeOptions (Sample utterance - What are my food options?)
 - GetCalories (Sample utterance - How many calories in a Big Mac?)
 - GetMexicanFoodCalories (Sample utterance - How many calories in a Chicken Burrito?)
 - GetNuggetsCalories (Sample utterance - How many calories in 20 Chicken Nuggets?)
 - GetPizzaCalories (Sample utterance - How many calories in 2 slices of Pepperoni Pizza at Papa Johns?)
+
+There are also intents that complement the core features.
+- EndConversation (Built-in intent - uses AWS sample utterances like - Stop)
 - HelpRequest (Built-in intent - uses AWS sample utterances like - Help)
 - Introduction (Sample utterances - Hello, Get Started, Send Message)
 - MoreDetails (Sample utterance - More details. Note: this can only be invoked after prior requests are made in the conversation as it's reading data from the session).
@@ -29,7 +32,7 @@ Currently there are many different intents that the NLU process sorts into.
 
 It is a combination of the sample utterances and slots that determine which intent the NLU models will invoke.
 
-Currently, here are the custom slots.
+Currently, here are the custom slots that are used by the intents.
 - FastFoodRestaurants (sample values: Chick-fil-A, McDonald's, Wendy's)
 - FoodType (sample values: Burger, Salad, Chicken)
 - ExtraItems (sample values: Large Fry, Sugar Cookie, Side Salad)
@@ -40,14 +43,14 @@ Currently, here are the custom slots.
 - PizzaSize (sample values: Small, Medium, Large)
 - PizzaType (sample values: Sausage, Pepperoni, Honolulu Hawaiian)
 
-Within each of the intents, sample utterances are provided that construct the potential sentances that a user may provide.
+Within each of the intents, sample utterances are provided that construct the potential sentances that a user may provide. The value of the slot (i.e. Large Fry) gets passed to the lambda function as a unique attribute.
 
 ## Rules logic in lambda
 All of the logic in formulating responses to different intents is processed in a series of lambda functions. Which lambda function to invoke is managed within Lex, and set at the intent level. This enables modularity to be built within the application, keeping the functions lightweight.
 
 There are two different spots within Lex that can invoke a lambda function. The first is through basic validation, and the attribute name that identifies it is called invocationSource. There are two potential values for this - DialogCodeHook and FulfillmentCodeHook.
 
-Here is an overview of each function.
+Here is an overview of each function currently written.
 
 1) lambda.js - the main function that handles the basic validation for queries, sourced by DialogCodeHook.
 
