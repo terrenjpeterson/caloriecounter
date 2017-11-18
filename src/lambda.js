@@ -686,8 +686,10 @@ function validateFoodTypes(intentRequest, callback) {
 		}
 	    }
         }
-    } else if (intentRequest.sessionAttributes.restaurantName) {
-        intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
+    } else if (intentRequest.sessionAttributes) {
+	if (intentRequest.sessionAttributes.restaurantName) {
+            intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
+	}
     }
 
     // all slots provided have been validated return positive response
