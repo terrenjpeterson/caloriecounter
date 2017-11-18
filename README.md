@@ -107,6 +107,43 @@ Part of facilitating this is designing a flow of the conversation. Error message
 The intents should also pass data between one another. This can be accomplished by saving the session data when completing an intent.
 This allows the next intent to retrieve the information and not require the user to repeat it with each request.
 
+In the example above, the conversation begins with the user indicating which restaurant they are eating at. This gets persisted in the session by the FoodTypeOptions intent.
+The dialog shifts to details of the meal, but the restaraunt name gets saved. Also, the initial response on the calorie count is brief, but offers a more detailed explainatin if the user says 'more details'.
+Once again the data gets stored in the session data, and is passed back as part of the Lex framework. Here is example of one of the objects.
+
+```sh
+{
+    "messageVersion": "1.0",
+    "invocationSource": "FulfillmentCodeHook",
+    "userId": "1712299768809980",
+    "sessionAttributes": {
+        "restaurantName": "Burger King",
+        "foodName": "Whopper",
+        "foodCalories": "660",
+        "extraName": "Onion Rings",
+        "extraCalories": "410",
+        "drinkCalories": "310",
+        "drinkName": "32 oz. Large Coke",
+        "totalCalories": "1380"
+    },
+    "bot": {
+        "name": "FastFoodChecker",
+        "alias": "PROD",
+        "version": "42"
+    },
+    "outputDialogMode": "Text",
+    "currentIntent": {
+        "name": "DailyIntakeAnalysis",
+        "slots": {},
+        "slotDetails": {},
+        "confirmationStatus": "None"
+    },
+    "inputTranscript": "Analyze my meal"
+}
+```
+
+The lambda functions in this bot are completely stateless, so any data from prior invocations must come through the request object.
+
 ## Deployment pipeline
 Modifying Lex is done completely through the console. The lambda functions that serve the business logic are hosted in AWS lambda, and are deployed from an EC2 host.
 
