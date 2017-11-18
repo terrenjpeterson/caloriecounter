@@ -81,10 +81,24 @@ Here is a sample of the format.
 
 The lambda functions refer to these objects to respond to different queries, and to calculate calorie consumption for the user.
 
+Each food item may be duplicated for different spellings and phrases used to retrieve. For example.
+
+```sh
+	    {"foodName":"Fries", "calories":340},
+            {"foodName":"Fry", "calories":340},
+            {"foodName":"Frys", "calories":340},
+	    {"foodName":"French Fries", "calories":340},
+            {"foodName":"French Fry", "calories":340},
+	    {"foodName":"Medium Fries", "calories":340},
+            {"foodName":"Medium Fry", "calories":340},
+```
+
+Given that the NLU models do not correct spelling provided by the user, it's up to the Lambda functions to handle this part of the logic.
+
 ## Deployment pipeline
 Modifying Lex is done completely through the console. The lambda functions that serve the business logic are hosted in AWS lambda, and are deployed from an EC2 host.
 
-The full deployment script is /src/build.sh but a quick overview can be found in the following instructions.
+The full deployment script is [/src/build.sh](https://github.com/terrenjpeterson/caloriecounter/blob/master/src/build.sh) but a quick overview can be found in the following instructions.
 
 ```sh
 zip -r foodbot.zip lambda.js data/restaurants.json data/foods.json data/drinks.json
@@ -96,12 +110,12 @@ aws lambda update-function-code --function-name myCalorieCounterGreen --s3-bucke
 aws lambda invoke --function-name myCalorieCalculatorGreen --payload "$request" testOutput.json
 ```
 
-1) Create a zip file on the host that acts as the build server. It's here where both the source code and data files are manipulated.
+1) Create a zip file on the host that acts as the build server. It's from the build server where both the source code and data files are manipulated. The datafiles are then read locally, and whenever they change, a new deployment is created.
 2) Upload the zip file to an s3 bucket using the proper AWS CLI commands.
 3) Update the existing lambda function with the new package, and using the AWS CLI command, provide the location of the zip file that contains the build package.
 4) Execute a test of the lambda function directly with valid sample data. The response object is returned and written to the console as well as a local file.
 
-This process is repeated for each of the lambda functions that are called by Lex.
+This process is repeated for each of the lambda functions that are called by Lex. This includes having at least one test condition for each lambda function to ensure that the deployment was done correctly. 
 
 ## Website in progress
 As part of the initial effort, I was attempting to get this chatbot published to the slack store. As part of that, I needed to build a website for public support of the app. It's a work in progress, and called caloriecountbot.com. It's hosted by s3, and the source is located in the /website folder.
