@@ -7,7 +7,7 @@
 
 // variables that contain lookup information including restaurant name and calories by food
 
-var restaurants = ["Papa Johns", "Dominos", "Little Caesars"];
+var restaurants = ["Papa Johns", "Dominos", "Little Caesars", "Pizza Hut"];
 
 // these are the valid choices based on website scraping
 var pizzas = require("data/pizzas.json");
@@ -134,7 +134,7 @@ function validateRestaurant(restaurantName) {
     } else {
         console.log("failed restaurant validation");
 	var botResponse = "Sorry, I don't have nutrition information for " + restaurantName + ". " +
-	    "I do have information about Domino's, Little Caesars, and Papa John's.";
+	    "I do have information about Domino's, Little Caesars, Pizza Hut and Papa John's.";
         return buildValidationResult(false, 'PizzaRestaurant', botResponse);
     }
 }
@@ -189,6 +189,7 @@ function getPizzaTypes(intentRequest, callback) {
     // check if the restaurant is one that the bot has data for
     if (restaurantName.toLowerCase() === "papa johns" ||
 	restaurantName.toLowerCase() === "little caesars" ||
+	restaurantName.toLowerCase() === "pizza hut" ||
 	restaurantName.toLowerCase() === "dominos") {
     	// sort through the pizza choices and pull out those relating to the restaraunt that has already been validated
         for (var i = 0; i < pizzas.length; i++) {
