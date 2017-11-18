@@ -89,7 +89,7 @@ function validateFields(intentRequest, callback) {
     // validate restaurant name if provided in the slot
     if (intentRequest.currentIntent.slots.PizzaRestaurant) {
 	console.log("Restaurant name provided, now scrub and validate.");
-    	// first scrub the restaurant name
+     	// first scrub the restaurant name
     	var updatedName = scrubRestaurantName(intentRequest.currentIntent.slots.PizzaRestaurant).scrubData.restaurantName;
     	if (updatedName) {
             console.log("Updated Restaurant Name to : " + updatedName);
@@ -156,6 +156,7 @@ function scrubRestaurantName(restaurantName) {
 	console.log("removed apostrophie to help matching");
 	scrubData.restaurantName = "dominos";
     } else if (restaurantName.toLowerCase() === "little caesar" ||
+	       restaurantName.toLowerCase() === "little ceasar" ||
 	       restaurantName.toLowerCase() === "little ceasers" ||
                restaurantName.toLowerCase() === "little ceaser's" ||
 	       restaurantName.toLowerCase() === "little caesers" ||
