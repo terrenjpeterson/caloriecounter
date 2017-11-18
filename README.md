@@ -5,13 +5,14 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 **Table of Contents**
 
 - [How does this use the NLU models from Lex?](#using-nlu-models)
+- [What custom slots are used by the NLU?](#custom-slots)
 - [What are the lambda functions called by the bot?](#rules-logic-in-lambda)
 - [Where does it get its data from?](#data-lookup-tables)
 - [What does the deployment model look like?](#deployment-pipeline)
 - [What is the website code for?](#website-in-progress)
 
 ## Using NLU Models
-This bot uses AWS Lex - a service that contains the intelligence to be able to decipher user requests and trigger intents based on data provided in the models.
+This bot uses AWS Lex - a service that contains the intelligence to be able to decipher user requests and trigger intents based on data provided in the models. The intents then invoke lambda functions that contain business logic specific to the intent.
 ![](https://s3.amazonaws.com/fastfoodchatbot/media/LexArchitecture.png)
 
 Currently there are many different intents that the NLU process sorts into.  Here are the "core functions" of the bot.
@@ -30,7 +31,10 @@ There are also intents that complement the core features.
 - WhatPizzaTypes (Sample utterance - What types of pizza are there?)
 - WhichRestaurants (Sample utterance - List of restaurants.)
 
-It is a combination of the sample utterances and slots that determine which intent the NLU models will invoke.
+Within each of the intents, sample utterances are provided that construct the potential sentances that a user may provide. The value of the slot (i.e. Large Fry) gets passed to the lambda function as a unique attribute.
+
+## Custom Slots
+It is a combination of the sample utterances and slots that determine which intent the NLU models will invoke. These are maintained in Lex, and are used for training the models. 
 
 Currently, here are the custom slots that are used by the intents.
 - FastFoodRestaurants (sample values: Chick-fil-A, McDonald's, Wendy's)
@@ -43,7 +47,7 @@ Currently, here are the custom slots that are used by the intents.
 - PizzaSize (sample values: Small, Medium, Large)
 - PizzaType (sample values: Sausage, Pepperoni, Honolulu Hawaiian)
 
-Within each of the intents, sample utterances are provided that construct the potential sentances that a user may provide. The value of the slot (i.e. Large Fry) gets passed to the lambda function as a unique attribute.
+An item does not need to be specified in the slot for the NLU to place a value into it. However, if the data is sparse, it may degrade how the NLU interprets the user requests.
 
 ## Rules logic in lambda
 All of the logic in formulating responses to different intents is processed in a series of lambda functions. Which lambda function to invoke is managed within Lex, and set at the intent level. This enables modularity to be built within the application, keeping the functions lightweight.
@@ -62,7 +66,20 @@ Here is an overview of each function currently written.
 
 ## Data lookup tables
 The core functionality of this bot is to be able to answer queries of how many calories are in different meals. While the slots that Lex uses are helpful in training the NLU models, they don't have the ability to serve as lookup files. 
-That's where the json objects come in that are stored in the /src/data/ folder.
+That's where the json objects come in that are stored in the [/src/data/](https://github.com/terrenjpeterson/caloriecounter/tree/master/src/data) folder.
+
+Here is a sample of the format.
+```sh
+[
+    {
+        "restaurant":"Chipotle",
+        "foodItems":[
+            {"foodName":"Chicken Burrito", "foodType":"Burrito", "protein":"chicken", "calories":975},
+            {"foodName":"Steak Burrito", "foodType":"Burrito", "protein":"steak", "calories":945},
+            {"foodName":"Carnitas Burrito", "foodType":"Burrito", "protein":"carnitas", "calories":1005},
+```
+
+The lambda functions refer to these objects to respond to different queries, and to calculate calorie consumption for the user.
 
 ## Deployment pipeline
 Modifying Lex is done completely through the console. The lambda functions that serve the business logic are hosted in AWS lambda, and are deployed from an EC2 host.
