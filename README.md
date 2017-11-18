@@ -8,6 +8,7 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 - [What custom slots are used by the NLU?](#custom-slots)
 - [What are the lambda functions called by the bot?](#rules-logic-in-lambda)
 - [Where does it get its data from?](#data-lookup-tables)
+- [How does information get shared between intents?](#using-session-data)
 - [What does the deployment model look like?](#deployment-pipeline)
 - [What is the website code for?](#website-in-progress)
 
@@ -94,6 +95,17 @@ Each food item may be duplicated for different spellings and phrases used to ret
 ```
 
 Given that the NLU models do not correct spelling provided by the user, it's up to the Lambda functions to handle this part of the logic.
+
+## Using Session Data
+
+The key to effective long-running conversations between a user and a bot is around managing context of the conversation.
+For example, a dialog could go on for several minutes, and invoke many intents.
+
+![](https://s3.amazonaws.com/fastfoodchatbot/media/LongChat.png)
+
+Part of facilitating this is designing a flow of the conversation. Error messages should not be too abrupt, and should lead the user to an alternative query.
+The intents should also pass data between one another. This can be accomplished by saving the session data when completing an intent.
+This allows the next intent to retrieve the information and not require the user to repeat it with each request.
 
 ## Deployment pipeline
 Modifying Lex is done completely through the console. The lambda functions that serve the business logic are hosted in AWS lambda, and are deployed from an EC2 host.
