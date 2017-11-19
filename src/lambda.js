@@ -71,8 +71,9 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
 }
 
 // this function will validate that the restaurant provided by the user matches what data we have
-function validateRestaurant(slots) {
+function validateRestaurant(intentRequest) {
     var validRestaurant = false;
+    const slots = intentRequest.currentIntent.slots;
 
     // correct common mistakes for restaurant names, then attempt to match
     if (slots.Restaurant) {
@@ -109,6 +110,7 @@ function validateRestaurant(slots) {
                     if (slots.Food.toLowerCase() === foodChoices[i].foodItems[j].foodName.toLowerCase()) {
                         console.log("default set to " + foodChoices[i].restaurant);
                         slots.Restaurant = foodChoices[i].restaurant;
+			intentRequest.currentIntent.restaurant = foodChoices[i].restaurant;
                         defaultRestaurant = true;
 			slots.Food = foodChoices[i].foodItems[j].foodName;
                     }
@@ -194,6 +196,13 @@ function validateFood(intentRequest) {
                 validFood = true;
                 foodCalories = foodItems[j].calories;
 		slots.Food = foodItems[j].foodName;
+		// check if the item is already a side (i.e. fries) as we would then skip that question
+		if (foodItems[j].sideItem) {
+		    if (!intentRequest.currentIntent.slots.Extra) {
+                        console.log("natural side item - don't ask for extra");
+		        intentRequest.currentIntent.slots.Extra = "No";
+		    }
+		}
             } else if (slots.Extra) {
 		// make sure that the parsing hasn't separated a combo food term - i.e. Ham and Swiss
 		const combineFoodWords = slots.Food + " and " + slots.Extra;
@@ -636,7 +645,7 @@ function validateFoodTypes(intentRequest, callback) {
     if (intentRequest.currentIntent.slots.Restaurant) {
 	console.log("Restaurant provided so validate.");
 
-	const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
+	const validationResult = validateRestaurant(intentRequest);
 
         // restaurant name has been provided. if failed validation, return with error message.
         if (!validationResult.isValid) {
@@ -712,7 +721,7 @@ function validateUserEntry(intentRequest, callback) {
     const foodName       = intentRequest.currentIntent.slots.Food;
     const drinkName      = intentRequest.currentIntent.slots.Drink;
 
-    const validationResult = validateRestaurant(intentRequest.currentIntent.slots);
+    const validationResult = validateRestaurant(intentRequest);
 
     // if a restaurant name has been provided, then validate it. If not, its too early and return.
     if (restaurantName) {
@@ -729,9 +738,12 @@ function validateUserEntry(intentRequest, callback) {
             // save session attributes for later reference
             sessionAttributes.restaurantName = restaurantName;
 	}
-    } else if (intentRequest.sessionAttributes.restaurantName) {
-	restaurantName = intentRequest.sessionAttributes.restaurantName;
-	intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
+    } else if (intentRequest.sessionAttributes) {
+	console.log("validate session data");
+	if (intentRequest.sessionAttributes.restaurantName) {
+	    restaurantName = intentRequest.sessionAttributes.restaurantName;
+	    intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
+	}
     }
 
     if (foodName && !invalidSlot) {
