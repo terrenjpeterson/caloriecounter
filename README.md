@@ -8,6 +8,7 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 - [What custom slots are used by the NLU?](#custom-slots)
 - [What are the lambda functions called by the bot?](#rules-logic-in-lambda)
 - [Where does it get its data from?](#data-lookup-tables)
+- [How do you create large custom slots?](#large-custom-slots)
 - [How does information get shared between intents?](#using-session-data)
 - [What does the deployment model look like?](#deployment-pipeline)
 - [What is the website code for?](#website-in-progress)
@@ -95,6 +96,27 @@ Each food item may be duplicated for different spellings and phrases used to ret
 ```
 
 Given that the NLU models do not correct spelling provided by the user, it's up to the Lambda functions to handle this part of the logic.
+
+## Large Custom Slots
+
+Managing large custom slots can be difficult, particularly if the data is dynamic. The main food lookup has several hundred unique values in it, and growing based on user usage.
+The process for creating this slot has been automated, and the data for the custom slot is taken from the [foods.json](https://github.com/terrenjpeterson/caloriecounter/blob/master/src/data/foods.json) data object.
+This is done through the AWS CLI that can load these directly from the command line. Here are the steps.
+
+1) The foods.json data object is passed to a lambda function called convertFoodsObjForSlot.
+2) The function sorts through the data, eliminates duplicates, then the data is formatted into a simple array with just the entree names.
+3) The array is returned and then passed into the AWS CLI using the [put-slot-type](https://docs.aws.amazon.com/cli/latest/reference/lex-models/put-slot-type.html) command.
+4) The model is then manually rebuilt via the console and deployed just like any other training activity.
+
+The syntax looks like this.
+
+```sh
+request=$(<foods.json)
+aws lambda invoke --function-name convertFoodsObjForSlot --payload "$request" output.json
+data=$(<output.json)
+aws lex-models put-slot-type --name FoodEntreeNames --checksum <enter latest checksum here> --enumeration-values "$data"
+
+```
 
 ## Using Session Data
 
