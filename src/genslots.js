@@ -25,15 +25,21 @@ exports.handler = function (event, context) {
     for (var k = 0; k < allFoodItems.length; k++) {
         var uniqueFoodItem = true;
         for (var m = 0; m < foodEntrees.length; m++ ) {
-            if (allFoodItems[k].toLowerCase() === foodEntrees[m].toLowerCase()) {
-                console.log("found duplicate of " + foodEntrees[m]);
+            if (allFoodItems[k] === foodEntrees[m].value) {
+                console.log("found duplicate of " + foodEntrees[m].value);
                 uniqueFoodItem = false;
             }
         }
         if (uniqueFoodItem) {
-            foodEntrees.push(allFoodItems[k]);
+            var newItem = {};
+                newItem.value = allFoodItems[k];
+            console.log(JSON.stringify(newItem));
+            foodEntrees.push(newItem);
         }
     }
+    
+    console.log("Number of unique items: " + foodEntrees.length);
+    console.log(foodEntrees);
     
     // return the food entrees array 
     context.succeed(foodEntrees);
