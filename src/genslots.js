@@ -15,7 +15,12 @@ exports.handler = function (event, context) {
         if (rawData[i].restaurant !== "Chipotle" &&
             rawData[i].restaurant !== "Taco Bell") {
             for (var j = 0; j < rawData[i].foodItems.length; j++) {
-                allFoodItems.push(rawData[i].foodItems[j].foodName);
+		// skip loading nuggets to custom slot
+            	if (rawData[i].foodItems[j].foodType === "Nuggets") {
+                    console.log("Skipped Food Item: " + rawData[i].foodItems[j].foodName);
+            	} else {
+                    allFoodItems.push(rawData[i].foodItems[j].foodName);
+		}
             }
         }
     }
