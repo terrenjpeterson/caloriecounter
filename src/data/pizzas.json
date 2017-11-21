@@ -263,6 +263,34 @@
                 {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":330} 
              ]
             },
+            {"name":"Hawaiian Chicken",
+             "sizes": [
+                {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":130},
+                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":210},
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":290}
+             ]
+            },
+            {"name":"Italian Meatball",
+             "sizes": [
+                {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":130},
+                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":210},
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":290}
+             ]
+            },
+            {"name":"Backyard BBQ Chicken",
+             "sizes": [
+                {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":140},
+                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":230},
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":330}
+             ]
+            },
+            {"name":"Buffalo Chicken",
+             "sizes": [
+                {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":130},
+                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":210},
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":290}
+             ]
+            },
             {"name":"Meat Lovers",
              "sizes": [
                 {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":180},
