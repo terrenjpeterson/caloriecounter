@@ -232,9 +232,12 @@ function calculatePizzaCalories(intentRequest, callback) {
 
     // validate the pizza type and get the calorie data for use in the response
     var pizzaTypeData = [];
+    var pizzaTypes = [];
     for (var i = 0; i < pizzas.length; i++) {
         if (intentRequest.currentIntent.slots.PizzaRestaurant.toLowerCase() === pizzas[i].restaurant.toLowerCase()) {
 	    for (var j = 0; j < pizzas[i].pizzaSelections.length; j++) {
+		// save the different valid pizza types for potential later use
+		pizzaTypes.push(pizzas[i].pizzaSelections[j].name);
 		if (intentRequest.currentIntent.slots.PizzaType.toLowerCase() === pizzas[i].pizzaSelections[j].name.toLowerCase()) {
 		    console.log("Found a match for " + intentRequest.currentIntent.slots.PizzaType);
 		    pizzaTypeData = pizzas[i].pizzaSelections[j].sizes;
@@ -249,12 +252,15 @@ function calculatePizzaCalories(intentRequest, callback) {
     var slicesPerPizza = 0;
     var caloriesPerSlice = 0;
 
-    // check if the pizza type was valid by looking for data in the array
+    // check if the pizza type was valid by looking for data in the array. If error, provide valid pizza types
     if (pizzaTypeData.length === 0) {
 	console.log("Invalid Pizza Type");
 	botResponse = "Sorry, I can't find " + intentRequest.currentIntent.slots.PizzaType + " as a valid type of pizza at " +
-	    intentRequest.currentIntent.slots.PizzaRestaurant + ". Say 'what types of pizza are there' " +
-	    "for valid types.";
+	    intentRequest.currentIntent.slots.PizzaRestaurant + ". ";
+	botResponse = botResponse + "Valid pizza types are: ";
+	for (var k = 0; k < pizzaTypes.length; k++) {
+	    botResponse = botResponse + pizzaTypes[k] + ", ";
+	}
     // check if the quantity of slices has been provided, or if it is for a full pizza
     } else {
 	console.log("Searching for match of pizza size: " + intentRequest.currentIntent.slots.PizzaSize);
