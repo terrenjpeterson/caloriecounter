@@ -621,7 +621,7 @@ function validateMexicanFood(intentRequest) {
 		    }
 		} else {
 		    // no protein was provided, so provide message requesting it to be provided
-		    botResponse = "What type of a " + foodType + " are you eating?";
+		    botResponse = "What type of a " + foodType + " are you eating? (i.e. chicken, steak)";
 		    return buildValidationResult(false, 'Protein', botResponse);
 		}
 	    } else {
@@ -683,9 +683,14 @@ function validateFoodTypes(intentRequest, callback) {
 		if (!foodTypeMatch) {
 		    // throw exception message and let the user try again
 		    console.log("No food types at " + intentRequest.currentIntent.slots.Restaurant);
+		    var validFoodTypes = getFoodTypes(restaurantName).foodOptions;
 		    var botMessage = "Sorry, " + intentRequest.currentIntent.slots.FoodType + " is " +
-		        "not a valid food type at " + intentRequest.currentIntent.slots.Restaurant + 
-			". Please try again.";
+		        "not a valid food category at " + intentRequest.currentIntent.slots.Restaurant + 
+			". Please say ";
+		    // provide valid alternatives
+                    for (var m = 0; m < foodTypes.length; m++) {
+                    	botMessage = botMessage + foodTypes[m] + ", ";
+                    }
                     const optionValidationResult = buildValidationResult(false, 'FoodType', botMessage);
 		    invalidSlot = true;
                     callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
