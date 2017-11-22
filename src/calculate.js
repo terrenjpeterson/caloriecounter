@@ -100,6 +100,8 @@ function calculateCalories(intentRequest, callback) {
     const extraName 	 = intentRequest.currentIntent.slots.Extra;
     const nuggetQty	 = intentRequest.currentIntent.slots.Quantity;
     const mexFoodType	 = intentRequest.currentIntent.slots.MexicanFoodType;
+    const ketchupPackets = intentRequest.currentIntent.slots.PacketsKetchup;
+    const ketchup	 = intentRequest.currentIntent.slots.Ketchup;
 
     var totalCalories 	 = 0;
     var counterResponse  = "";
@@ -161,8 +163,22 @@ function calculateCalories(intentRequest, callback) {
         var extraCalories = getFoodCalories(extraName, restaurantName).foodCalories;
         totalCalories += extraCalories;
         counterResponse = counterResponse + " and a " + extraName;
-        sessionAttributes.extraName     = extraName;
-        sessionAttributes.extraCalories = extraCalories;
+	// if ketchup is an optional item for the extra, check what the user response was
+	if (ketchup) {
+	    if (ketchup.toLowerCase() === "yes") {
+		const ketchupCalories = 20;
+		counterResponse = counterResponse + " with ketchup";
+		sessionAttributes.extraName = extraName + " with ketchup";
+		sessionAttributes.extraCalories = extraCalories + ketchupCalories;
+		totalCalories += ketchupCalories;
+	    } else {
+            	sessionAttributes.extraName     = extraName;
+            	sessionAttributes.extraCalories = extraCalories;
+	    }
+	} else {
+            sessionAttributes.extraName     = extraName;
+            sessionAttributes.extraCalories = extraCalories;
+	}
     }
 
     // process details related to the drink
