@@ -403,6 +403,7 @@ function validateExtra(slots) {
     var extraCalories = 0;
     var restaurant = slots.Restaurant;
     var foodItems = [];
+    var ketchupItem = false;
 
     console.log("validated extra item " + slots.Extra);
 
@@ -417,12 +418,16 @@ function validateExtra(slots) {
 
     // take the array of food items from the matching restaurant, and attempt to match the extra item
     for (var j = 0; j < foodItems.length; j++) {
-        //console.log("food item: " + JSON.stringify(foodItems[j]));
+	// matched extra item
         if (slots.Extra.toLowerCase() == foodItems[j].foodName.toLowerCase()) {
             console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
             validExtra = true;
             extraCalories = foodItems[j].calories;
             slots.Extra = foodItems[j].foodName;
+	    if (foodItems[j].ketchupItem) {
+		console.log("this is a ketchup item - i.e. fries. prompt accordingly for additional detail.");
+		ketchupItem = true;
+	    }
         }
     }    
 
@@ -436,7 +441,7 @@ function validateExtra(slots) {
     // create response. if extra food item didn't match, respond as such, else pass back as supported.
     if (validExtra) {
         console.log("passed extra validation");
-        return { isValid: true, calories: extraCalories };
+        return { isValid: true, calories: extraCalories, ketchup: ketchupItem };
     } else if (slots.Extra.toLowerCase() === "nothing" ||
 	       slots.Extra.toLowerCase() === "none" ||
 	       slots.Extra.toLowerCase() === "no." ||
@@ -783,7 +788,17 @@ function validateUserEntry(intentRequest, callback) {
 	    slots[`${extraValidationResult.violatedSlot}`] = null;
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
             	slots, extraValidationResult.violatedSlot, extraValidationResult.message));
-	}
+	} else if (extraValidationResult.ketchup) {
+	    if (!intentRequest.currentIntent.slots.Ketchup) {
+		console.log("Prompt user if they want ketchup");
+		var botMessage = "Do you want ketchup with your " + intentRequest.currentIntent.slots.Extra + "?";
+		const ketchupPrompt = buildValidationResult(false, 'Ketchup', botMessage);
+		callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+		    slots, ketchupPrompt.violatedSlot, ketchupPrompt.message));
+	    } else {
+		console.log("Vallidate Ketchup Response: " + intentRequest.currentIntent.slots.Ketchup);
+	    }
+	} 
     } else {
 	// default message prompting for side item - this is a separate function
 	if (intentRequest.currentIntent.slots.Restaurant && !invalidSlot) {
