@@ -112,11 +112,15 @@ The syntax looks like this.
 
 ```sh
 request=$(<foods.json)
+
 aws lambda invoke --function-name convertFoodsObjForSlot --payload "$request" output.json
+
 data=$(<output.json)
+
 aws lex-models put-slot-type --name FoodEntreeNames --checksum <enter latest checksum here> --enumeration-values "$data"
 
 ```
+Also, the checksum value is from the prior deployment of the custom slot. I can't find any CLI command that retreives this if you lose it, so a workaround is to just create a new slot name and deploy a new unique name, then change the intent to use it.
 
 ## Using Session Data
 
