@@ -10,6 +10,7 @@
 var foodChoices = require("data/foods.json");
 var drinks = require("data/drinks.json");
 var restaurants = require("data/restaurants.json");
+var sauces = require("data/sauces.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -102,6 +103,7 @@ function calculateCalories(intentRequest, callback) {
     const mexFoodType	 = intentRequest.currentIntent.slots.MexicanFoodType;
     const ketchupPackets = intentRequest.currentIntent.slots.PacketsKetchup;
     const ketchup	 = intentRequest.currentIntent.slots.Ketchup;
+    const sauce		 = intentRequest.currentIntent.slots.Sauce;
 
     var totalCalories 	 = 0;
     var counterResponse  = "";
@@ -120,10 +122,23 @@ function calculateCalories(intentRequest, callback) {
     } else if (nuggetQty) {
 	const nuggetName = nuggetQty + " piece chicken nuggets";
         var nuggetCalories = getFoodCalories(nuggetName, restaurantName).foodCalories;
-        totalCalories += nuggetCalories;
+        totalCalories += nuggetCalories
         sessionAttributes.foodName     = nuggetName;
         sessionAttributes.foodCalories = nuggetCalories;
         counterResponse = "At " + restaurantName + " eating a " + nuggetName;
+	// check if nuggets also had sauce
+	if (sauce.toLowerCase !== "no") {
+	    var sauceCalories = getSauceCalories(sauce, restaurantName).sauceCalories;
+            totalCalories += sauceCalories  
+            sessionAttributes.sauceCalories = sauceCalories;
+	    if (sauce.toLowerCase !== "yes") {
+	    	sessionAttributes.sauceName = sauce + " sauce";
+	    	counterResponse = counterResponse + " with " + sauce + " sauce ";
+	    } else {
+		sessionAttributes.sauceName = "Nugget Sauce";
+		counterResponse = counterResponse + " with dipping sauce";
+	    }
+	}
         console.log("returned food calories: " + JSON.stringify(nuggetCalories));
     } else if (mexFoodType) {
 	const protein = intentRequest.currentIntent.slots.Protein;
@@ -240,6 +255,21 @@ function getFoodCalories(foodName, restaurantName) {
 
     return {
 	foodCalories
+    };
+}
+
+// this function looks up sauce calories based on a sauce name
+function getSauceCalories(sauce, restaurantName) {
+    var sauceCalories = 45;
+
+    for (var i = 0; i < sauces.length; i++) {
+	if (sauce.toLowerCase() === sauces[i].sauceName.toLowerCase()) {
+	    sauceCalories = sauces[i].calories;
+	}
+    }
+
+    return {
+	sauceCalories
     };
 }
 

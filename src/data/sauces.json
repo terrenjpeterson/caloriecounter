@@ -1,0 +1,61 @@
+[
+    {
+        "sauceName":"BBQ",
+        "calories":45
+    },
+    {
+	"sauceName":"Chipotle BBQ",
+	"calories":45,
+	"restaurantNames":["McDonalds"]
+    },
+    {
+	"sauceName":"Honey Mustard",
+	"calories":45,
+	"restaurantNames":["McDonalds", "Hardees", "Honey Mustard"]
+    },
+    {
+        "sauceName":"Sweet and Sour",
+        "calories":45,
+        "restaurantNames":["McDonalds", "Wendys"]
+    },
+    {
+        "sauceName":"Tangy BBQ",
+        "calories":45,
+        "restaurantNames":["McDonalds"]
+    },
+    {
+        "sauceName":"Buffalo",
+        "calories":50,
+        "restaurantNames":["McDonalds", "Hardees", "Chick-fil-A"]
+    },     
+    {
+        "sauceName":"Sweet Chili",
+        "calories":45,
+        "restaurantNames":["McDonalds"]
+    },
+    {
+        "sauceName":"Hot Mustard",
+        "calories":45,
+        "restaurantNames":["McDonalds"]
+    },     
+    {
+        "sauceName":"Ranch",
+        "calories":140,
+        "restaurantNames":["McDonalds","Hardees","Wendys"]
+    },
+    {
+        "sauceName":"Sriracha",
+        "calories":45,
+        "restaurantNames":["Chick-fil-A", "Wendys"]
+    },
+    {
+        "sauceName":"Chick-fil-A",
+        "calories":140,
+        "restaurantNames":["Chick-fil-A"]
+    },
+    {
+        "sauceName":"Polynesian",
+        "calories":140,
+        "restaurantNames":["Chick-fil-A"]
+    }
+]

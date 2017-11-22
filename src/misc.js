@@ -199,6 +199,10 @@ function getMealDetails(intentRequest, callback) {
     if (sessionAttributes.foodName) {
 	var detailResponse = sessionAttributes.foodName + " is " + 
 	    sessionAttributes.foodCalories + " calories. ";
+	if (sessionAttributes.sauceName) {
+	    detailResponse = detailResponse + sessionAttributes.sauceName + " is " +
+		sessionAttributes.sauceCalories + " calories. ";
+	}
         if (sessionAttributes.extraName) {
             detailResponse = detailResponse + sessionAttributes.extraName + " is " +
                 sessionAttributes.extraCalories + " calories. ";
@@ -207,7 +211,7 @@ function getMealDetails(intentRequest, callback) {
 	    detailResponse = detailResponse + sessionAttributes.drinkName + " is " +
 		sessionAttributes.drinkCalories + " calories. ";
 	}
-	if (sessionAttributes.extraName || sessionAttributes.drinkName) {
+	if (sessionAttributes.extraName || sessionAttributes.drinkName || sessionAttributes.sauceName) {
 	    detailResponse = detailResponse + "Total Calories are " + 
 		sessionAttributes.totalCalories + ". ";
 	}

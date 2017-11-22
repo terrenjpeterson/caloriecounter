@@ -10,6 +10,7 @@
 var foodChoices = require("data/foods.json");
 var drinks = require("data/drinks.json");
 var restaurants = require("data/restaurants.json");
+var sauces = require("data/sauces.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -459,6 +460,59 @@ function validateExtra(slots) {
     }
 }
 
+// this function will validate the sauce answer provided by the user
+function validateSauce(intentRequest) {
+    const slots = intentRequest.currentIntent.slots;
+
+    console.log("validating sauce response provided " + slots.Sauce);
+
+    if (slots.Sauce.toLowerCase() === "no" ||
+	slots.Sauce.toLowerCase() === "no thanks" ||
+	slots.Sauce.toLowerCase() === "none" ||
+	slots.Sauce.toLowerCase() === "yes") {
+	console.log("binary answer given for sauce response - no additional validation.");
+	return { isValid: true};
+    } else {
+	// not a binary answer - try and match from table
+	var validSauceName = false;
+	var restaurantSauces = [];
+	console.log("Check sauce table." + JSON.stringify(sauces));
+	for (var i = 0; i < sauces.length; i++) {
+	    // check to see if there is a match with the sauce name
+	    if (sauces[i].sauceName.toLowerCase() === slots.Sauce.toLowerCase()) {
+		console.log("Matched sauce name.");
+		validSauceName = true;
+		intentRequest.currentIntent.slots.Sauce = sauces[i].sauceName;
+	    } 
+	    // save the sauce name if it matches the restaurant. this may be used in the response.
+	    if (sauces[i].restaurantNames) {
+	    	for (var j = 0; j < sauces[i].restaurantNames.length; j++) {
+		    if (sauces[i].restaurantNames[j].toLowerCase() === slots.Restaurant.toLowerCase()) {
+		        restaurantSauces.push(sauces[i].sauceName);
+		    }
+		}
+	    }
+	}
+	if (validSauceName) {
+	    return { isValid: true};
+	} else {
+	    // sauce name wasn't valid. return response with those info is available on.
+	    console.log("Couldn't match sauce name provided.");
+	    var botResponse = "Sorry, I don't have info on " + slots.Sauce + ". " +
+		"How about ";
+	    console.log("Sauce Alternatives to Suggest: " + JSON.stringify(restaurantSauces));
+	    for (var k = 0; k < restaurantSauces.length; k++) {
+		if ((k+1) < restaurantSauces.length) {
+		    botResponse = botResponse + restaurantSauces[k] + ", ";
+		} else {
+		    botResponse = botResponse + " or " + restaurantSauces[k] + "?";
+		}
+	    }
+            return buildValidationResult(false, 'Sauce', botResponse);
+        }
+    }
+}
+
 // this function will validate that the drink provided is something that calorie detail is available for
 function validateDrink(slots) {
     var validDrink = false;
@@ -845,9 +899,21 @@ function validateUserEntry(intentRequest, callback) {
 	}
 	// check if a sauce has been added
 	if (intentRequest.currentIntent.slots.Sauce) {
-	    console.log("Received sauce:" + intentRequest.currentIntent.slots.Sauce)
+	    console.log("Received sauce:" + intentRequest.currentIntent.slots.Sauce);
 	}
     }
+
+    var nuggetSauce = intentRequest.currentIntent.slots.Sauce;
+    if (nuggetSauce && !invalidSlot) {
+	console.log("Nugget sauce response provided.");
+	const sauceValidationResult = validateSauce(intentRequest);
+	if (!sauceValidationResult.isValid) {
+            slots[`${sauceValidationResult.violatedSlot}`] = null;
+            invalidSlot = true;
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                slots, sauceValidationResult.violatedSlot, sauceValidationResult.message));
+	}
+    }	
 
     // validate Mexican Food Types
     var mexicanFoodType = intentRequest.currentIntent.slots.MexicanFoodType;
