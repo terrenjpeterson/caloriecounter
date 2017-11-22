@@ -439,6 +439,9 @@ function validateExtra(slots) {
         return { isValid: true, calories: extraCalories };
     } else if (slots.Extra.toLowerCase() === "nothing" ||
 	       slots.Extra.toLowerCase() === "none" ||
+	       slots.Extra.toLowerCase() === "no." ||
+	       slots.Extra.toLowerCase() === "No side items" ||
+	       slots.Extra.toLowerCase() === "No side items." ||
 	       slots.Extra.toLowerCase() === "no" ) {
 	console.log("no extra provided");
 	return { isValid: true, calories: 0 };
@@ -683,7 +686,7 @@ function validateFoodTypes(intentRequest, callback) {
 		if (!foodTypeMatch) {
 		    // throw exception message and let the user try again
 		    console.log("No food types at " + intentRequest.currentIntent.slots.Restaurant);
-		    var validFoodTypes = getFoodTypes(restaurantName).foodOptions;
+		    var validFoodTypes = getFoodTypes(intentRequest.currentIntent.slots.Restaurant).foodOptions;
 		    var botMessage = "Sorry, " + intentRequest.currentIntent.slots.FoodType + " is " +
 		        "not a valid food category at " + intentRequest.currentIntent.slots.Restaurant + 
 			". Please say ";
@@ -781,8 +784,16 @@ function validateUserEntry(intentRequest, callback) {
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
             	slots, extraValidationResult.violatedSlot, extraValidationResult.message));
 	}
+    } else {
+	// default message prompting for side item - this is a separate function
+	if (intentRequest.currentIntent.slots.Restaurant && !invalidSlot) {
+	    if (intentRequest.currentIntent.name === 'GetCalories') {
+		invalidSlot = true;
+		buildExtraMessage(intentRequest, callback);
+	    }
+	}
     }
-
+	
     // validate drink name if provided
     if (drinkName && !invalidSlot) {
 	const drinkValidationResult = validateDrink(intentRequest.currentIntent.slots);
@@ -846,6 +857,31 @@ function validateUserEntry(intentRequest, callback) {
         callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
     }
     
+}
+
+// this function builds an intelligent response back prompting the user for a side item
+function buildExtraMessage(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    console.log("Building side item prompt for " + intentRequest.currentIntent.slots.Restaurant);
+               
+    // customize the message based on the restaurant name
+     
+    var botMessage = "Any side items with that - for example, ";
+           
+    if (intentRequest.currentIntent.slots.Restaurant === "Panera") {
+	botMessage = botMessage + "Chips or a Baguette";
+    } else if (intentRequest.currentIntent.slots.Restaurant === "Subway") {
+	botMessage = botMessage + "Potato Chips or Cheetos";
+    } else {
+	botMessage = botMessage + "Fries";
+    }
+    botMessage = botMessage + "?";
+                
+    const defaultExtra = buildValidationResult(false, 'Extra', botMessage);
+               
+    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+	intentRequest.currentIntent.slots, defaultExtra.violatedSlot, defaultExtra.message));
 }
 
 // --------------- Intents -----------------------
