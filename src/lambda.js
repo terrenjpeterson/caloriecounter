@@ -224,55 +224,69 @@ function validateFood(intentRequest) {
         console.log("passed food validation");
         return { isValid: true, calories: foodCalories };
     } else if (slots.Food) {
-        console.log("failed food validation");
-	var vagueFoodEval = vagueFood(slots.Food, slots.Restaurant).vagueFoodResponse;
-	console.log(JSON.stringify(vagueFoodEval));
-	// this is for the *too value* error condition
-	if (vagueFoodEval.assessment) {
-	    return buildValidationResult(false, 'Food', vagueFoodEval.msg);
-	// this is for the *quantity required* error condition
-	} else if (slots.Food.toLowerCase() === "chicken nuggets" || 
-                   slots.Food.toLowerCase() === "chicken tenders" ||
-                   slots.Food.toLowerCase() === "mcnuggets" ||
-		   slots.Food.toLowerCase() === "nuggets") {
-	    return buildValidationResult(false, 'Food', 'Can you be more specific? For example say six piece ' + slots.Food + ' so I can be precise.');
-	// this is trying to catch where the user has replied with more than one food item
-	} else if (slots.Food.length > 25) {
-	    return buildValidationResult(false, 'Food', 'Can you just start by saying just the first item?');
-	} else {
-	    // check to see if the user is entering another restaurant name vs. a food name - this is a common usability issue
-	    var switchRestaurant = false;
-            var updatedName = scrubRestaurantName(slots.Food).scrubData.restaurantName;
-	    // update food name with the correct restaurant spelling if applicable
-            if (updatedName) {
-		console.log("Scrubbed name to: " + updatedName);
-                slots.Food = updatedName;
-            } 
-            for (var i = 0; i < restaurants.length; i++) {
-                if (slots.Food.toLowerCase() === restaurants[i].toLowerCase()) {
-                    console.log("found a match for " + restaurants[i]);
-                    switchRestaurant = true;
-                }
-            }
-	    if (switchRestaurant) {
-		slots.Restaurant = slots.Food;
-		slots.Food = "";
-		return buildValidationResult(false, 'Food', 'Switching to restaurant ' + slots.Restaurant + '. What food are you looking for?');
-	    } else {
-                // this is the generic error message where a match can't be found
-		var botResponse = "Sorry, I don't have information for " + slots.Food;
-		if (slots.Restaurant) {
-		    botResponse = botResponse + " at " + slots.Restaurant + 
-			". Please say 'What are my food options at " + slots.Restaurant + "' for help.";
-		} else {
-		    botResponse = botResponse + ". Please try another restaurant, or say list restaurants.";
-		}
-                return buildValidationResult(false, 'Food', botResponse);
-	    }
-	}
+	const foodError = processFoodEntryError(intentRequest);
+	console.log(JSON.stringify(foodError));
+	return buildValidationResult(false, 'Food', foodError.message.content);
     } else {
         console.log("no food items provided yet.");
         return { isValid: true };
+    }
+}
+
+// process handling of a food entry that failed the initial validation
+function processFoodEntryError(intentRequest) {
+    var slots = intentRequest.currentIntent.slots;
+
+    console.log("failed food validation");
+
+    var vagueFoodEval = vagueFood(slots.Food, slots.Restaurant).vagueFoodResponse;
+
+    // this is for the *too value* error condition
+    if (vagueFoodEval.assessment) {
+	return buildValidationResult(false, 'Food', vagueFoodEval.msg);
+    // this is for the *quantity required* error condition
+    } else if (slots.Food.toLowerCase() === "chicken nuggets" || 
+               slots.Food.toLowerCase() === "chicken tenders" ||
+               slots.Food.toLowerCase() === "mcnuggets" ||
+	       slots.Food.toLowerCase() === "nuggets") {
+	return buildValidationResult(false, 'Food', 'Can you be more specific? For example say six piece ' + slots.Food + ' so I can be precise.');
+
+    // this is trying to catch where the user has replied with more than one food item
+    } else if (slots.Food.length > 25) {
+	return buildValidationResult(false, 'Food', 'Can you just start by saying just the first item?');
+    } else {
+	console.log("Checking for inadvertent Restaurant Name");
+    // check to see if the user is entering another restaurant name vs. a food name - this is a common usability issue
+	var switchRestaurant = false;
+        var updatedName = scrubRestaurantName(slots.Food).scrubData.restaurantName;
+	// update food name with the correct restaurant spelling if applicable
+        if (updatedName) {
+	    console.log("Scrubbed name to: " + updatedName);
+            slots.Food = updatedName;
+        } 
+        for (var i = 0; i < restaurants.length; i++) {
+            if (slots.Food.toLowerCase() === restaurants[i].toLowerCase()) {
+                console.log("found a match for " + restaurants[i]);
+                switchRestaurant = true;
+            }
+        }
+	if (switchRestaurant) {
+	    slots.Restaurant = slots.Food;
+	    slots.Food = "";
+	    return buildValidationResult(false, 'Food', 'Switching to restaurant ' + slots.Restaurant + '. What food are you looking for?');
+
+	} else {
+            // this is the generic error message where a match can't be found
+	    console.log("match can't be found");
+	    var botResponse = "Sorry, I don't have information for " + slots.Food;
+	    if (slots.Restaurant) {
+		botResponse = botResponse + " at " + slots.Restaurant + 
+		    ". Please say 'What are my food options at " + slots.Restaurant + "' for help.";
+	    } else {
+		botResponse = botResponse + ". Please try another restaurant, or say list restaurants.";
+	    }
+            return buildValidationResult(false, 'Food', botResponse);
+	}
     }
 }
 
@@ -817,6 +831,8 @@ function validateUserEntry(intentRequest, callback) {
         // food name exists, so validate it
         console.log("Validate Food Name: " + foodName);                
         const foodValidationResult = validateFood(intentRequest);
+
+	console.log("food validation result: " + JSON.stringify(foodValidationResult));
 
         // check if food was valid
         if (!foodValidationResult.isValid) {
