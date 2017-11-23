@@ -148,6 +148,30 @@ function endConversation(intentRequest, callback) {
         
 }
 
+// this function reacts to someone paying a complement
+
+function replyComplement(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var counterResponse = "Awww - you're too kind!";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
+
+}
+
+// this function reacts to someone being harsh or critical
+
+function replyCritic(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var counterResponse = "Sorry, I'm trying my best and will learn from my mistakes!";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
+
+}
+
 // this function is what builds the response to a request for help
 
 function getBotName(intentRequest, callback) {
@@ -335,6 +359,12 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'MyName') {
 	console.log("user requested bot name");
 	return getBotName(intentRequest, callback);
+    } else if (intentName === 'Complement') {
+        console.log("user provided a complement");
+        return replyComplement(intentRequest, callback);
+    } else if (intentName === 'Critic') {
+        console.log("user was harsh");
+        return replyCritic(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
