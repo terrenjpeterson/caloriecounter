@@ -160,6 +160,13 @@ function scrubRestaurantName(restaurantName) {
                restaurantName.toLowerCase() === "arby’s") {
         console.log("corrected restaurant name apostrophie");
         scrubData.restaurantName = "Arbys";
+    } else if (restaurantName.toLowerCase() === "5 guys" ||
+	       restaurantName.toLowerCase() === "5 guy's" ||
+               restaurantName.toLowerCase() === "5 guy’s" ||
+	       restaurantName.toLowerCase() === "Five guy's" || 
+               restaurantName.toLowerCase() === "Five guy’s") {
+	console.log("correct restaurant name apostrophie");
+	scrubData.restaurantName = "Five Guys";
     }
 
     return {
