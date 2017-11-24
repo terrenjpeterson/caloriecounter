@@ -44,6 +44,12 @@ Then there are intents that form the 'personality' of the bot. These were create
 
 Within each of the intents, sample utterances are provided that construct the potential sentances that a user may provide. The value of the slot (i.e. Large Fry) gets passed to the lambda function as a unique attribute.
 
+You can get the summary information from the AWS CLI by executing the following command.
+
+```sh
+aws lex-models get-bot --name FastFoodChecker --version-or-alias PROD
+```
+
 ## Custom Slots
 It is a combination of the sample utterances and slots that determine which intent the NLU models will invoke. These are maintained in Lex, and are used for training the models. 
 
