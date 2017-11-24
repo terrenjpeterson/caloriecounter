@@ -16,6 +16,7 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 
 ## Using NLU Models
 This bot uses AWS Lex - a service that contains the intelligence to be able to decipher user requests and trigger intents based on data provided in the models. The intents then invoke lambda functions that contain business logic specific to the intent.
+
 ![](https://s3.amazonaws.com/fastfoodchatbot/media/LexArchitecture.png)
 
 Currently there are many different intents that the NLU process sorts into.  Here are the "core functions" of the bot.
@@ -47,6 +48,8 @@ Within each of the intents, sample utterances are provided that construct the po
 It is a combination of the sample utterances and slots that determine which intent the NLU models will invoke. These are maintained in Lex, and are used for training the models. 
 
 Currently, here are the custom slots that are used by the intents.
+- FoodOptions (sample values: Big Mac, Smokehouse Brisket Sandwich, etc. This has hundreds of entries, and is generated from the foods.json data object).)
+- DrinkOptions (sample values: Water, Iced Tea, Large Diet Lemonade, etc. This has many entries, and is generated from the drinks.json data object).
 - FastFoodRestaurants (sample values: Chick-fil-A, McDonald's, Wendy's)
 - FoodType (sample values: Burger, Salad, Chicken)
 - ExtraItems (sample values: Large Fry, Sugar Cookie, Side Salad)
