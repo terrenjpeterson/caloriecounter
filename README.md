@@ -9,9 +9,9 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 - [What are the lambda functions called by the bot?](#rules-logic-in-lambda)
 - [Where does it get its data from?](#data-lookup-tables)
 - [How do you create large custom slots?](#large-custom-slots)
-- [How does information get shared between intents?](#using-session-data)
+- [How does information get shared between intents?](#sharing-session-data-between-intents)
 - [What does the deployment model look like?](#deployment-pipeline)
-- [Does a bot have a personality?](#answer-non-topic-questions)
+- [Does a bot have a personality?](#add-personality-to-the-bot))
 - [What is the website code for?](#website-in-progress)
 
 ## Using NLU Models
@@ -123,7 +123,7 @@ aws lex-models put-slot-type --name FoodEntreeNames --checksum <enter latest che
 ```
 Also, the checksum value is from the prior deployment of the custom slot. I can't find any CLI command that retreives this if you lose it, so a workaround is to just create a new slot name and deploy a new unique name, then change the intent to use it.
 
-## Using Session Data
+## Sharing Session Data between Intents
 
 The key to effective long-running conversations between a user and a bot is around managing context of the conversation.
 For example, a dialog could go on for several minutes, and invoke many intents.
@@ -193,11 +193,28 @@ aws lambda invoke --function-name myCalorieCalculatorGreen --payload "$request" 
 
 This process is repeated for each of the lambda functions that are called by Lex. This includes having at least one test condition for each lambda function to ensure that the deployment was done correctly. 
 
-## Answer non-topic questions
+## Add Personality to the Bot
 
 One of the topics in bot design is around having a personality. Something to consider when designing the intents is what are all of the possible questions that a user may ask.
 This should include off-topic questions, such as 'what is your name' or emotional responses like 'oh-no' or 'you suck'.
 These are easy to code - usually just a simple request-response with no slots involved, and does tend to make the dialogs more natural.
+
+For an example, here is a brief response coded in the [misc.js](https://github.com/terrenjpeterson/caloriecounter/blob/master/src/misc.js) function that responds to if someone asks what the bots name is.
+
+```sh
+
+function getBotName(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var botResponse = "My name is Chuck. I'm a chatbot that helps people sort out " +
+	"fast food options. Talking about food all day makes me hungry!!!";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: botResponse }));
+
+}
+
+```
 
 ## Website in progress
 As part of the initial effort, I was attempting to get this chatbot published to the slack store. As part of that, I needed to build a website for public support of the app. It's a work in progress, and called caloriecountbot.com. It's hosted by s3, and the source is located in the /website folder.
