@@ -26,13 +26,20 @@ Currently there are many different intents that the NLU process sorts into.  Her
 - GetPizzaCalories (Sample utterance - How many calories in 2 slices of Pepperoni Pizza at Papa Johns?)
 
 There are also intents that complement the core features.
-- EndConversation (Built-in intent - uses AWS sample utterances like - Stop)
-- HelpRequest (Built-in intent - uses AWS sample utterances like - Help)
-- Introduction (Sample utterances - Hello, Get Started, Send Message)
 - MoreDetails (Sample utterance - More details. Note: this can only be invoked after prior requests are made in the conversation as it's reading data from the session).
-- Thanks (Sample utterances - Thanks, Goodbye, Bye)
+- DailyIntakeAnalysis (Sample utterance - analyze my meal. Similar to more details, this uses session data, so must follow one of the prior requests.
 - WhatPizzaTypes (Sample utterance - What types of pizza are there?)
 - WhichRestaurants (Sample utterance - List of restaurants.)
+
+Then there are intents that form the 'personality' of the bot. These were created based on real user usage, and prevent the generic error message from being used to respond.
+- EndConversation (Built-in intent - uses AWS sample utterances like - Stop)
+- Introduction (Sample utterances - Hello, Get Started, Send Message)
+- Thanks (Sample utterances - Thanks, Goodbye, Bye)
+- Complement (Sample utterances - I love you)
+- Critic (Sample utterances - U suck)
+- Shock (Sample utterances - wow, ouch)
+- MyName (Sample utterances - what is your name)
+- HelpRequest (Built-in intent - uses AWS sample utterances like - Help)
 
 Within each of the intents, sample utterances are provided that construct the potential sentances that a user may provide. The value of the slot (i.e. Large Fry) gets passed to the lambda function as a unique attribute.
 
@@ -102,7 +109,8 @@ Given that the NLU models do not correct spelling provided by the user, it's up 
 
 Managing large custom slots can be difficult, particularly if the data is dynamic. The main food lookup has several hundred unique values in it, and growing based on user usage.
 The process for creating this slot has been automated, and the data for the custom slot is taken from the [foods.json](https://github.com/terrenjpeterson/caloriecounter/blob/master/src/data/foods.json) data object.
-This is done through the AWS CLI that can load these directly from the command line. Here are the steps.
+This is done through the AWS CLI that can load these directly from the command line. All of the files are contained in the [slots}(https://github.com/terrenjpeterson/caloriecounter/tree/master/src/slots) directory for reference. 
+Here are the steps used to create.
 
 1) The foods.json data object is passed to a lambda function called convertFoodsObjForSlot.
 2) The function sorts through the data, eliminates duplicates, then the data is formatted into a simple array with just the entree names.
@@ -112,16 +120,20 @@ This is done through the AWS CLI that can load these directly from the command l
 The syntax looks like this.
 
 ```sh
+# foods.json is the data object that will be passed to the lambda function
 request=$(<foods.json)
 
+# invoke the lambda function from the command line and write the output to output.json
 aws lambda invoke --function-name convertFoodsObjForSlot --payload "$request" output.json
 
 data=$(<output.json)
 
-aws lex-models put-slot-type --name FoodEntreeNames --checksum <enter latest checksum here> --enumeration-values "$data"
+# invoke lex to create a new version of the FoodEntreeNames custom slot using the data from output.json
+aws lex-models put-slot-type --name FoodEntreeNames --checksum <enter latest checksum here> --enumeration-values "$data" >> sysout.txt
 
 ```
 Also, the checksum value is from the prior deployment of the custom slot. I can't find any CLI command that retreives this if you lose it, so a workaround is to just create a new slot name and deploy a new unique name, then change the intent to use it.
+When invoking the CLI, saving it to sysout.txt helps as you will be saving the logs that contain the console output.
 
 ## Sharing Session Data between Intents
 
