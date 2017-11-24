@@ -577,6 +577,7 @@
             {"foodName":"7 Layer","calories":440},
             {"foodName":"Seven Layer","calories":440},
             {"foodName":"Bean Burrito","calories":380},
+	    {"foodName":"5 layer burrito", "calories":500},
             {"foodName":"Beefy 5 Layer Burrito", "foodType":"Burrito", "calories":500},
             {"foodName":"Beefy five layer burrito","calories":500},
             {"foodName":"Beefy Fritos Burrito","calories":440},
