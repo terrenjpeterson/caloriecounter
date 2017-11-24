@@ -4,6 +4,10 @@
         "calories":45
     },
     {
+        "sauceName":"Ketchup",
+        "calories":20
+    },
+    {
 	"sauceName":"Chipotle BBQ",
 	"calories":45,
 	"restaurantNames":["McDonalds"]
