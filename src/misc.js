@@ -137,19 +137,16 @@ function getBasicDailyAnalysis(intentRequest, callback) {
 }
 
 // this function is what builds the wrap-up of a conversation
-
 function endConversation(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
-    var counterResponse = 'Thanks for checking in. Have a nice day! ';
+    var counterResponse = 'Thanks for stoping by. I get off work at 5pm... on June 14, 2035! ';
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
-        
 }
 
 // this function reacts to someone paying a complement
-
 function replyComplement(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
@@ -157,11 +154,9 @@ function replyComplement(intentRequest, callback) {
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
-
 }
 
 // this function reacts to someone being harsh or critical
-
 function replyCritic(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
@@ -169,11 +164,36 @@ function replyCritic(intentRequest, callback) {
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
+}
 
+// this function reacts to someone indicating that they will come back
+function replyComingBack(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var counterResponse = "Okay I.will.be.right.here! :)";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
+}
+
+// this function reacts to a pause in the conversation
+function replyNextTopic(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var counterResponse = "What's next? ";
+
+    if (sessionAttributes.restaurantName) {
+	counterResponse = counterResponse + "I assume you are still at " + 
+	    sessionAttributes.restaurantName + ".";
+    } else {
+    	counterResponse = counterResponse + "Interested in getting a pizza?";
+    }
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
 }
 
 // this function is what builds the response to a request for help
-
 function getBotName(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
@@ -182,11 +202,9 @@ function getBotName(intentRequest, callback) {
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: botResponse }));
-
 }
 
 // this function is what builds the response to a request for help
-
 function getHelp(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
@@ -365,6 +383,12 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'Critic') {
         console.log("user was harsh");
         return replyCritic(intentRequest, callback);
+    } else if (intentName === 'ComingBack') {
+	console.log("user said they will come back");
+	return replyComingBack(intentRequest, callback);
+    } else if (intentName === 'NextTopic') {
+	console.log("user indicated a pause in the conversation");
+	return replyNextTopic(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
