@@ -11,6 +11,7 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 - [How do you create large custom slots?](#large-custom-slots)
 - [How does information get shared between intents?](#using-session-data)
 - [What does the deployment model look like?](#deployment-pipeline)
+- [Does a bot have a personality?](#answer-non-topic-questions)
 - [What is the website code for?](#website-in-progress)
 
 ## Using NLU Models
@@ -191,6 +192,12 @@ aws lambda invoke --function-name myCalorieCalculatorGreen --payload "$request" 
 4) Execute a test of the lambda function directly with valid sample data. The response object is returned and written to the console as well as a local file.
 
 This process is repeated for each of the lambda functions that are called by Lex. This includes having at least one test condition for each lambda function to ensure that the deployment was done correctly. 
+
+## Answer non-topic questions
+
+One of the topics in bot design is around having a personality. Something to consider when designing the intents is what are all of the possible questions that a user may ask.
+This should include off-topic questions, such as 'what is your name' or emotional responses like 'oh-no' or 'you suck'.
+These are easy to code - usually just a simple request-response with no slots involved, and does tend to make the dialogs more natural.
 
 ## Website in progress
 As part of the initial effort, I was attempting to get this chatbot published to the slack store. As part of that, I needed to build a website for public support of the app. It's a work in progress, and called caloriecountbot.com. It's hosted by s3, and the source is located in the /website folder.
