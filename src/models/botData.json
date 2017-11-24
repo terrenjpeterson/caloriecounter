@@ -1,0 +1,103 @@
+{
+    "status": "READY", 
+    "intents": [
+        {
+            "intentVersion": "1", 
+            "intentName": "Shock"
+        }, 
+        {
+            "intentVersion": "2", 
+            "intentName": "MyName"
+        }, 
+        {
+            "intentVersion": "3", 
+            "intentName": "MoreDetails"
+        }, 
+        {
+            "intentVersion": "2", 
+            "intentName": "DailyIntakeAnalysis"
+        }, 
+        {
+            "intentVersion": "1", 
+            "intentName": "GetCarbs"
+        }, 
+        {
+            "intentVersion": "5", 
+            "intentName": "Thanks"
+        }, 
+        {
+            "intentVersion": "81", 
+            "intentName": "GetCalories"
+        }, 
+        {
+            "intentVersion": "43", 
+            "intentName": "GetPizzaCalories"
+        }, 
+        {
+            "intentVersion": "1", 
+            "intentName": "Critic"
+        }, 
+        {
+            "intentVersion": "14", 
+            "intentName": "WhatPizzaTypes"
+        }, 
+        {
+            "intentVersion": "34", 
+            "intentName": "FoodTypeOptions"
+        }, 
+        {
+            "intentVersion": "3", 
+            "intentName": "WhichRestaurants"
+        }, 
+        {
+            "intentVersion": "3", 
+            "intentName": "EndConversation"
+        }, 
+        {
+            "intentVersion": "51", 
+            "intentName": "GetMexicanFoodCalories"
+        }, 
+        {
+            "intentVersion": "1", 
+            "intentName": "Complement"
+        }, 
+        {
+            "intentVersion": "2", 
+            "intentName": "HelpRequest"
+        }, 
+        {
+            "intentVersion": "7", 
+            "intentName": "Introduction"
+        }, 
+        {
+            "intentVersion": "50", 
+            "intentName": "GetNuggetsCalories"
+        }
+    ], 
+    "name": "FastFoodChecker", 
+    "locale": "en-US", 
+    "checksum": "d38e19f0-ea5f-4e87-be7b-24fd22105239", 
+    "abortStatement": {
+        "messages": [
+            {
+                "content": "Sorry, I could not understand. Goodbye.", 
+                "contentType": "PlainText"
+            }
+        ]
+    }, 
+    "version": "55", 
+    "lastUpdatedDate": 1511534261.471, 
+    "createdDate": 1511534217.982, 
+    "clarificationPrompt": {
+        "maxAttempts": 5, 
+        "messages": [
+            {
+                "content": "Sorry, I didn't understand? Please say something like, 'what are my food options' to get started.", 
+                "contentType": "PlainText"
+            }
+        ]
+    }, 
+    "voiceId": "Joanna", 
+    "childDirected": false, 
+    "idleSessionTTLInSeconds": 900
+}
