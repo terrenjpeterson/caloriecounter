@@ -11,7 +11,7 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 - [How do you create large custom slots?](#large-custom-slots)
 - [How does information get shared between intents?](#sharing-session-data-between-intents)
 - [What does the deployment model look like?](#deployment-pipeline)
-- [Does a bot have a personality?](#add-personality-to-the-bot))
+- [Does a bot have a personality?](#add-personality-to-the-bot)
 - [What is the website code for?](#website-in-progress)
 
 ## Using NLU Models
@@ -203,6 +203,11 @@ For an example, here is a brief response coded in the [misc.js](https://github.c
 
 ```sh
 
+if (intentName === 'MyName') {
+    console.log("user requested bot name");
+    return getBotName(intentRequest, callback);
+}
+...
 function getBotName(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
