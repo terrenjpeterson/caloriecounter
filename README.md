@@ -177,12 +177,16 @@ Modifying Lex is done completely through the console. The lambda functions that 
 The full deployment script is [/src/build.sh](https://github.com/terrenjpeterson/caloriecounter/blob/master/src/build.sh) but a quick overview can be found in the following instructions.
 
 ```sh
+# this creates the build package as a zip file containing the code and relevant data objects
 zip -r foodbot.zip lambda.js data/restaurants.json data/foods.json data/drinks.json
 
+# this CLI command copies the build package to an s3 bucket for staging
 aws s3 cp foodbot.zip s3://fastfoodchatbot/binaries/
 
+# this CLI command takes the package from the s3 bucket, and overlays the lambda function 'myCalorieCounterGreen'
 aws lambda update-function-code --function-name myCalorieCounterGreen --s3-bucket fastfoodchatbot --s3-key binaries/foodbot.zip
 
+# this CLI command invokes the lambda function with the data object  read into request, and writes out a response to the testOutput data object.
 aws lambda invoke --function-name myCalorieCalculatorGreen --payload "$request" testOutput.json
 ```
 
@@ -200,6 +204,7 @@ This should include off-topic questions, such as 'what is your name' or emotiona
 These are easy to code - usually just a simple request-response with no slots involved, and does tend to make the dialogs more natural.
 
 For an example, here is a brief response coded in the [misc.js](https://github.com/terrenjpeterson/caloriecounter/blob/master/src/misc.js) function that responds to if someone asks what the bots name is.
+In the models, an utterance of 'what is your name' resolves to this intent.
 
 ```sh
 
@@ -216,7 +221,6 @@ function getBotName(intentRequest, callback) {
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: botResponse }));
-
 }
 
 ```
