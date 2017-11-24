@@ -717,6 +717,15 @@ function validateFoodTypes(intentRequest, callback) {
 
     console.log("Validate Food Types");
 
+    // remove space from footlong
+    if (intentRequest.currentIntent.slots.FoodType) {
+	if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "foot long") {
+	    console.log("Fixed minor spelling issue with Footlong Food Type");
+	    intentRequest.currentIntent.slots.FoodType === "Footlong";
+	    slots.FoodType = "Footlong";
+	}
+    }
+
     // if a restaurant name has been provided, then validate it. If not, its too early and return.
     if (intentRequest.currentIntent.slots.Restaurant) {
 	console.log("Restaurant provided so validate.");
