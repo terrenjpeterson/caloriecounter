@@ -650,13 +650,14 @@ function validateMexicanFood(intentRequest) {
 	    }
 	    // now attempt to match the food item with what is available at the restaurant
 	    if (restaurantFoodItems.length > 0) {
-		// first check if a protein type was provided. If not, the request is too generic (i.e. taco, burrito)
+		// first check if a protein type was provided. If not, the request might be too generic (i.e. taco, burrito)
 		const protein = intentRequest.currentIntent.slots.Protein;
                 var botResponse = "";
+		var foodRequest = "";
+                var foundFoodMatch = false;
 		if (protein) {
 		    // both a food item and protein were provided - so potentially a match can be found
 		    const foodPrep = intentRequest.currentIntent.slots.Preparation;
-		    var foodRequest = "";
 		    // altRequest is a different ordering of the same characteristics
 		    var altRequest = "";
 		    if (foodPrep) {
@@ -667,7 +668,6 @@ function validateMexicanFood(intentRequest) {
 			altRequest  = "not applicable";
 		    }
 		    console.log("Attempt to match: " + foodRequest);
-		    var foundFoodMatch = false;
 		    var altFood = [];
 		    for (var j = 0; j < restaurantFoodItems.length; j++) {
 			// this looks for an exact match
@@ -703,15 +703,28 @@ function validateMexicanFood(intentRequest) {
 			return buildValidationResult(false, 'Protein', botResponse);
 		    }
 		} else {
-		    // no protein was provided, so provide message requesting it to be provided
-		    botResponse = "What type of a " + foodType + " are you eating? (i.e. chicken, steak)";
-		    return buildValidationResult(false, 'Protein', botResponse);
+		    // no protein was provided, so check if it's needed.
+		    foodRequest = intentRequest.currentIntent.slots.MexicanFoodType;
+		    console.log("Attempt to match " + foodRequest);
+		    for (var m = 0; m < restaurantFoodItems.length; m++) {
+			if (restaurantFoodItems[m].foodName.toLowerCase() === foodRequest.toLowerCase()) {
+			    console.log("Matched food name " + restaurantFoodItems[m].foodName + ".");
+			    foundFoodMatch = true;
+			}
+		    }
+		    if (foundFoodMatch) {
+			return buildValidationResult(true);
+		    } else {
+		    	botResponse = "What type of a " + foodType + " are you eating? (i.e. chicken, steak)";
+		    	return buildValidationResult(false, 'Protein', botResponse);
+		    }
 		}
 	    } else {
 		return buildValidationResult(false, 'Restaurant', 'Sorry No types of ' + foodType + ' at ' + restaurant + '.');
 	    }
 	}
     } else {
+	console.log("Mexican food but no restaurant entered yet.");
 	return buildValidationResult(false, 'Restaurant', 'Which restaurant are you at (i.e. Taco Bell, Chipotle)?');
     }
 }
