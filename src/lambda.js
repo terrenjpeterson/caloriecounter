@@ -995,10 +995,13 @@ function buildExtraMessage(intentRequest, callback) {
      
     var botMessage = "Any side items with that - for example, ";
            
+    // vary message based on restaurant name
     if (intentRequest.currentIntent.slots.Restaurant === "Panera") {
 	botMessage = botMessage + "Chips or a Baguette";
     } else if (intentRequest.currentIntent.slots.Restaurant === "Subway") {
 	botMessage = botMessage + "Potato Chips or Cheetos";
+    } else if (intentRequest.currentIntent.slots.Restaurant === "Sonic") {
+	botMessage = botMessage + "Fries, Chili Cheese Fries, or Tots";
     } else {
 	botMessage = botMessage + "Fries";
     }
