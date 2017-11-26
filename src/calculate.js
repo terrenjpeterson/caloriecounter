@@ -223,13 +223,75 @@ function calculateCalories(intentRequest, callback) {
     sessionAttributes.totalCalories  = totalCalories;
 
     if (totalCalories > sessionAttributes.foodCalories) {
-	counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout.";
+	counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout. ";
     } else {
 	counterResponse = counterResponse + "To analyze this meal vs. your daily recommended calorie intake, " +
-	    "please say 'analyze my meal'.";
+	    "please say 'analyze my meal'. ";
+    }
+
+    // for Panera, the option for counting carbs is available as an option as well
+    if (sessionAttributes.restaurantName === "Panera") {
+	counterResponse = counterResponse + "If counting carbs, say 'Get carbs'.";
     }
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
+
+    callback(close(sessionAttributes, 'Fulfilled',{ contentType: 'PlainText', content: counterResponse }));
+}
+
+// this function converts the calorie count into carbs
+function calculateCarbs(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+    var restaurantFoodItems = [];
+    var foodCarbs = 0;
+    var extraCarbs = 0;
+    var drinkCarbs = 0;
+    var counterResponse = "";
+
+    console.log(JSON.stringify(sessionAttributes));
+
+    // first verify that a restaruant and food names have been given
+    if (!sessionAttributes.restaurantName || !sessionAttributes.foodName) {
+	counterResponse = "First get the meal information, then I will count the carbs.";
+    } else if (sessionAttributes.restaurantName === "Panera") {
+	// retrieve nutrition info for the restaurant
+    	for (var i = 0; i < foodChoices.length; i++) {
+            if (sessionAttributes.restaurantName.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+            	restaurantFoodItems = foodChoices[i].foodItems;
+            }
+    	}
+
+	// attempt to match the food name
+	if (sessionAttributes.foodName) {
+     	    for (var j = 0; j < restaurantFoodItems.length; j++) {
+            	if (sessionAttributes.foodName.toLowerCase() === restaurantFoodItems[j].foodName.toLowerCase()) {
+            	    console.log("matched recommendation for " + restaurantFoodItems[j].foodName);
+            	    foodCarbs = restaurantFoodItems[j].carbs;
+            	}
+	    }
+    	}
+
+	// attempt to match the extra name
+    	if (sessionAttributes.extraName) {
+            for (var j = 0; j < restaurantFoodItems.length; j++) {
+            	if (sessionAttributes.extraName.toLowerCase() === restaurantFoodItems[j].foodName.toLowerCase()) {
+                    console.log("matched recommendation for " + restaurantFoodItems[j].foodName);
+                    extraCarbs = restaurantFoodItems[j].carbs;
+            	}
+            }
+    	}
+
+	counterResponse = "There are " + foodCarbs + " g of carbs in " + sessionAttributes.foodName;
+	if (extraCarbs > 0) {
+	    counterResponse = counterResponse + ", and there are " + extraCarbs + " g of carbs in " +
+		sessionAttributes.extraName + ". ";
+	    counterResponse = counterResponse + "For a total of " + (foodCarbs + extraCarbs) + " g of carbs.";
+	} else {
+	    counterResponse = counterResponse + ". ";
+	}
+    } else {
+    	counterResponse = "Sorry, I don't have carb counts for " + sessionAttributes.restaurantName + ".";
+    }
 
     callback(close(sessionAttributes, 'Fulfilled',{ contentType: 'PlainText', content: counterResponse }));
 }
@@ -311,7 +373,10 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'GetMexicanFoodCalories') {
         console.log("get mexican food calories.");
         return calculateCalories(intentRequest, callback);
-    } 
+    } else if (intentName === 'GetCarbs') {
+	console.log("calculate carbs for the meal");
+	return calculateCarbs(intentRequest, callback);
+    }
     
     throw new Error(`Intent with name ${intentName} not supported`);
 }
