@@ -1,4 +1,3 @@
-
 'use strict';
 
  /**
@@ -7,13 +6,10 @@
 
 // variables that contain lookup information including restaurant name and calories by food
 
-var restaurants = ["Papa Johns", "Dominos", "Little Caesars", "Pizza Hut"];
-
-// these are the valid choices based on website scraping
+var restaurants = require("data/restaurants.json");
 var pizzas = require("data/pizzas.json");
 
 // --------------- Helpers that build all of the responses -----------------------
-
 
 function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message) {
     return {
@@ -119,10 +115,11 @@ function validateRestaurant(restaurantName) {
     if (restaurantName) {
         console.log("validating restaurant:" + restaurantName);
         for (var i = 0; i < restaurants.length; i++) {
-            if (restaurantName.toLowerCase() === restaurants[i].toLowerCase()) {
-                console.log("found a match for " + restaurants[i]);
+            if (restaurantName.toLowerCase() === restaurants[i].restaurantName.toLowerCase() &&
+		restaurants[i].servesPizza && restaurants[i].validRestaurant) {
+                console.log("found a match for " + restaurants[i].restaurantName);
                 validRestaurant = true;
-		matchName = restaurants[i];
+		matchName = restaurants[i].restaurantName;
             }
         }
     }
@@ -214,6 +211,7 @@ function getPizzaTypes(intentRequest, callback) {
 
 function calculatePizzaCalories(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+    var defaultSize = false;
 
     // first scrub the restaurant name
     var updatedName = scrubRestaurantName(intentRequest.currentIntent.slots.PizzaRestaurant).scrubData.restaurantName;
@@ -226,6 +224,7 @@ function calculatePizzaCalories(intentRequest, callback) {
 
     // check if size was provided - if not, default to medium size pizza
     if (!intentRequest.currentIntent.slots.PizzaSize) {
+	defaultSize = true;
 	console.log("Default Pizza Size to Medium");
 	intentRequest.currentIntent.slots.PizzaSize = "Medium";
     } 
@@ -241,6 +240,7 @@ function calculatePizzaCalories(intentRequest, callback) {
 		if (intentRequest.currentIntent.slots.PizzaType.toLowerCase() === pizzas[i].pizzaSelections[j].name.toLowerCase()) {
 		    console.log("Found a match for " + intentRequest.currentIntent.slots.PizzaType);
 		    pizzaTypeData = pizzas[i].pizzaSelections[j].sizes;
+		    intentRequest.currentIntent.slots.PizzaType = pizzas[i].pizzaSelections[j].name;
 		}
 	    }
 	}
@@ -267,6 +267,7 @@ function calculatePizzaCalories(intentRequest, callback) {
 	for (var k = 0; k < pizzaTypeData.length; k++) {
 	    if (pizzaTypeData[k].size.toLowerCase() === intentRequest.currentIntent.slots.PizzaSize.toLowerCase()) {
 		console.log(JSON.stringify(pizzaTypeData[k]));
+		intentRequest.currentIntent.slots.PizzaSize = pizzaTypeData[k].size;
 		pizzaDiameter = pizzaTypeData[k].diameter;
 		slicesPerPizza = pizzaTypeData[k].slicesPerPizza;
 		caloriesPerSlice = pizzaTypeData[k].sliceCalories;
@@ -285,6 +286,11 @@ function calculatePizzaCalories(intentRequest, callback) {
 		    intentRequest.currentIntent.slots.PizzaType + " pizza " +
 		    " is " + (slicesPerPizza * caloriesPerSlice) + " calories. The pizza comes cut in " +
 		    slicesPerPizza + " slices, and each slice is " + caloriesPerSlice + " calories.";
+		// prompt to change size if this was a default, except for little caesars which has only one size
+		if (defaultSize && intentRequest.currentIntent.slots.PizzaRestaurant !== 'Little Caesars') {
+		    botResponse = botResponse + " For a different size, say something like " +
+			"Large " + intentRequest.currentIntent.slots.PizzaType + " Pizza.";
+		}
 	    } 
 	} else {
 	    botResponse = intentRequest.currentIntent.slots.PizzaSize + " is not a valid size of pizza " +

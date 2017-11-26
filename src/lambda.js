@@ -84,10 +84,11 @@ function validateRestaurant(intentRequest) {
 	}
         console.log("validating restaurant:" + slots.Restaurant);
         for (var i = 0; i < restaurants.length; i++) {
-            if (slots.Restaurant.toLowerCase() === restaurants[i].toLowerCase()) {
-                console.log("found a match for " + restaurants[i]);
+            if (slots.Restaurant.toLowerCase() === restaurants[i].restaurantName.toLowerCase() &&
+		restaurants[i].validRestaurant) {
+                console.log("found a match for " + restaurants[i].restaurantName);
                 validRestaurant = true;
-		slots.Restaurant = restaurants[i];
+		slots.Restaurant = restaurants[i].restaurantName;
             }
         }
     }
@@ -1004,10 +1005,7 @@ function dispatch(intentRequest, callback) {
     } else if (intentRequest.invocationSource === 'DialogCodeHook') {
         console.log("Validation in progress.");
         validateUserEntry(intentRequest, callback);
-    } else if (intentName === 'WhichRestaurants') {
-        console.log("list of restaurants requested.");
-        return getRestaurants(intentRequest, callback);
-    }
+    } 
     
     throw new Error(`Intent with name ${intentName} not supported`);
 }

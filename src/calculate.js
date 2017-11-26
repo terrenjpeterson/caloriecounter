@@ -9,7 +9,6 @@
 
 var foodChoices = require("data/foods.json");
 var drinks = require("data/drinks.json");
-var restaurants = require("data/restaurants.json");
 var sauces = require("data/sauces.json");
 
 // --------------- Helpers that build all of the responses -----------------------

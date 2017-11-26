@@ -3,8 +3,8 @@
 
 # create temp zip file with all the json data objects
 zip -r foodbot.zip lambda.js data/restaurants.json data/foods.json data/drinks.json data/sauces.json package.json
-zip -r calcbot.zip calculate.js data/restaurants.json data/foods.json data/drinks.json data/sauces.json
-zip -r pizzabot.zip pizza.js data/pizzas.json
+zip -r calcbot.zip calculate.js data/foods.json data/drinks.json data/sauces.json
+zip -r pizzabot.zip pizza.js data/restaurants.json data/pizzas.json
 zip -r miscbot.zip misc.js data/restaurants.json data/foods.json data/drinks.json
 
 # copy the build file and source files to a staging bucket in case need for research
