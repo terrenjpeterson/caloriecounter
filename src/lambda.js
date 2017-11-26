@@ -99,8 +99,8 @@ function validateRestaurant(intentRequest) {
         return { isValid: true };
     } else if (slots.Restaurant) {
         console.log("failed restaurant validation");
-	var botResponse = "Sorry, I dont have information for " + slots.Restaurant + ". " +
-	    "Say, List of restaurants for what I know about.";
+	var botResponse = "Sorry, I haven't learned about " + slots.Restaurant + " yet. " +
+	    "Say, 'List of restaurants' for places I do know.";
         return buildValidationResult(false, 'Restaurant', botResponse);
     } else {
         // check if a food item has been entered. this might allow for restaurant to be defaulted.

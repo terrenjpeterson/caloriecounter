@@ -1,4 +1,3 @@
-
 'use strict';
 
  /**
@@ -8,7 +7,6 @@
 // variables that contain lookup information including restaurant name and calories by food
 
 var foodChoices = require("data/foods.json");
-var drinks = require("data/drinks.json");
 var restaurants = require("data/restaurants.json");
 
 // --------------- Helpers that build all of the responses -----------------------
@@ -71,33 +69,33 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
 }
 
 // this function is what builds the introduction
-
 function getIntroduction(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
     const slots = intentRequest.currentIntent.slots;
 
-    var counterResponse = "Hello, my name is Chuck. I am a chatbot that can calculate " +
-        "calories for fast food restaurants. To get started, please ask me " +
+    var counterResponse = "Hello, my name is Chuck. I am a chatbot that is an expert at fast food. " +
+        "To get started, say 'help', or ask me " +
         "something like 'How many calories in a Big Mac' or 'What are my food options at Taco Bell'.";
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
-
 }
 
 // this function is what retrieves the restaurants that data is available for
-
 function getRestaurants(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
-    var counterResponse = 'Okay, here are the fast food restaurants that I have ' +
-        'information on. ';
+    var counterResponse = "Okay, here are the fast food restaurants that I have " +
+        "info on. ";
 
+    // cycle through all of the restaurant names that are listed as valid
     for (var i = 0; i < restaurants.length; i++) {
-        counterResponse = counterResponse + restaurants[i] + ', ';
+	if (restaurants[i].validRestaurant) {
+            counterResponse = counterResponse + restaurants[i].restaurantName + ", ";
+	}
     }
 
-	counterResponse = counterResponse + 'Say something like, eating at McDonalds, to begin.';
+    counterResponse = counterResponse + "Say something like, 'Eating at McDonalds', to begin.";
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
@@ -176,6 +174,16 @@ function replyComingBack(intentRequest, callback) {
         { contentType: 'PlainText', content: counterResponse }));
 }
 
+// this function reacts to someone indicating that they want a new restaurant
+function resetRestaurant(intentRequest, callback) {
+    const sessionAttributes = {};
+
+    var counterResponse = "Got it. Which restaurant are you at now?";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
+}
+
 // this function reacts to a pause in the conversation
 function replyNextTopic(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
@@ -193,7 +201,7 @@ function replyNextTopic(intentRequest, callback) {
         { contentType: 'PlainText', content: counterResponse }));
 }
 
-// this function is what builds the response to a request for help
+// this function is what builds the response to a request for what the bots name is
 function getBotName(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
@@ -208,12 +216,12 @@ function getBotName(intentRequest, callback) {
 function getHelp(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
-    var counterResponse = 'This is the Fast Food Calorie Checker chatbot. ' +
-        'I am a resource to reference how many calories are in different fast foods. ' +
-        'To get started, just say something like How many calories in a Big Mac, ' +
-	'or Eating one slice of Peperroni Pizza, and I will ask a few additional ' +
-        'questions and calculate the amount for you. For the latest list of fast food ' +
-        'restaurants I know about, just say List of restaurants.';
+    var counterResponse = "I'm Chuck, a chatbot that helps out on questions around " +
+	"Fast Food, including how many calories are in different meals. " + 
+        "To get started, just ask me a question like 'How many calories in a Big Mac?', " +
+	"or 'Eating one slice of Pepperoni Pizza'. I will ask a few additional " +
+        "questions and tell you what I know. For the latest list of fast food " +
+        "restaurants I know about, just say 'List of restaurants.'";
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
@@ -389,6 +397,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'NextTopic') {
 	console.log("user indicated a pause in the conversation");
 	return replyNextTopic(intentRequest, callback);
+    } else if (intentName === 'NewRestaurant') {
+	console.log("user wants to reset the restaurant that is saved");
+	return resetRestaurant(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
