@@ -6,6 +6,7 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 
 - [How does this use the NLU models from Lex?](#using-nlu-models)
 - [What custom slots are used by the NLU?](#custom-slots)
+- [How can multiple slots be used in a single intent?](#multiple-slots-in-a-single-intent)
 - [What are the lambda functions called by the bot?](#rules-logic-in-lambda)
 - [Where does it get its data from?](#data-lookup-tables)
 - [How do you create large custom slots?](#large-custom-slots)
@@ -54,7 +55,7 @@ aws lex-models get-bot --name FastFoodChecker --version-or-alias PROD
 It is a combination of the sample utterances and slots that determine which intent the NLU models will invoke. These are maintained in Lex, and are used for training the models. 
 
 Currently, here are the custom slots that are used by the intents.
-- FoodOptions (sample values: Big Mac, Smokehouse Brisket Sandwich, etc. This has hundreds of entries, and is generated from the foods.json data object).)
+- FoodOptions (sample values: Big Mac, Smokehouse Brisket Sandwich, etc. This has hundreds of entries, and is generated from the foods.json data object).
 - DrinkOptions (sample values: Water, Iced Tea, Large Diet Lemonade, etc. This has many entries, and is generated from the drinks.json data object).
 - FastFoodRestaurants (sample values: Chick-fil-A, McDonald's, Wendy's)
 - FoodType (sample values: Burger, Salad, Chicken)
@@ -67,6 +68,22 @@ Currently, here are the custom slots that are used by the intents.
 - PizzaType (sample values: Sausage, Pepperoni, Honolulu Hawaiian)
 
 An item does not need to be specified in the slot for the NLU to place a value into it. However, if the data is sparse, it may degrade how the NLU interprets the user requests.
+
+## Multiple Slots in a Single Intent
+
+Usability of a chatbot requires natural interaction to occur with a user. One key concept is around how to incorporate multiple slots into a single intent.
+For example, a user could ask "How many calories in a Big Mac, Fries, and a Coke?" That is three different items that each need to be parsed out.
+Within this chatbot, the main processing has many different slots that map into intents. For example, here are the slots that map into the GetCalories intent.
+
+![](https://s3.amazonaws.com/fastfoodchatbot/media/slotsExample.png)
+
+There are a couple of items to note in this.
+
+1) In the example request above, the NLU models would parse the data from the utterance into three different slots (Food, Extra, and Drink).
+
+2) The slot order doesn't matter to the parsing, but it does drive what would be the next response (slot 1 - Which Restaurant are you at?)
+
+3) There are two slots that aren't required in this intent - Ketchup and PacketsKetchup. This optional information is asked for if fries is asked for as a side item. This is driven by the code in the Lambda function that is invoked in the Validation code hook.
 
 ## Rules logic in lambda
 All of the logic in formulating responses to different intents is processed in a series of lambda functions. Which lambda function to invoke is managed within Lex, and set at the intent level. This enables modularity to be built within the application, keeping the functions lightweight.
