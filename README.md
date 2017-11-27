@@ -88,11 +88,18 @@ There are a couple of items to note in this.
 ## Rules logic in lambda
 All of the logic in formulating responses to different intents is processed in a series of lambda functions. Which lambda function to invoke is managed within Lex, and set at the intent level. This enables modularity to be built within the application, keeping the functions lightweight.
 
-There are two different spots within Lex that can invoke a lambda function. The first is through basic validation, and the attribute name that identifies it is called invocationSource. There are two potential values for this - DialogCodeHook and FulfillmentCodeHook.
+There are two different spots within Lex that can invoke a lambda function. The first is through basic validation, and the attribute name that identifies it is called invocationSource. 
+There are two potential values for this - DialogCodeHook and FulfillmentCodeHook. Here is where these Lambda functions are specified in the Lex Bot.
+
+![](https://s3.amazonaws.com/fastfoodchatbot/media/lambdaHooks.png)
+
+The first dropdown is the Validation, and calls the lambda function every time the bot is called. The attribute that it passes is called DialogCodeHook.
+The second dropdown is the Fulfillment, and only called once the mandatory slots have been completed, and the validation from the initial call is complete.
+This allows for the functions to be different, enabling better scalability in building the bot.
 
 Here is an overview of each function currently written.
 
-1) lambda.js - the main function that handles the basic validation for queries, sourced by DialogCodeHook.
+1) lambda.js - the main function that handles the basic validation for queries, sourced only in DialogCodeHook mode.
 
 2) calculate.js - calculating the response for the actual calories in a meal is handled by this funciton, and is sourced by a FulfillmentCodeHook.
 
