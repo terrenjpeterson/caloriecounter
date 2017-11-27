@@ -204,7 +204,12 @@ function validateFood(intentRequest) {
                 console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
                 validFood = true;
                 foodCalories = foodItems[j].calories;
-		slots.Food = foodItems[j].foodName;
+		// check if there is an alternative spelling or expanded term for the food item
+		if (foodItems[j].correctedTerm) {
+		    slots.Food = foodItems[j].correctedTerm;
+		} else {
+		    slots.Food = foodItems[j].foodName;
+		}
 		// check if the item is already a side (i.e. fries) as we would then skip that question
 		if (foodItems[j].sideItem) {
 		    if (!intentRequest.currentIntent.slots.Extra) {
@@ -417,7 +422,13 @@ function validateExtra(slots) {
             console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
             validExtra = true;
             extraCalories = foodItems[j].calories;
-            slots.Extra = foodItems[j].foodName;
+	    // check if a food term is corrected - i.e. Medium Fries vs. Fries
+	    if (foodItems[j].correctedTerm) {
+		slots.Extra = foodItems[j].correctedTerm;
+	    } else {
+            	slots.Extra = foodItems[j].foodName;
+	    }
+	    // check if the item could use ketchup, if so, set a flag to make mandatory later
 	    if (foodItems[j].ketchupItem) {
 		console.log("this is a ketchup item - i.e. fries. prompt accordingly for additional detail.");
 		ketchupItem = true;
