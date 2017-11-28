@@ -291,7 +291,6 @@ function vagueFood(foodName, restaurantName) {
 	foodName.toLowerCase() === "burger" ||
         foodName.toLowerCase() === "sandwich" ||
 	foodName.toLowerCase() === "footlong" ||
-        foodName.toLowerCase() === "soup" ||
 	foodName.toLowerCase() === "turkey" ||
         foodName.toLowerCase() === "steak" ||
         foodName.toLowerCase() === "salad" ||
@@ -447,6 +446,7 @@ function validateExtra(slots) {
     if (validExtra) {
         console.log("passed extra validation");
         return { isValid: true, calories: extraCalories, ketchup: ketchupItem };
+    // check if a variation of no was made. this is valid, just will not be in the lookup tables
     } else if (slots.Extra.toLowerCase() === "nothing" ||
 	       slots.Extra.toLowerCase() === "none" ||
 	       slots.Extra.toLowerCase() === "no." ||
@@ -455,12 +455,24 @@ function validateExtra(slots) {
 	       slots.Extra.toLowerCase() === "no" ) {
 	console.log("no extra provided");
 	return { isValid: true, calories: 0 };
+    // check if a generic yes answer was provided. if so, ask to provide the specific name
     } else if (slots.Extra.toLowerCase() === "yes" ) {
 	console.log("extra question answered with a yes - clarify");
 	return buildValidationResult(false, 'Extra', "What side item would you like to add?");
+    // check if a generic request for soup was made
+    } else if (slots.Extra.toLowerCase() === "cup of soup" ||
+	       slots.Extra.toLowerCase() === "soup") {
+	console.log("generic cup of soup requested - ask to clarify");
+	var botResponse = "Which type of soup would you like? For example, Chicken Noodle Soup.";
+	if (slots.Restaurant) {
+	    botResponse = slots.Restaurant + " has great soup. Which type are you eating? My favorite is Chicken Noodle Soup.";
+	} 
+	return buildValidationResult(false, 'Extra', botResponse);
+    // this is the base failed validation of the extra name.
     } else {
-	console.log("failed extra validation");
-	return buildValidationResult(false, 'Extra', `Sorry, I dont have information for ` + slots.Extra + '. Please try again.');
+	console.log("failed extra validation - generic error handling for " + slots.Extra);
+	var genericResponse = "Sorry, I dont have information for ` + slots.Extra + '. Please try again.";
+	return buildValidationResult(false, 'Extra', genericResponse);
     }
 }
 
@@ -980,9 +992,11 @@ function buildExtraMessage(intentRequest, callback) {
            
     // vary message based on restaurant name
     if (intentRequest.currentIntent.slots.Restaurant === "Panera") {
-	botMessage = botMessage + "Chips or a Baguette";
+	botMessage = botMessage + "Chips, Baguette, or a Cup of Soup";
     } else if (intentRequest.currentIntent.slots.Restaurant === "Subway") {
 	botMessage = botMessage + "Potato Chips or Cheetos";
+    } else if (intentRequest.currentIntent.slots.Restaurant === "Chick-fil-A") {
+	botMessage = botMessage + "Waffle Fries";
     } else if (intentRequest.currentIntent.slots.Restaurant === "Sonic") {
 	botMessage = botMessage + "Fries, Chili Cheese Fries, or Tots";
     } else {
