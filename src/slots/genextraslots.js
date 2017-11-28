@@ -15,20 +15,18 @@ exports.handler = function (event, context) {
         if (rawData[i].restaurant !== "Chipotle" &&
             rawData[i].restaurant !== "Taco Bell") {
             for (var j = 0; j < rawData[i].foodItems.length; j++) {
-		// skip loading nuggets to custom slot
-            	if (rawData[i].foodItems[j].foodType === "Nuggets") {
-                    console.log("Skipped Food Item: " + rawData[i].foodItems[j].foodName);
-            	} else {
-		    // skip loading side items - these belong to the extra slot
-		    if (rawData[i].foodItems[j].sideItem) {
-			console.log("Skipped side item: " + rawData[i].foodItems[j].foodName);
-		    } else {
-                    	allFoodItems.push(rawData[i].foodItems[j].foodName);
-		    }
+		if (rawData[i].foodItems[j].sideItem) {
+		    console.log("Found side item: " + rawData[i].foodItems[j].foodName);
+                    allFoodItems.push(rawData[i].foodItems[j].foodName);
 		}
             }
         }
     }
+
+    // add some generic items that are potentially provided by user, but are not found in the lookup table
+    allFoodItems.push('No');
+    allFoodItems.push('Nothing');
+    allFoodItems.push('Cup of Soup');
     
     // now sort through for unique items
     var foodEntrees = [];
