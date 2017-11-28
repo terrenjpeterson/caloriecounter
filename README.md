@@ -165,8 +165,15 @@ data=$(<output.json)
 aws lex-models put-slot-type --name FoodEntreeNames --checksum <enter latest checksum here> --enumeration-values "$data" >> sysout.txt
 
 ```
-Also, the checksum value is from the prior deployment of the custom slot. I can't find any CLI command that retreives this if you lose it, so a workaround is to just create a new slot name and deploy a new unique name, then change the intent to use it.
-When invoking the CLI, saving it to sysout.txt helps as you will be saving the logs that contain the console output.
+
+Also, the checksum value is from the prior deployment of the custom slot. You can find the current checksum for a slot by the get-slot-type command.
+
+```sh
+
+# find the latest information about a custom slot
+aws lex-models get-slot-type --name FoodOptions --slot-type-version '$LATEST'
+
+```
 
 ## Sharing Session Data between Intents
 
