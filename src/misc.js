@@ -116,7 +116,7 @@ function getBasicDailyAnalysis(intentRequest, callback) {
     	var botResponse = "This meal of " + mealEstimate + " calories at " + restaurantName +
 	    " is " + ((mealEstimate * 100) /maleAverage) + "% of a daily average male diet, or " +
 	    ((mealEstimate * 100) /femaleAverage) + "% of a daily average female diet based on " +
-	    "guidelines set by nutrition experts.";
+	    "guidelines set by nutrition experts. For a specific daily calorie intake estimate, say 'Customize'.";
 
     	callback(close(sessionAttributes, 'Fulfilled',
             { contentType: 'PlainText', content: botResponse }));
@@ -236,6 +236,50 @@ function getHelp(intentRequest, callback) {
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
         
+}
+
+// this function is what calculates the BMR for a given user
+function calculateBMR(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    const gender 	= intentRequest.currentIntent.slots.Gender;
+    const age 		= intentRequest.currentIntent.slots.Age;
+    const heightFeet 	= intentRequest.currentIntent.slots.HeightFeet;
+    const heightInches 	= intentRequest.currentIntent.slots.HeightInches;
+    const weightUnits 	= intentRequest.currentIntent.slots.WeightUnits;
+    const weight 	= intentRequest.currentIntent.slots.Weight;
+
+    var counterResponse = "Daily calorie intake for a " + age + " year old " + gender + ", weighing " +
+	weight + " lbs, and is " + heightFeet + " ft " + heightInches + " inches tall is ";
+
+    var bmr = 0;
+
+    if (gender.toLowerCase() === "male") {
+        // This is the male BMR calculation
+        bmr = 66 + ( 6.2 * Number(weight)) + ( 12.7 * Number(heightFeet) * 12 ) + ( -6.76 * Number(age));
+        if (intentRequest.currentIntent.slots.HeightInches) {
+            if (heightInches !== "?") {
+              	bmr = bmr + 12.7 * Number(heightInches);
+            }
+        }
+    } else {
+        // This is the female BMR calculation
+        bmr = 655.1 + (4.35 * Number(weight)) + (4.7 * Number(heightFeet) * 12 ) + (- 4.7 * Number(age));
+        if (intentRequest.currentIntent.slots.HeightInches) {
+            if (heightInches !== "?") {
+                bmr = bmr + 4.7 * Number(heightInches);
+            }
+        }
+    }
+
+    var dci = Math.round(bmr * 1.2);
+
+    counterResponse = counterResponse + dci + " calories per day. This amount will increase if you are active " +
+	"at work or exercise on a regular basis. ";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
+
 }
 
 // this function is what builds the response to a shock message (i.e. wow)
@@ -413,6 +457,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'NewRestaurant') {
 	console.log("user wants to reset the restaurant that is saved");
 	return resetRestaurant(intentRequest, callback);
+    } else if (intentName === 'CalculateBMR') {
+	console.log("user wants to know their BMR");
+	return calculateBMR(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
