@@ -144,6 +144,16 @@ function endConversation(intentRequest, callback) {
         { contentType: 'PlainText', content: counterResponse }));
 }
 
+// this function is what builds the response to a deez nuts comment
+function replyDeezNuts(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var counterResponse = "LOL - well I'm not really trying to mess with them ;)";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
+}
+
 // this function reacts to someone paying a complement
 function replyComplement(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
@@ -388,6 +398,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'Complement') {
         console.log("user provided a complement");
         return replyComplement(intentRequest, callback);
+    } else if (intentName === 'DeezNuts') {
+	console.log("user played a joke on the bot");
+	return replyDeezNuts(intentRequest, callback);
     } else if (intentName === 'Critic') {
         console.log("user was harsh");
         return replyCritic(intentRequest, callback);
