@@ -1,0 +1,32 @@
+[
+    {
+        "dressingName":"Ranch",
+        "calories":200,
+        "carbs":11,
+        "restaurantNames":["McDonalds"]
+    },
+    {
+        "dressingName":"French",
+        "calories":300,
+        "carbs":22,
+        "restaurantNames":["McDonalds"]
+    },
+    {
+        "dressingName":"Italian",
+        "calories":50,
+        "carbs":8,
+        "restaurantNames":["McDonalds"]
+    },
+    {
+        "dressingName":"Balsamic Vinaigrette",
+        "calories":45,
+        "carbs":5,
+        "restaurantNames":["McDonalds"]
+    },
+    {
+        "dressingName":"Creamy Southwest",
+        "calories":120,
+        "carbs":11,
+        "restaurantNames":["McDonalds"]
+    }
+]
