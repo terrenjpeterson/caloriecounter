@@ -456,7 +456,7 @@ function validateExtra(slots) {
 	console.log("no extra provided");
 	return { isValid: true, calories: 0 };
     // check if a generic yes answer was provided. if so, ask to provide the specific name
-    } else if (slots.Extra.toLowerCase() === "yes" ) {
+    } else if (slots.Extra.toLowerCase().substring(0, 3) === "yes" ) {
 	console.log("extra question answered with a yes - clarify");
 	return buildValidationResult(false, 'Extra', "What side item would you like to add?");
     // check if a generic request for soup was made
@@ -471,7 +471,7 @@ function validateExtra(slots) {
     // this is the base failed validation of the extra name.
     } else {
 	console.log("failed extra validation - generic error handling for " + slots.Extra);
-	var genericResponse = "Sorry, I dont have information for ` + slots.Extra + '. Please try again.";
+	var genericResponse = "Sorry, I dont have information for " + slots.Extra + ". Please try again.";
 	return buildValidationResult(false, 'Extra', genericResponse);
     }
 }
