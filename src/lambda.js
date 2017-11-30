@@ -1,4 +1,3 @@
-
 'use strict';
 
  /**
@@ -11,6 +10,7 @@ var foodChoices = require("data/foods.json");
 var drinks = require("data/drinks.json");
 var restaurants = require("data/restaurants.json");
 var sauces = require("data/sauces.json");
+var dressings = require("data/dressings.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -402,6 +402,7 @@ function validateExtra(slots) {
     var restaurant = slots.Restaurant;
     var foodItems = [];
     var ketchupItem = false;
+    var dressingItem = false;
 
     console.log("validated extra item " + slots.Extra);
 
@@ -432,6 +433,11 @@ function validateExtra(slots) {
 		console.log("this is a ketchup item - i.e. fries. prompt accordingly for additional detail.");
 		ketchupItem = true;
 	    }
+	    // check if the item could use a dressing, if so, set a flag to make it mandatory later
+	    if (foodItems[j].dressingItem) {
+		console.log("this is a dressing item - i.e. a salad. prompt accordingly for additional detail.");
+		dressingItem = true;
+	    }
         }
     }    
 
@@ -445,7 +451,7 @@ function validateExtra(slots) {
     // create response. if extra food item didn't match, respond as such, else pass back as supported.
     if (validExtra) {
         console.log("passed extra validation");
-        return { isValid: true, calories: extraCalories, ketchup: ketchupItem };
+        return { isValid: true, calories: extraCalories, ketchup: ketchupItem, dressing: dressingItem };
     // check if a variation of no was made. this is valid, just will not be in the lookup tables
     } else if (slots.Extra.toLowerCase() === "nothing" ||
 	       slots.Extra.toLowerCase() === "none" ||
@@ -474,6 +480,50 @@ function validateExtra(slots) {
 	var genericResponse = "Sorry, I dont have information for " + slots.Extra + ". Please try again.";
 	return buildValidationResult(false, 'Extra', genericResponse);
     }
+}
+
+// this function will validate the dressings answer provided by the user
+function validateDressing(intentRequest) {
+    const slots = intentRequest.currentIntent.slots;
+
+    console.log("validating answer around which dressing is on a salad");
+
+    if (slots.Dressing.toLowerCase() === "no" ||
+	slots.Dressing.toLowerCase() === "none ") {
+	console.log("negative answer given for dressing response - no additional validation.");
+        return { isValid: true };
+    } else if (slots.Dressing.toLowerCase() === "yes") {
+	console.log("user said they wanted dressing, but didn't provide a name of one");
+    //	return { isValid: false, 'Dressing', 'Which type of dressing?' };
+    } else {
+	// user entered a dressing name
+	console.log("validate dressing type provided: " + slots.Dressing);
+	var validDressing = false;
+	var dressingOptions = [];
+
+	// go through all of the dressing names and try and find a match
+	for (var i = 0; dressings.length; i++) {
+	    for (var j = 0; dressings[i].restaurantNames.length; j++) {
+		if (dressings[i].restaurantNames[j].toLowerCase() === slots.Restaurant) {
+		    console.log("Found a valid dressing name: " + dressings[i].dressingName);
+		    dressingOptions.push(dressings[i].dressingName); 
+	    	    if (slots.Dressing.toLowerCase() === dressings[i].dressingName) {
+			console.log("Matched dressing for restaurant too.");
+			validDressing = true;
+		    }
+		}
+	    }
+	}
+
+	// if a match was found, consider the field validated. if not, provide options for restaurant
+	if (validDressing) {
+	    return { isValid: true }
+	} else {
+	    var botResponse = "Sorry, don't have that type of dressing.";
+	    return buildValidationResult(false, 'Dressing', botResponse);
+	}
+    }
+
 }
 
 // this function will validate the sauce answer provided by the user
@@ -892,7 +942,7 @@ function validateUserEntry(intentRequest, callback) {
 	    } else {
 		console.log("Vallidate Ketchup Response: " + intentRequest.currentIntent.slots.Ketchup);
 	    }
-	} 
+	}
     } else {
 	// default message prompting for side item - this is a separate function
 	if (intentRequest.currentIntent.slots.Restaurant && !invalidSlot) {
