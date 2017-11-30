@@ -844,8 +844,8 @@ function validateUserEntry(intentRequest, callback) {
             sessionAttributes.restaurantName = restaurantName;
 	}
     } else if (intentRequest.sessionAttributes) {
-	console.log("validate session data");
-	if (intentRequest.sessionAttributes.restaurantName) {
+	console.log("potentially default restaurant name from session data");
+	if (intentRequest.sessionAttributes.restaurantName && intentRequest.currentIntent.name === 'GetCalories') {
 	    restaurantName = intentRequest.sessionAttributes.restaurantName;
 	    intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
 	}
@@ -872,7 +872,7 @@ function validateUserEntry(intentRequest, callback) {
 
     // check if extra name was provided then validate
     var extraName = intentRequest.currentIntent.slots.Extra;
-    if (extraName && extraName !== "" && !invalidSlot && restaurantName) {
+    if (extraName && extraName !== "" && !invalidSlot && intentRequest.currentIntent.slots.Restaurant) {
 	console.log("Check Extra Name: " + intentRequest.currentIntent.slots.Extra);
 	var extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
 	if (!extraValidationResult.isValid) {
