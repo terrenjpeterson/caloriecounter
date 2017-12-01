@@ -502,12 +502,14 @@ function validateDressing(intentRequest) {
 	var dressingOptions = [];
 
 	// go through all of the dressing names and try and find a match
-	for (var i = 0; dressings.length; i++) {
-	    for (var j = 0; dressings[i].restaurantNames.length; j++) {
-		if (dressings[i].restaurantNames[j].toLowerCase() === slots.Restaurant) {
+	for (var i = 0; i < dressings.length; i++) {
+	    console.log("dressings: " + JSON.stringify(dressings[i]));
+	    for (var j = 0; j < dressings[i].restaurantNames.length; j++) {
+		console.log("restaurant " + j);
+		if (dressings[i].restaurantNames[j].toLowerCase() === slots.Restaurant.toLowerCase()) {
 		    console.log("Found a valid dressing name: " + dressings[i].dressingName);
 		    dressingOptions.push(dressings[i].dressingName); 
-	    	    if (slots.Dressing.toLowerCase() === dressings[i].dressingName) {
+	    	    if (slots.Dressing.toLowerCase() === dressings[i].dressingName.toLowerCase()) {
 			console.log("Matched dressing for restaurant too.");
 			validDressing = true;
 		    }
@@ -519,7 +521,12 @@ function validateDressing(intentRequest) {
 	if (validDressing) {
 	    return { isValid: true }
 	} else {
-	    var botResponse = "Sorry, don't have that type of dressing.";
+	    // read back the valid salad dressing options
+	    var botResponse = "Sorry, " + slots.Restaurant + " doesn't have " + slots.Dressing + ". " +
+		"They do have ";
+	    for (var k = 0; k < dressingOptions.length; k++) {
+		botResponse = botResponse + dressingOptions[k] + ", ";
+	    }
 	    return buildValidationResult(false, 'Dressing', botResponse);
 	}
     }
@@ -940,7 +947,17 @@ function validateUserEntry(intentRequest, callback) {
 		callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
 		    slots, ketchupPrompt.violatedSlot, ketchupPrompt.message));
 	    } else {
-		console.log("Vallidate Ketchup Response: " + intentRequest.currentIntent.slots.Ketchup);
+		console.log("Validate Ketchup Response: " + intentRequest.currentIntent.slots.Ketchup);
+	    }
+	} else if (extraValidationResult.dressing) {
+	    if (!intentRequest.currentIntent.slots.Dressing) {
+		console.log("Ask the user what type of salad dressing they want with their salad.");
+		var saladMessage = "What type of salad dressing would you like?";
+		const saladPrompt = buildValidationResult(false, 'Dressing', saladMessage);
+		callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+		    slots, saladPrompt.violatedSlot, saladPrompt.message));
+	    } else {
+		console.log("Validate Dressing Response: " + intentRequest.currentIntent.slots.Dressing);
 	    }
 	}
     } else {
@@ -1004,6 +1021,18 @@ function validateUserEntry(intentRequest, callback) {
                 slots, sauceValidationResult.violatedSlot, sauceValidationResult.message));
 	}
     }	
+
+    var saladDressing = intentRequest.currentIntent.slots.Dressing;
+    if (saladDressing && !invalidSlot) {
+	console.log("Salad dressing response provided.");
+	const dressingValidationResult = validateDressing(intentRequest);
+	if (!dressingValidationResult.isValid) {
+            slots[`${dressingValidationResult.violatedSlot}`] = null;
+            invalidSlot = true;
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                slots, dressingValidationResult.violatedSlot, dressingValidationResult.message));
+	}
+    }
 
     // validate Mexican Food Types
     var mexicanFoodType = intentRequest.currentIntent.slots.MexicanFoodType;

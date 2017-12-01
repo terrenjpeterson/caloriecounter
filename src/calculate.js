@@ -10,6 +10,7 @@
 var foodChoices = require("data/foods.json");
 var drinks = require("data/drinks.json");
 var sauces = require("data/sauces.json");
+var dressings = require("data/dressings.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -103,6 +104,7 @@ function calculateCalories(intentRequest, callback) {
     const ketchupPackets = intentRequest.currentIntent.slots.PacketsKetchup;
     const ketchup	 = intentRequest.currentIntent.slots.Ketchup;
     const sauce		 = intentRequest.currentIntent.slots.Sauce;
+    const dressing	 = intentRequest.currentIntent.slots.Dressing;
 
     var totalCalories 	 = 0;
     var counterResponse  = "";

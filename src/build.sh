@@ -3,7 +3,7 @@
 
 # create temp zip file with all the json data objects
 zip -r foodbot.zip lambda.js data/restaurants.json data/foods.json data/drinks.json data/sauces.json data/dressings.json  package.json
-zip -r calcbot.zip calculate.js data/foods.json data/drinks.json data/sauces.json
+zip -r calcbot.zip calculate.js data/foods.json data/drinks.json data/sauces.json data/dressings.json
 zip -r pizzabot.zip pizza.js data/restaurants.json data/pizzas.json
 zip -r miscbot.zip misc.js data/restaurants.json data/foods.json data/drinks.json
 
