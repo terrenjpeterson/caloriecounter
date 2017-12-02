@@ -154,6 +154,16 @@ function replyDeezNuts(intentRequest, callback) {
         { contentType: 'PlainText', content: counterResponse }));
 }
 
+// this function reacts to someone asking for a beer
+function beerReply(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var counterResponse = "Beer. Delicious beer. Sorry, I don't know about how many calories in it.";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
+}
+
 // this function reacts to someone paying a complement
 function replyComplement(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
@@ -460,6 +470,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'CalculateBMR') {
 	console.log("user wants to know their BMR");
 	return calculateBMR(intentRequest, callback);
+    } else if (intentName === 'Beer') {
+	console.log("user asks about beer");
+	return beerReply(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
