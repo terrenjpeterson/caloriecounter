@@ -1,0 +1,54 @@
+{
+    "messageVersion": "1.0",
+    "invocationSource": "DialogCodeHook",
+    "userId": "50pm2qhx3wn6n4i5hfrhbb9nfkho75de",
+    "sessionAttributes": {
+        "restaurantName": "McDonalds"
+    },
+    "requestAttributes": null,
+    "bot": {
+        "name": "FastFoodChecker",
+        "alias": "$LATEST",
+        "version": "$LATEST"
+    },
+    "outputDialogMode": "Text",
+    "currentIntent": {
+        "name": "GetCalories",
+        "slots": {
+            "PacketsKetchup": null,
+            "Restaurant": "McDonalds",
+            "Dressing": "Ranch",
+            "Extra": "Side Salad",
+            "Ketchup": null,
+            "Drink": null,
+            "Food": "McChicken Sandwich"
+        },
+        "slotDetails": {
+            "PacketsKetchup": {
+                "resolutions": [],
+                "originalValue": null
+            },
+            "Restaurant": null,
+            "Dressing": {
+                "resolutions": [
+                    {
+                        "value": "Ranch"
+                    }
+                ],
+                "originalValue": "Ranch"
+            },
+            "Extra": null,
+            "Ketchup": {
+                "resolutions": [],
+                "originalValue": null
+            },
+            "Drink": {
+                "resolutions": [],
+                "originalValue": null
+            },
+            "Food": null
+        },
+        "confirmationStatus": "None"
+    },
+    "inputTranscript": "Ranch"
+}

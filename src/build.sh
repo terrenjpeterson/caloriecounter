@@ -96,6 +96,20 @@ response=$(<testOutput.json)
 echo $response
 echo 'test case 4 complete'
 
+# read in test data required for the pizza test
+echo 'test case 5 salad request'
+cd testing
+request=$(<saladRequest.json)
+cd ..
+
+# invoke the lambda function for validating food
+aws lambda invoke --function-name myCalorieCounterGreen --payload "$request" testOutput.json
+
+# read response file into local variable then print on the console
+response=$(<testOutput.json)
+echo $response
+echo 'test case 5 complete'
+
 # clean-up any temporary data
 #aws s3 rm foodbot.zip s3://fastfoodchatbot/binaries/
 rm testOutput.json
