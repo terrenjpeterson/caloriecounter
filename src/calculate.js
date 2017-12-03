@@ -113,7 +113,7 @@ function calculateCalories(intentRequest, callback) {
     console.log("confirm final response - now calculating calories");
 
     // if the food name was provided, calculate the calories related to it and save
-    if (foodName) {
+    if (foodName && foodName !== "None") {
 	var foodCalories = getFoodCalories(foodName, restaurantName).foodCalories;
 	totalCalories += foodCalories;
     	sessionAttributes.foodName     = foodName;
@@ -178,7 +178,12 @@ function calculateCalories(intentRequest, callback) {
     } else if (extraName) {
         var extraCalories = getFoodCalories(extraName, restaurantName).foodCalories;
         totalCalories += extraCalories;
-        counterResponse = counterResponse + " and a " + extraName;
+	// check if the extra item is the main one - like in a soup or salad
+	if (foodName === "None") {
+	    counterResponse = "At " + restaurantName + " having a " + extraName;
+	} else {
+            counterResponse = counterResponse + " and a " + extraName;
+	}
 	// if ketchup is an optional item for the extra, check what the user response was
 	if (ketchup) {
 	    if (ketchup.toLowerCase() === "yes") {

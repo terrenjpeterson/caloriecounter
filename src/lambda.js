@@ -902,13 +902,14 @@ function validateUserEntry(intentRequest, callback) {
 	}
     } else if (intentRequest.sessionAttributes) {
 	console.log("potentially default restaurant name from session data");
-	if (intentRequest.sessionAttributes.restaurantName && intentRequest.currentIntent.name === 'GetCalories') {
+	if (intentRequest.sessionAttributes.restaurantName && intentRequest.currentIntent.name === 'GetCalories' ||
+	    intentRequest.sessionAttributes.restaurantName === "Taco Bell") {
 	    restaurantName = intentRequest.sessionAttributes.restaurantName;
 	    intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
 	}
     }
 
-    if (foodName && !invalidSlot) {
+    if (foodName && !invalidSlot && foodName !== "None") {
         // food name exists, so validate it
         console.log("Validate Food Name: " + foodName);                
         const foodValidationResult = validateFood(intentRequest);
@@ -959,6 +960,10 @@ function validateUserEntry(intentRequest, callback) {
 	    } else {
 		console.log("Validate Dressing Response: " + intentRequest.currentIntent.slots.Dressing);
 	    }
+	}
+	if (!foodName && !invalidSlot) {
+	    console.log("Extra Provided, but no main entree. Default food name to none.");
+	    intentRequest.currentIntent.slots.Food = "None";
 	}
     } else {
 	// default message prompting for side item - this is a separate function
