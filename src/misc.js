@@ -317,10 +317,15 @@ function getMealDetails(intentRequest, callback) {
 	    detailResponse = detailResponse + sessionAttributes.sauceName + " is " +
 		sessionAttributes.sauceCalories + " calories. ";
 	}
-        if (sessionAttributes.extraName) {
+        if (sessionAttributes.extraName && !sessionAttributes.dressingName) {
             detailResponse = detailResponse + sessionAttributes.extraName + " is " +
                 sessionAttributes.extraCalories + " calories. ";
         }
+	if (sessionAttributes.dressingName) {
+	    detailResponse = detailResponse + sessionAttributes.extraName + " is " +
+		sessionAttributes.extraCalories + " calories and the " + sessionAttributes.dressingName +
+		" Dressing adds " + sessionAttributes.dressingCalories + " calories. ";
+	}
 	if (sessionAttributes.drinkName) {
 	    detailResponse = detailResponse + sessionAttributes.drinkName + " is " +
 		sessionAttributes.drinkCalories + " calories. ";

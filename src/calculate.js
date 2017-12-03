@@ -191,7 +191,24 @@ function calculateCalories(intentRequest, callback) {
             	sessionAttributes.extraName     = extraName;
             	sessionAttributes.extraCalories = extraCalories;
 	    }
+	// check if a dressing has been added - likely the extra was a type of salad
+	} else if (dressing) {
+	    if (dressing === "no" || dressing === "none") {
+		console.log("No dressing on the salad. Don't add calories.");
+	    } else {
+		// call the function that calculates the dressing calories and add to response
+		const dressingData = getDressingCalories(dressing, restaurantName).dressingData;
+		console.log("Dressing: " + JSON.stringify(dressingData));
+		counterResponse = counterResponse + " with " + dressingData.name + " Dressing ";
+		sessionAttributes.dressingName     = dressingData.name;
+		sessionAttributes.dressingCalories = dressingData.calories;
+		sessionAttributes.dressingCarbs    = dressingData.carbs;
+		totalCalories += dressingData.calories;
+	    }
+            sessionAttributes.extraName     = extraName;
+            sessionAttributes.extraCalories = extraCalories;
 	} else {
+	    // normal extra - save session data
             sessionAttributes.extraName     = extraName;
             sessionAttributes.extraCalories = extraCalories;
 	}
@@ -320,6 +337,35 @@ function getFoodCalories(foodName, restaurantName) {
 	foodCalories
     };
 }
+
+// this function looks up dressing calories based on a dressing and restaurant name
+function getDressingCalories(dressing, restaurantName) {
+    console.log("calculate dressing type provided: " + dressing + " at " + restaurantName);
+    var validDressing = false;
+    var dressingData = {};
+
+    // go through all of the dressing names and try and find a match
+    for (var i = 0; i < dressings.length; i++) {
+    	console.log("dressings: " + JSON.stringify(dressings[i]));
+        for (var j = 0; j < dressings[i].restaurantNames.length; j++) {
+            if (dressings[i].restaurantNames[j].toLowerCase() === restaurantName.toLowerCase()) {
+                if (dressing.toLowerCase() === dressings[i].dressingName.toLowerCase()) {
+                    console.log("Matched dressing for restaurant too.");
+                    validDressing = true;
+		    dressingData.calories = dressings[i].calories;
+		    dressingData.carbs    = dressings[i].carbs;
+		    dressingData.name     = dressings[i].dressingName;
+                }
+            }
+        }
+    }
+
+    // return the number of calories
+    return {
+	dressingData
+    };
+}
+
 
 // this function looks up sauce calories based on a sauce name
 function getSauceCalories(sauce, restaurantName) {
