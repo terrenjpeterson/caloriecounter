@@ -28,5 +28,83 @@
         "calories":120,
         "carbs":11,
         "restaurantNames":["McDonalds"]
+    },
+    {
+        "dressingName":"Caesar",
+        "calories":170,
+        "carbs":2,
+        "restaurantNames":["Panera"]
+    },
+    {
+        "dressingName":"Greek",
+        "calories":230,
+        "carbs":1,
+        "restaurantNames":["Panera"]
+    },
+    {
+        "dressingName":"Thai Chili Vinaigrette",
+        "fullName":"Low Fat Thai Chili Vinaigrette",
+        "calories":50,
+        "carbs":8,
+        "restaurantNames":["Panera"]
+    },
+    {
+        "dressingName":"Balsamic Vinaigrette",
+        "fullName":"Reduced Fat Balsamic Vinaigrette",
+        "calories":130,
+        "carbs":9,
+        "restaurantNames":["Panera"]
+    },
+    {
+        "dressingName":"White Balsamic Vinaigrette",
+        "fullName":"White Balsamic Apple Flavored Vinaigrette",
+        "calories":140,
+        "carbs":11,
+        "restaurantNames":["Panera"]
+    },
+    {
+        "dressingName":"Ranch",
+        "fullName":"Chile Lime Rojo Ranch",
+        "calories":70,
+        "carbs":3,
+        "restaurantNames":["Panera"]
+    },
+    {
+        "dressingName":"Green Goddess",
+        "calories":120,
+        "carbs":3,
+        "restaurantNames":["Panera"]
+    },
+    {
+        "dressingName":"Chipotle Southwest",
+        "calories":190,
+        "carbs":2,
+        "restaurantNames":["Subway"]
+    },
+    {
+        "dressingName":"Oil and Vinegar",
+        "calories":190,
+        "carbs":0,
+        "restaurantNames":["Subway"]
+    },
+    {
+        "dressingName":"Ranch",
+        "calories":220,
+        "carbs":2,
+        "restaurantNames":["Subway"]
+    },
+    {
+        "dressingName":"Vinaigrette",
+        "fullName":"Subway Vinaigrette",
+        "calories":110,
+        "carbs":3,
+        "restaurantNames":["Subway"]
+    },
+    {
+        "dressingName":"Sweet Onion",
+        "fullName":"Sweet Onion Sauce",
+        "calories":80,
+        "carbs":18,
+        "restaurantNames":["Subway"]
     }
 ]
