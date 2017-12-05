@@ -408,7 +408,6 @@ function validateExtra(slots) {
 
     // sort through the food choices and pull out those relating to the restaraunt that has already been validated
     for (var i = 0; i < foodChoices.length; i++) {
-        //console.log("checking: " + JSON.stringify(foodChoices[i]));
         if (slots.Restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
             foodItems = foodChoices[i].foodItems;
             console.log("match restaurant - food items: " + JSON.stringify(foodItems));
@@ -494,7 +493,7 @@ function validateDressing(intentRequest) {
         return { isValid: true };
     } else if (slots.Dressing.toLowerCase() === "yes") {
 	console.log("user said they wanted dressing, but didn't provide a name of one");
-    //	return { isValid: false, 'Dressing', 'Which type of dressing?' };
+        return buildValidationResult(false, 'Dressing', 'Which type of dressing?');
     } else {
 	// user entered a dressing name
 	console.log("validate dressing type provided: " + slots.Dressing);
@@ -503,9 +502,7 @@ function validateDressing(intentRequest) {
 
 	// go through all of the dressing names and try and find a match
 	for (var i = 0; i < dressings.length; i++) {
-	    console.log("dressings: " + JSON.stringify(dressings[i]));
 	    for (var j = 0; j < dressings[i].restaurantNames.length; j++) {
-		console.log("restaurant " + j);
 		if (dressings[i].restaurantNames[j].toLowerCase() === slots.Restaurant.toLowerCase()) {
 		    console.log("Found a valid dressing name: " + dressings[i].dressingName);
 		    dressingOptions.push(dressings[i].dressingName); 
@@ -930,7 +927,8 @@ function validateUserEntry(intentRequest, callback) {
 
     // check if extra name was provided then validate
     var extraName = intentRequest.currentIntent.slots.Extra;
-    if (extraName && extraName !== "" && !invalidSlot && intentRequest.currentIntent.slots.Restaurant) {
+    if (extraName && extraName !== "" && extraName !== "no" && extraName !== "none" && 
+	!invalidSlot && intentRequest.currentIntent.slots.Restaurant) {
 	console.log("Check Extra Name: " + intentRequest.currentIntent.slots.Extra);
 	var extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
 	if (!extraValidationResult.isValid) {
@@ -961,7 +959,7 @@ function validateUserEntry(intentRequest, callback) {
 		console.log("Validate Dressing Response: " + intentRequest.currentIntent.slots.Dressing);
 	    }
 	}
-	if (!foodName && !invalidSlot) {
+	if (!foodName && !invalidSlot && intentRequest.currentIntent.name === 'GetCalories') {
 	    console.log("Extra Provided, but no main entree. Default food name to none.");
 	    intentRequest.currentIntent.slots.Food = "None";
 	}
