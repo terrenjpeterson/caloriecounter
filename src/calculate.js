@@ -246,7 +246,7 @@ function calculateCalories(intentRequest, callback) {
     counterResponse = counterResponse + "That is " + totalCalories + " calories. ";
     sessionAttributes.totalCalories  = totalCalories;
 
-    if (totalCalories > sessionAttributes.foodCalories) {
+    if (totalCalories > sessionAttributes.foodCalories || sessionAttributes.dressingCalories > 0) {
 	counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout. ";
     } else {
 	counterResponse = counterResponse + "To analyze this meal vs. your daily recommended calorie intake, " +
