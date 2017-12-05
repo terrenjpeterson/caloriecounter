@@ -164,6 +164,16 @@ function beerReply(intentRequest, callback) {
         { contentType: 'PlainText', content: counterResponse }));
 }
 
+// this function is used to give away prizes for contests
+function drawingReply(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var counterResponse = "Thanks for getting back to us. We will respond shortly.";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
+}
+
 // this function reacts to someone paying a complement
 function replyComplement(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
@@ -305,14 +315,55 @@ function getShockResponse(intentRequest, callback) {
 
 }
 
+// this function returns what healthy options exist at a particular restaurant
+
+function getHealthyChoice(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    const restaurant = intentRequest.currentIntent.slots.Restaurant;
+    var counterResponse = restaurant + " has ";
+
+    if (restaurant === "Subway") {
+	counterResponse = counterResponse + " healthy salads and sandwiches. ";
+    } else if (restaurant === "McDonalds") {
+	counterResponse = counterResponse + " grilled chicken sandwiches and salads. ";
+    } else if (restaurant === "Panera") {
+        counterResponse = counterResponse + " healthy soups, salads, and sandwiches. ";
+    } else if (restaurant === "Burger King") {
+        counterResponse = counterResponse + " a nice grilled chicken sandwich. ";
+    } else if (restaurant === "Chick-fil-A") {
+        counterResponse = counterResponse + " grilled chicken sandwiches and salads. ";
+    } else if (restaurant === "Wendys") {
+        counterResponse = counterResponse + " chicken sandwiches and a healthy fish sandwich. ";
+    } else if (restaurant === "Arbys") {
+        counterResponse = counterResponse + " roast beef and turkey sandwiches as well as salads. ";
+    } else if (restaurant === "Hardees") {
+        counterResponse = counterResponse + " charbroiled chicken and veggie sandwiches. ";
+    } else if (restaurant === "Five Guys") {
+        counterResponse = counterResponse + " veggie sandwiches, and little size burgers. Just stay away from the fries. ";
+    } else if (restaurant === "Sonic") {
+        counterResponse = counterResponse + " veggie burgers. ";
+    }
+
+    counterResponse = counterResponse + "Let me know if you want me to get more details.";
+
+    callback(close(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: counterResponse }));
+}
+
+// this function returns the details of a recent meal request stored in session data
+
 function getMealDetails(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+    var detailResponse = "";
 
     console.log("Session Attributes: " + JSON.stringify(intentRequest.sessionAttributes));
 
-    if (sessionAttributes.foodName) {
-	var detailResponse = sessionAttributes.foodName + " is " + 
-	    sessionAttributes.foodCalories + " calories. ";
+    if (sessionAttributes.foodName || sessionAttributes.extraName) {
+	if (sessionAttributes.foodName) {
+	    detailResponse = sessionAttributes.foodName + " is " + 
+	        sessionAttributes.foodCalories + " calories. ";
+	}
 	if (sessionAttributes.sauceName) {
 	    detailResponse = detailResponse + sessionAttributes.sauceName + " is " +
 		sessionAttributes.sauceCalories + " calories. ";
@@ -478,6 +529,12 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'Beer') {
 	console.log("user asks about beer");
 	return beerReply(intentRequest, callback);
+    } else if (intentName === 'DrawingWinner') {
+	console.log("user replying to drawing");
+	return drawingReply(intentRequest, callback);
+    } else if (intentName === 'HealthyChoice') {
+	console.log("user requesting healthy choice meals");
+	return getHealthyChoice(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
