@@ -927,8 +927,7 @@ function validateUserEntry(intentRequest, callback) {
 
     // check if extra name was provided then validate
     var extraName = intentRequest.currentIntent.slots.Extra;
-    if (extraName && extraName !== "" && extraName !== "no" && extraName !== "none" && 
-	!invalidSlot && intentRequest.currentIntent.slots.Restaurant) {
+    if (extraName && extraName !== "" && !invalidSlot && intentRequest.currentIntent.slots.Restaurant) {
 	console.log("Check Extra Name: " + intentRequest.currentIntent.slots.Extra);
 	var extraValidationResult = validateExtra(intentRequest.currentIntent.slots);
 	if (!extraValidationResult.isValid) {
