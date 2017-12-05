@@ -192,8 +192,10 @@
             {"foodName":"6 Piece Chicken Nuggets", "foodType":"Nuggets", "calories":260},
             {"foodName":"10 Piece Chicken Nuggets", "foodType":"Nuggets", "calories":430},
             {"foodName":"20 Piece Chicken Nuggets", "foodType":"Nuggets", "calories":860},
-            {"foodName":"10 Piece Spicy Nuggets","calories":530},
+            {"foodName":"10 Piece Spicy Nuggets","calories":530 },
+	    {"foodName":"Ten Piece Spicy Nuggets", "calories":530 },
             {"foodName":"10 Spicy Nuggets", "foodType":"Nuggets", "calories":530},
+            {"foodName":"Ten Spicy Nuggets", "calories":530 },
             {"foodName":"Spicy 10 Piece Nuggets","calories":530},
 	    {"foodName":"Spicy Chicken Nuggets","calories":530},
 	    {"foodName":"Spicy Nuggets","calories":530},
@@ -244,7 +246,6 @@
             {"foodName":"Six inch Oven Roasted Chicken", "calories":320},
             {"foodName":"12 inch Oven Roasted Chicken", "calories":640},
             {"foodName":"Footlong Oven Roasted Chicken", "foodType":"Footlong", "calories":640},
-            {"foodName":"Roast Beef", "calories":320, "correctedTerm":"6 inch RoastBeef" },
             {"foodName":"6 inch Roast Beef", "foodType":"Six inch", "calories":320},
             {"foodName":"Six inch Roast Beef", "calories":320},
             {"foodName":"12 inch Roast Beef", "calories":640},
@@ -771,7 +772,6 @@
     {
         "restaurant":"Arbys",
         "foodItems":[
-            {"foodName":"Roast Beef", "calories":360 },
             {"foodName":"Classic Roast Beef","calories":360, "foodType":"Roast Beef" },
             {"foodName":"Roast Beef Classic","calories":360},
             {"foodName":"Double Roast Beef","calories":510, "foodType":"Roast Beef" },
