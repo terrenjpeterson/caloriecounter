@@ -70,20 +70,50 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
 // this funciton is called during intial field validation
 function validateFields(intentRequest, callback) {
     var sessionAttributes = {};
+    var validEntry = true;
 
+    // validate the entree name if provided
     if (intentRequest.currentIntent.slots.ChineseEntree) {
-    	const checkEntree = validateEntree(intentRequest.slots.ChineseEntree).entreeResponse;
+    	const checkEntree = validateFood(intentRequest.currentIntent.slots.ChineseEntree, 'Entree');
     	console.log(JSON.stringify(checkEntree));
+	// if the entree validation failed, pass back result to request
+	if (!checkEntree.isValid) {
+	    validEntry = false;
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                intentRequest.currentIntent.slots, 'ChineseEntree', checkEntree.message));
+	} else {
+	    sessionAttributes.entreeCalories = checkEntree.calories;
+	}
     }
 
-    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+    // validate the side item if provided
+    if (intentRequest.currentIntent.slots.ChineseSide && validEntry) {
+        const checkSide = validateFood(intentRequest.currentIntent.slots.ChineseSide, 'Sides');
+        console.log(JSON.stringify(checkSide));
+        // if the entree validation failed, pass back result to request
+        if (!checkSide.isValid) {
+            validEntry = false;
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                intentRequest.currentIntent.slots, 'ChineseSide', checkSide.message));
+        } else {
+	    sessionAttributes.sideCalories = checkSide.calories;
+	}
+    }    
+
+    if (validEntry) {
+        callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+    }
 }
 
 // this function will validate that the restaurant provided by the user matches what data we have
-function validateEntree(foodName) {
+function validateFood(foodName, foodType) {
     var entreeResponse = {};
     var foodItems = [];
+    var botMessage = "";
+    var validItem = false;
     const restaurantName = "Panda Express";
+
+    console.log("Validating " + foodType);
 
     // get the array of food items
     for (var i = 0; i < foodChoices.length; i++) {
@@ -95,29 +125,45 @@ function validateEntree(foodName) {
     }
 
     // attempt to match the food item
-    entreeResponse.validItem = false;
+    var entreeAlternatives = [];
+    var entreeCalories = 0;
     for (var j = 0; j < foodItems.length; j++) {
         if (foodName.toLowerCase() == foodItems[j].foodName.toLowerCase()) {
             console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
-            entreeResponse.validItem = true;
-            entreeResponse.calories = foodItems[j].calories;
+            validItem = true;
+            entreeCalories = foodItems[j].calories;
+	} else if (foodItems[j].foodType === foodType) {
+	    entreeAlternatives.push(foodItems[j].foodName);
 	}
     }
 
-    return {
-        entreeResponse
-    };
-
+    // check to see if the food name provided was valid. if not, format error message
+    if (!validItem) {
+	botMessage = "I can't find " + foodName + ". How about ";
+    	for (var k = 0; k < entreeAlternatives.length; k++) {
+	    botMessage = botMessage + entreeAlternatives[k] + ", ";
+    	}
+	return buildValidationResult(false, foodType, botResponse);
+    } else {
+	return { isValid: true, calories: entreeCalories };
+    }
 }
 
 // this function handles the flow for pizza places checking for calories
 
 function calculateCalories(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+    var botResponse = "";
+
+    botResponse = botResponse + intentRequest.currentIntent.slots.ChineseEntree + " is " + 
+	intentRequest.sessionAttributes.entreeCalories + " calories, and " +
+	intentRequest.currentIntent.slots.ChineseSide + " is " +
+	intentRequest.sessionAttributes.sideCalories + " calories.";
 
     // save session attributes for later reference
-    //sessionAttributes.restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
-    //sessionAttributes.pizzaRestaurant = true;
+    sessionAttributes.entreeName = intentRequest.currentIntent.slots.ChineseEntree;
+    sessionAttributes.sideName = intentRequest.currentIntent.slots.ChineseSide;
+    sessionAttributes.chineseRestaurant = true;
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
 
@@ -142,12 +188,9 @@ function dispatch(intentRequest, callback) {
     if (intentRequest.invocationSource === 'DialogCodeHook') {
 	console.log("validation mode");
 	return validateFields(intentRequest, callback);
-    } else if (intentName === 'GetPizzaCalories') {
-	console.log("checking on pizza places.");
-	return calculatePizzaCalories(intentRequest, callback);
-    } else if (intentName === 'WhatPizzaTypes') {
-	console.log("user requested types of pizza");
-	return getPizzaTypes(intentRequest, callback);
+    } else {
+	console.log("calculate calories");
+	return calculateCalories(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);

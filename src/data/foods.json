@@ -262,7 +262,9 @@
             {"foodName":"6 inch Subway Club", "foodType":"Six inch", "calories":310},
             {"foodName":"12 inch Subway Club", "calories":620},
             {"foodName":"Footlong Subway Club", "calories":620},
-            {"foodName":"Teriyaki Chicken", "calories":370},
+            {"foodName":"Teriyaki Chicken", "calories":370, "correctedTerm":"6 inch Sweet Onion Chicken Teriyaki" },
+            {"foodName":"Chicken Teriyaki", "calories":370, "correctedTerm":"6 inch Sweet Onion Chicken Teriyaki" },
+            {"foodName":"6 inch Chicken Teriyaki", "calories":370, "correctedTerm":"6 inch Sweet Onion Chicken Teriyaki" },
             {"foodName":"Sweet Onion Chicken Teriyaki", "calories":370},
             {"foodName":"6 inch Sweet Onion Chicken Teriyaki", "foodType":"Six inch", "calories":370},
             {"foodName":"12 inch Sweet Onion Chicken Teriyaki", "calories":740},
@@ -1037,5 +1039,19 @@
             { "foodName":"Large Tots", "calories":580, "sideItem":true, "ketchupItem":true },
             { "foodName":"Tots with Cheese", "calories":170, "sideItem":true, "ketchupItem":true }
 	]
+    },
+    {
+        "restaurant":"Panda Express",
+        "foodItems":[
+            { "foodName":"Orange Chicken", "foodType":"Entree", "calories":380, "carbs":44, "sodium":610 },
+            { "foodName":"String Bean Chicken Breast", "foodType":"Entree", "calories":190, "carbs":13, "sodium":590 },
+            { "foodName":"Sweet Fire Chicken Breast", "foodType":"Entree", "calories":380, "carbs":47, "sodium":320 },
+            { "foodName":"Kung Pao Chicken", "foodType":"Entree", "calories":290, "carbs":14, "sodium":970 },
+            { "foodName":"Chow Mein", "foodType":"Sides", "calories":510, "carbs":80, "sodium":860 },
+            { "foodName":"Fried Rice", "foodType":"Sides", "calories":520, "carbs":85, "sodium":850 },
+            { "foodName":"Mixed Vegetables", "foodType":"Sides", "calories":80, "carbs":16, "sodium":540 },
+            { "foodName":"White Steamed Rice", "foodType":"Sides", "calories":380, "carbs":87, "sodium":0 },
+            { "foodName":"Brown Steamed Rice", "foodType":"Sides", "calories":420, "carbs":86, "sodium":15 }
+        ]
     }
 ]
