@@ -1047,11 +1047,31 @@
             { "foodName":"String Bean Chicken Breast", "foodType":"Entree", "calories":190, "carbs":13, "sodium":590 },
             { "foodName":"Sweet Fire Chicken Breast", "foodType":"Entree", "calories":380, "carbs":47, "sodium":320 },
             { "foodName":"Kung Pao Chicken", "foodType":"Entree", "calories":290, "carbs":14, "sodium":970 },
+            { "foodName":"Mushroom Chicken", "foodType":"Entree", "calories":220, "carbs":11, "sodium":840 },
+            { "foodName":"Black Pepper Chicken", "foodType":"Entree", "calories":280, "carbs":15, "sodium":1130 },
+            { "foodName":"Grilled Teriyaki Chicken", "calories":300, "carbs":8, "sodium":530 },
+            { "foodName":"Teriyaki Chicken", "foodType":"Entree", "calories":300, "carbs":8, "sodium":530 },
+            { "foodName":"Broccoli Beef", "foodType":"Entree", "calories":150, "carbs":13, "sodium":520 },
+            { "foodName":"Beef Broccoli", "calories":150, "carbs":13, "sodium":520 },
+            { "foodName":"Shanghai Angus Steak", "foodType":"Entree", "calories":310, "carbs":16, "sodium":830 },
+            { "foodName":"Beijing Beef", "foodType":"Entree", "calories":470, "carbs":46, "sodium":660 },
+            { "foodName":"Honey Walnut Shrimp", "foodType":"Entree", "calories":360, "carbs":35, "sodium":440 },
+            { "foodName":"Eggplant Tofu", "foodType":"Entree", "calories":340, "carbs":23, "sodium":520 },
             { "foodName":"Chow Mein", "foodType":"Sides", "calories":510, "carbs":80, "sodium":860 },
             { "foodName":"Fried Rice", "foodType":"Sides", "calories":520, "carbs":85, "sodium":850 },
             { "foodName":"Mixed Vegetables", "foodType":"Sides", "calories":80, "carbs":16, "sodium":540 },
-            { "foodName":"White Steamed Rice", "foodType":"Sides", "calories":380, "carbs":87, "sodium":0 },
-            { "foodName":"Brown Steamed Rice", "foodType":"Sides", "calories":420, "carbs":86, "sodium":15 }
+            { "foodName":"White Steamed Rice", "calories":380, "carbs":87, "sodium":0 },
+            { "foodName":"White Rice", "foodType":"Sides", "calories":380, "carbs":87, "sodium":0 },
+            { "foodName":"Brown Rice", "foodType":"Sides", "calories":420, "carbs":86, "sodium":15 },
+            { "foodName":"Brown Steamed Rice", "calories":420, "carbs":86, "sodium":15 },
+	    { "foodName":"Chicken Potsticker", "foodType":"Appetizers", "calories":160, "carbs":20, "sodium":250 },
+            { "foodName":"Potsticker", "calories":160, "carbs":20, "sodium":250 },
+            { "foodName":"Cream Cheese Rangoon", "foodType":"Appetizers", "calories":190, "carbs":24, "sodium":180 },
+            { "foodName":"Chicken Egg Roll", "calories":200, "carbs":20, "sodium":340 },
+            { "foodName":"Egg Roll", "foodType":"Appetizers", "calories":200, "carbs":20, "sodium":340 },
+            { "foodName":"Veggie Spring Roll", "calories":190, "carbs":27, "sodium":520 },
+            { "foodName":"Spring Roll", "foodType":"Appetizers", "calories":190, "carbs":27, "sodium":520 },
+            { "foodName":"Crispy Shrimp", "foodType":"Appetizers", "calories":260, "carbs":26, "sodium":800 }
         ]
     }
 ]
