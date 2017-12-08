@@ -1,0 +1,45 @@
+{
+    "messageVersion": "1.0",
+    "invocationSource": "DialogCodeHook",
+    "userId": "b15z32or4jjlzp4dzmp4kqczs1r283gi",
+    "sessionAttributes": {},
+    "requestAttributes": null,
+    "bot": {
+        "name": "FastFoodChecker",
+        "alias": "$LATEST",
+        "version": "$LATEST"
+    },
+    "outputDialogMode": "Text",
+    "currentIntent": {
+        "name": "GetChineseCalories",
+        "slots": {
+            "ChineseEntree": "kung pao chicken",
+            "ChineseSide": "fried rice",
+            "ChineseAppetizer": null
+        },
+        "slotDetails": {
+            "ChineseEntree": {
+                "resolutions": [
+                    {
+                        "value": "Kung Pao Chicken"
+                    }
+                ],
+                "originalValue": "kung pao chicken"
+            },
+            "ChineseSide": {
+                "resolutions": [
+                    {
+                        "value": "Fried Rice"
+                    }
+                ],
+                "originalValue": "fried rice"
+            },
+            "ChineseAppetizer": {
+                "resolutions": [],
+                "originalValue": null
+            }
+        },
+        "confirmationStatus": "None"
+    },
+    "inputTranscript": "how many calories in a kung pao chicken and fried rice"
+}

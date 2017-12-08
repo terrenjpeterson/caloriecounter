@@ -6,6 +6,7 @@ zip -r foodbot.zip lambda.js data/restaurants.json data/foods.json data/drinks.j
 zip -r calcbot.zip calculate.js data/foods.json data/drinks.json data/sauces.json data/dressings.json
 zip -r pizzabot.zip pizza.js data/restaurants.json data/pizzas.json
 zip -r miscbot.zip misc.js data/restaurants.json data/foods.json data/drinks.json
+zip -r chinesebot.zip chinese.js data/foods.json data/drinks.json
 
 # copy the build file and source files to a staging bucket in case need for research
 aws s3 cp lambda.js s3://fastfoodchatbot/binaries/
@@ -16,6 +17,7 @@ aws s3 cp foodbot.zip s3://fastfoodchatbot/binaries/
 aws s3 cp pizzabot.zip s3://fastfoodchatbot/binaries/
 aws s3 cp calcbot.zip s3://fastfoodchatbot/binaries/
 aws s3 cp miscbot.zip s3://fastfoodchatbot/binaries/
+aws s3 cp chinesebot.zip s3://fastfoodchatbot/binaries/
 echo 'copied zip files and source code to s3'
 
 aws s3 cp data/foods.json s3://fastfoodchatbot/data/
@@ -31,6 +33,7 @@ rm foodbot.zip
 rm pizzabot.zip
 rm calcbot.zip
 rm miscbot.zip
+rm chinesebot.zip
 echo 'removed temp files'
 
 # update the lambda function with the binaries that have been staged
@@ -38,6 +41,7 @@ aws lambda update-function-code --function-name myCalorieCounterGreen --s3-bucke
 aws lambda update-function-code --function-name myPizzaCalorieCounterGreen --s3-bucket fastfoodchatbot --s3-key binaries/pizzabot.zip
 aws lambda update-function-code --function-name myCalorieCalculatorGreen --s3-bucket fastfoodchatbot --s3-key binaries/calcbot.zip
 aws lambda update-function-code --function-name myCalorieBotMiscMsgGreen --s3-bucket fastfoodchatbot --s3-key binaries/miscbot.zip
+aws lambda update-function-code --function-name myChineseFoodCalculatorGreen --s3-bucket fastfoodchatbot --s3-key binaries/chinesebot.zip
 echo 'new versions of lambda functions has been deployed'
 
 # read in test data required for a food validation request
@@ -109,6 +113,20 @@ aws lambda invoke --function-name myCalorieCounterGreen --payload "$request" tes
 response=$(<testOutput.json)
 echo $response
 echo 'test case 5 complete'
+
+# read in test data required for the pizza test
+echo 'test case 6 chinese food request'
+cd testing
+request=$(<chineseRequest.json)
+cd ..
+
+# invoke the lambda function for validating food
+aws lambda invoke --function-name myChineseFoodCalculatorGreen --payload "$request" testOutput.json
+
+# read response file into local variable then print on the console
+response=$(<testOutput.json)
+echo $response
+echo 'test case 6 complete'
 
 # clean-up any temporary data
 #aws s3 rm foodbot.zip s3://fastfoodchatbot/binaries/
