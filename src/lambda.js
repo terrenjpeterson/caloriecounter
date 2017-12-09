@@ -795,6 +795,15 @@ function validateFoodTypes(intentRequest, callback) {
 	}
     }
 
+    // scrub common mispellings of food types
+    if (intentRequest.currentIntent.slots.FoodType) {
+	if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "entrees") {
+	    console.log("removing extra s from entrees");
+	    intentRequest.currentIntent.slots.FoodType === "Entree";
+	    slots.FoodType = "Entree";
+	}
+    }
+
     // if a restaurant name has been provided, then validate it. If not, its too early and return.
     if (intentRequest.currentIntent.slots.Restaurant) {
 	console.log("Restaurant provided so validate.");
