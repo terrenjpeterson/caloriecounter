@@ -157,12 +157,15 @@ function calculateCalories(intentRequest, callback) {
 	} else {
 	    mexFoodName = mexFoodType;
 	}
-        var mexFoodCalories = getFoodCalories(mexFoodName, restaurantName).foodCalories;
+        var mexFoodEval = getFoodCalories(mexFoodName, restaurantName);
+	console.log(JSON.stringify(mexFoodEval));
+	var mexFoodCalories = mexFoodEval.foodCalories;
+	    mexFoodName = mexFoodEval.correctFoodName;
 	// this condition is where the combination food name is alternate form (i.e. protein first)
 	if (mexFoodCalories === 0) {
 	    mexFoodCalories = getFoodCalories(altMexFoodName, restaurantName).foodCalories;
 	    mexFoodName = altMexFoodName;
-	}
+	} 
         totalCalories += mexFoodCalories;
         sessionAttributes.foodName     = mexFoodName;
         sessionAttributes.foodCalories = mexFoodCalories;
@@ -324,6 +327,7 @@ function calculateCarbs(intentRequest, callback) {
 function getFoodCalories(foodName, restaurantName) {
     var restaurantFoodItems = [];
     var foodCalories = 0;
+    var correctFoodName = "";
 
     for (var i = 0; i < foodChoices.length; i++) {
         if (restaurantName.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
@@ -335,11 +339,17 @@ function getFoodCalories(foodName, restaurantName) {
 	if (foodName.toLowerCase() === restaurantFoodItems[j].foodName.toLowerCase()) {
 	    console.log("matched recommendation for " + restaurantFoodItems[j].foodName);
 	    foodCalories = restaurantFoodItems[j].calories;
+	    // pass back corrected name if one exists
+	    if (restaurantFoodItems[j].correctedTerm) {
+		correctFoodName = restaurantFoodItems[j].correctedTerm;
+	    } else {
+	    	correctFoodName = restaurantFoodItems[j].foodName;
+	    }
 	}
     }
 
     return {
-	foodCalories
+	foodCalories, correctFoodName
     };
 }
 
