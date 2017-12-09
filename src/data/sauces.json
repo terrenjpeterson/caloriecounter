@@ -15,10 +15,16 @@
     {
 	"sauceName":"Honey Mustard",
 	"calories":45,
-	"restaurantNames":["McDonalds", "Hardees", "Honey Mustard"]
+	"restaurantNames":["McDonalds", "Hardees"]
     },
     {
         "sauceName":"Sweet and Sour",
+        "calories":45,
+        "restaurantNames":["McDonalds", "Wendys"]
+    },
+    {
+        "sauceName":"Sweet Sour",
+	"correctedName":"Sweet and Sour",
         "calories":45,
         "restaurantNames":["McDonalds", "Wendys"]
     },
