@@ -83,6 +83,8 @@ function validateFields(intentRequest, callback) {
                 intentRequest.currentIntent.slots, 'ChineseEntree', checkEntree.message));
 	} else {
 	    sessionAttributes.entreeCalories = checkEntree.calories;
+	    sessionAttributes.entreeSodium   = checkEntree.sodium;
+	    intentRequest.currentIntent.slots.ChineseEntree = checkEntree.correctedName;
 	}
     }
 
@@ -97,7 +99,8 @@ function validateFields(intentRequest, callback) {
                 intentRequest.currentIntent.slots, 'ChineseSide', checkSide.message));
         } else {
 	    sessionAttributes.sideCalories = checkSide.calories;
-	}
+            sessionAttributes.sideSodium   = checkSide.sodium;
+            intentRequest.currentIntent.slots.ChineseSide = checkSide.correctedName;	}
     }    
 
     // validate the appetizer item if provided
@@ -112,6 +115,8 @@ function validateFields(intentRequest, callback) {
                 intentRequest.currentIntent.slots, 'ChineseAppetizer', checkAppetizer.message));
         } else {
             sessionAttributes.appetizerCalories = checkAppetizer.calories;
+            sessionAttributes.appetizerSodium   = checkAppetizer.sodium;
+            intentRequest.currentIntent.slots.ChineseAppetizer = checkAppetizer.correctedName;
         }
     }
 
@@ -142,11 +147,16 @@ function validateFood(foodName, foodType) {
     // attempt to match the food item
     var entreeAlternatives = [];
     var entreeCalories = 0;
+    var entreeSodium = 0;
+    var entreeName = "";
+
     for (var j = 0; j < foodItems.length; j++) {
         if (foodName.toLowerCase() == foodItems[j].foodName.toLowerCase()) {
             console.log("found a match for " + foodItems[j].foodName + " calories " + foodItems[j].calories);
             validItem = true;
             entreeCalories = foodItems[j].calories;
+	    entreeSodium = foodItems[j].sodium;
+	    entreeName = foodItems[j].foodName;
 	} else if (foodItems[j].foodType === foodType) {
 	    entreeAlternatives.push(foodItems[j].foodName);
 	}
@@ -160,7 +170,7 @@ function validateFood(foodName, foodType) {
     	}
 	return buildValidationResult(false, foodType, botMessage);
     } else {
-	return { isValid: true, calories: entreeCalories };
+	return { isValid: true, calories: entreeCalories, sodium: entreeSodium, correctedName: entreeName };
     }
 }
 
@@ -168,13 +178,19 @@ function validateFood(foodName, foodType) {
 
 function calculateCalories(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    // default to Panda Express for now
     var botResponse = "Eating at Panda Express. ";
+    sessionAttributes.restaurantName = "Panda Express";
 
     var totalCalories = Number(intentRequest.sessionAttributes.entreeCalories) +
 	Number(intentRequest.sessionAttributes.sideCalories);
+    var totalSodium = Number(intentRequest.sessionAttributes.entreeSodium) +
+	Number(intentRequest.sessionAttributes.sideSodium);
 
     if (intentRequest.sessionAttributes.appetizerCalories) {
 	totalCalories = totalCalories + Number(intentRequest.sessionAttributes.appetizerCalories);
+	totalSodium   = totalSodium   + Number(intentRequest.sessionAttributes.appetizerSodium);
 	sessionAttributes.appetizerName = intentRequest.currentIntent.slots.ChineseAppetizer;
     }
 
@@ -187,7 +203,8 @@ function calculateCalories(intentRequest, callback) {
 	botResponse = botResponse + ". ";
     }
 
-    botResponse = botResponse + "Total is " + totalCalories + " calories. " +
+    botResponse = botResponse + "Total is " + totalCalories + " calories, and " +
+	totalSodium + " mg of sodium. " +
 	"You can also say 'more details' for an itemized breakout.";
 
     // save session attributes for later reference
@@ -195,6 +212,7 @@ function calculateCalories(intentRequest, callback) {
     sessionAttributes.sideName   = intentRequest.currentIntent.slots.ChineseSide;
 
     sessionAttributes.totalCalories 	= totalCalories;
+    sessionAttributes.totalSodium	= totalSodium;
     sessionAttributes.chineseRestaurant = true;
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));

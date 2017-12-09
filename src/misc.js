@@ -107,6 +107,7 @@ function getBasicDailyAnalysis(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
     const maleAverage = 2500;
     const femaleAverage = 2000;
+    const sodiumIntake = 2300;
 
     // change response depending on if a prior food calculation was saved in the session
     if (intentRequest.sessionAttributes.totalCalories) {
@@ -116,7 +117,16 @@ function getBasicDailyAnalysis(intentRequest, callback) {
     	var botResponse = "This meal of " + mealEstimate + " calories at " + restaurantName +
 	    " is " + ((mealEstimate * 100) /maleAverage) + "% of a daily average male diet, or " +
 	    ((mealEstimate * 100) /femaleAverage) + "% of a daily average female diet based on " +
-	    "guidelines set by nutrition experts. For a specific daily calorie intake estimate, say 'Customize'.";
+	    "guidelines set by nutrition experts. ";
+
+	if (intentRequest.sessionAttributes.chineseRestaurant) {
+	    const sodiumEstimate = intentRequest.sessionAttributes.totalSodium;
+	    botResponse = botResponse + "The American Heart Association recommends no more than " +
+		sodiumIntake + " mg of sodium per day, and this meal is " +
+		Math.round((sodiumEstimate * 100) /sodiumIntake) + "% of the daily amount.";
+	} else {
+	    botResponse = botResponse + "For a specific daily calorie intake estimate, say 'Customize'.";
+	}
 
     	callback(close(sessionAttributes, 'Fulfilled',
             { contentType: 'PlainText', content: botResponse }));
@@ -388,13 +398,18 @@ function getMealDetails(intentRequest, callback) {
 	detailResponse = detailResponse + "To analyze this meal vs. your daily recommended " +
 	    "calorie intake, please say 'analyze my meal'.";
     } else if (sessionAttributes.chineseRestaurant) {
-	detailResponse = sessionAttributes.entreeName + " is " + sessionAttributes.entreeCalories + " calories. " +
-	    sessionAttributes.sideName + " is " + sessionAttributes.sideCalories + " calories. ";
+	detailResponse = sessionAttributes.entreeName + " is " + sessionAttributes.entreeCalories + 
+	    " calories, and " + sessionAttributes.entreeSodium + " mg of sodium. " +
+	    sessionAttributes.sideName + " is " + sessionAttributes.sideCalories + 
+	    " calories, and " + sessionAttributes.sideSodium + " mg of sodium. ";
 	if (sessionAttributes.appetizerCalories) {
 	    detailResponse = detailResponse + sessionAttributes.appetizerName + " is " + 
-		sessionAttributes.appetizerCalories + " calories. ";
+		sessionAttributes.appetizerCalories + 
+		" calories, and " + sessionAttributes.appetizerSodium + " mg of sodium. ";
 	}
-	detailResponse = detailResponse + "Total Calories are " + sessionAttributes.totalCalories + ".";
+	detailResponse = detailResponse + "Total Calories are " + sessionAttributes.totalCalories + 
+	    " and sodium intake is " + sessionAttributes.totalSodium + ". " +
+            "To analyze this meal vs. your daily recommended calorie intake, please say 'analyze my meal'.";
     } else {
 	var detailResponse = "Sorry, first start by telling me more about the meal. " +
 	    "For example, say something like Eating at Burger King.";
