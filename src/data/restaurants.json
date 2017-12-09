@@ -14,5 +14,6 @@
     { "restaurantName":"Dominos", "validRestaurant":true, "servesPizza":true },
     { "restaurantName":"Papa Johns", "validRestaurant":true, "servesPizza":true },
     { "restaurantName":"Little Caesars", "validRestaurant":true, "servesPizza":true },
-    { "restaurantName":"Pizza Hut", "validRestaurant":true, "servesPizza":true }
+    { "restaurantName":"Pizza Hut", "validRestaurant":true, "servesPizza":true },
+    { "restaurantName":"Panda Express", "validRestaurant":true, "servesChinese":true }
 ]

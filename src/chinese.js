@@ -100,6 +100,21 @@ function validateFields(intentRequest, callback) {
 	}
     }    
 
+    // validate the appetizer item if provided
+    if (intentRequest.currentIntent.slots.ChineseAppetizer && validEntry 
+	&& intentRequest.currentIntent.slots.ChineseAppetizer.toLowerCase() !== "no") {
+        const checkAppetizer = validateFood(intentRequest.currentIntent.slots.ChineseAppetizer, 'Appetizers');
+        console.log(JSON.stringify(checkAppetizer));
+        // if the entree validation failed, pass back result to request
+        if (!checkAppetizer.isValid) {
+            validEntry = false;
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                intentRequest.currentIntent.slots, 'ChineseAppetizer', checkAppetizer.message));
+        } else {
+            sessionAttributes.appetizerCalories = checkAppetizer.calories;
+        }
+    }
+
     if (validEntry) {
         callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
     }
@@ -143,26 +158,43 @@ function validateFood(foodName, foodType) {
     	for (var k = 0; k < entreeAlternatives.length; k++) {
 	    botMessage = botMessage + entreeAlternatives[k] + ", ";
     	}
-	return buildValidationResult(false, foodType, botResponse);
+	return buildValidationResult(false, foodType, botMessage);
     } else {
 	return { isValid: true, calories: entreeCalories };
     }
 }
 
-// this function handles the flow for pizza places checking for calories
+// this function calculates the total calories in a meal and saves it to the session
 
 function calculateCalories(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
-    var botResponse = "";
+    var botResponse = "Eating at Panda Express. ";
 
-    botResponse = botResponse + intentRequest.currentIntent.slots.ChineseEntree + " is " + 
-	intentRequest.sessionAttributes.entreeCalories + " calories, and " +
-	intentRequest.currentIntent.slots.ChineseSide + " is " +
-	intentRequest.sessionAttributes.sideCalories + " calories.";
+    var totalCalories = Number(intentRequest.sessionAttributes.entreeCalories) +
+	Number(intentRequest.sessionAttributes.sideCalories);
+
+    if (intentRequest.sessionAttributes.appetizerCalories) {
+	totalCalories = totalCalories + Number(intentRequest.sessionAttributes.appetizerCalories);
+	sessionAttributes.appetizerName = intentRequest.currentIntent.slots.ChineseAppetizer;
+    }
+
+    botResponse = botResponse + intentRequest.currentIntent.slots.ChineseEntree + " and " + 
+	intentRequest.currentIntent.slots.ChineseSide;
+
+    if (intentRequest.currentIntent.slots.ChineseAppetizer && intentRequest.currentIntent.slots.ChineseAppetizer.toLowerCase() !== "no") {
+	botResponse = botResponse + " with a " + intentRequest.currentIntent.slots.ChineseAppetizer + ". ";
+    } else {
+	botResponse = botResponse + ". ";
+    }
+
+    botResponse = botResponse + "Total is " + totalCalories + " calories. " +
+	"You can also say 'more details' for an itemized breakout.";
 
     // save session attributes for later reference
     sessionAttributes.entreeName = intentRequest.currentIntent.slots.ChineseEntree;
-    sessionAttributes.sideName = intentRequest.currentIntent.slots.ChineseSide;
+    sessionAttributes.sideName   = intentRequest.currentIntent.slots.ChineseSide;
+
+    sessionAttributes.totalCalories 	= totalCalories;
     sessionAttributes.chineseRestaurant = true;
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));

@@ -387,7 +387,14 @@ function getMealDetails(intentRequest, callback) {
 	}
 	detailResponse = detailResponse + "To analyze this meal vs. your daily recommended " +
 	    "calorie intake, please say 'analyze my meal'.";
-
+    } else if (sessionAttributes.chineseRestaurant) {
+	detailResponse = sessionAttributes.entreeName + " is " + sessionAttributes.entreeCalories + " calories. " +
+	    sessionAttributes.sideName + " is " + sessionAttributes.sideCalories + " calories. ";
+	if (sessionAttributes.appetizerCalories) {
+	    detailResponse = detailResponse + sessionAttributes.appetizerName + " is " + 
+		sessionAttributes.appetizerCalories + " calories. ";
+	}
+	detailResponse = detailResponse + "Total Calories are " + sessionAttributes.totalCalories + ".";
     } else {
 	var detailResponse = "Sorry, first start by telling me more about the meal. " +
 	    "For example, say something like Eating at Burger King.";
