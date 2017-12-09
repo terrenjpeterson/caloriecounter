@@ -120,6 +120,18 @@ function validateFields(intentRequest, callback) {
         }
     }
 
+    if (intentRequest.currentIntent.slots.Drink && validEntry) {
+	const checkDrink = validateDrink(intentRequest.currentIntent.slots.Drink);
+	console.log(JSON.stringify(checkDrink));
+        if (!checkDrink.isValid) {
+            validEntry = false;
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                intentRequest.currentIntent.slots, 'Drink', checkDrink.message));
+        } else {
+            sessionAttributes.drinkCalories = checkDrink.calories;
+        }
+    }
+
     if (validEntry) {
         callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
     }
@@ -163,7 +175,10 @@ function validateFood(foodName, foodType) {
     }
 
     // check to see if the food name provided was valid. if not, format error message
-    if (!validItem) {
+    if (foodName.toLowerCase() === "rice") {
+        botMessage = "Which type do you want, White Rice or Brown Rice?";
+        return buildValidationResult(false, foodType, botMessage);
+    } else if (!validItem) {
 	botMessage = "I can't find " + foodName + ". How about ";
     	for (var k = 0; k < entreeAlternatives.length; k++) {
 	    botMessage = botMessage + entreeAlternatives[k] + ", ";
@@ -171,6 +186,42 @@ function validateFood(foodName, foodType) {
 	return buildValidationResult(false, foodType, botMessage);
     } else {
 	return { isValid: true, calories: entreeCalories, sodium: entreeSodium, correctedName: entreeName };
+    }
+}
+
+// this function validates a drink provided
+
+function validateDrink(drinkName) {
+    var validDrink = false;
+    var drinkCalories = 0;
+
+    console.log("validating drink entered " + drinkName);
+
+    // first try and match the drink name from the main array
+    for (var j = 0; j < drinks.length; j++) {
+        if (drinkName.toLowerCase() === drinks[j].drinkName.toLowerCase()) {
+            console.log("found a match for " + drinks[j].drinkName + " calories " + drinks[j].calories);
+            validDrink = true;
+            drinkCalories = drinks[j].calories;
+        }
+    }
+
+    // create response. if the drink item didn't match, respond as such, else pass back as supported.
+    if (validDrink) {
+        console.log("passed drink validation");
+        return { isValid: true, calories: drinkCalories };
+    } else if (drinkName) {
+        console.log("failed drink validation" + JSON.stringify(drinkName));
+        if (drinkName.toLowerCase() === "drink" ||
+            drinkName.toLowerCase() === "small drink" ||
+            drinkName.toLowerCase() === "medium drink" ||
+            drinkName.toLowerCase() === "large drink" ||
+            drinkName.toLowerCase() === "yes" ) {
+            // in this case, the response was too vague - so instruct the user to be more specific
+            return buildValidationResult(false, 'Drink', 'Please say a drink name, for example, Small Coke.');
+        } else {
+            return buildValidationResult(false, 'Drink', `Sorry, I dont have information for ` + drinkName + '. Please try again.');
+        }
     }
 }
 
