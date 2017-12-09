@@ -407,6 +407,10 @@ function getMealDetails(intentRequest, callback) {
 		sessionAttributes.appetizerCalories + 
 		" calories, and " + sessionAttributes.appetizerSodium + " mg of sodium. ";
 	}
+	if (sessionAttributes.drinkName) {
+	    detailResponse = detailResponse + "The " + sessionAttributes.drinkSize + " oz. " + 
+		sessionAttributes.drinkName + " adds " + sessionAttributes.drinkCalories + " calories. ";
+	}
 	detailResponse = detailResponse + "Total Calories are " + sessionAttributes.totalCalories + 
 	    " and sodium intake is " + sessionAttributes.totalSodium + ". " +
             "To analyze this meal vs. your daily recommended calorie intake, please say 'analyze my meal'.";
