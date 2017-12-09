@@ -128,6 +128,8 @@ function validateFields(intentRequest, callback) {
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                 intentRequest.currentIntent.slots, 'Drink', checkDrink.message));
         } else {
+	    sessionAttributes.drinkName     = intentRequest.currentIntent.slots.Drink;
+	    sessionAttributes.drinkSize	    = checkDrink.size;
             sessionAttributes.drinkCalories = checkDrink.calories;
         }
     }
@@ -194,6 +196,7 @@ function validateFood(foodName, foodType) {
 function validateDrink(drinkName) {
     var validDrink = false;
     var drinkCalories = 0;
+    var drinkSize = 0;
 
     console.log("validating drink entered " + drinkName);
 
@@ -203,13 +206,14 @@ function validateDrink(drinkName) {
             console.log("found a match for " + drinks[j].drinkName + " calories " + drinks[j].calories);
             validDrink = true;
             drinkCalories = drinks[j].calories;
+	    drinkSize = drinks[j].size;
         }
     }
 
     // create response. if the drink item didn't match, respond as such, else pass back as supported.
     if (validDrink) {
         console.log("passed drink validation");
-        return { isValid: true, calories: drinkCalories };
+        return { isValid: true, calories: drinkCalories, size: drinkSize };
     } else if (drinkName) {
         console.log("failed drink validation" + JSON.stringify(drinkName));
         if (drinkName.toLowerCase() === "drink" ||
@@ -254,6 +258,14 @@ function calculateCalories(intentRequest, callback) {
 	botResponse = botResponse + ". ";
     }
 
+    // check if a drink was selected, if so, add to the response
+    if (intentRequest.sessionAttributes.drinkName) {
+	botResponse = botResponse + "Drinking a " + intentRequest.sessionAttributes.drinkSize +
+	"oz. " + intentRequest.sessionAttributes.drinkName + ". ";
+	totalCalories = totalCalories + Number(intentRequest.sessionAttributes.drinkCalories);
+    }
+	
+    // provide the total calories and sodium
     botResponse = botResponse + "Total is " + totalCalories + " calories, and " +
 	totalSodium + " mg of sodium. " +
 	"You can also say 'more details' for an itemized breakout.";
