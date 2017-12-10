@@ -298,6 +298,13 @@
                 {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":390} 
              ]
             },
+            {"name":"BBQ Beef",
+             "sizes": [
+                {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":140},
+                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":240},
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":340}
+             ]
+            },
             {"name":"Veggie Lovers",
              "sizes": [
                 {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":120},
