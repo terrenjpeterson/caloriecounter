@@ -11,6 +11,7 @@ This is a Lex based chatbot that will calculate calories made by trips to differ
 - [Where does it get its data from?](#data-lookup-tables)
 - [How do you create large custom slots?](#large-custom-slots)
 - [How does information get shared between intents?](#sharing-session-data-between-intents)
+- [How do you create buttons for the user to click on?](#creating-buttons-in-user-interface)
 - [What does the deployment model look like?](#deployment-pipeline)
 - [Does a bot have a personality?](#add-personality-to-the-bot)
 - [What is the website code for?](#website-in-progress)
@@ -222,6 +223,13 @@ Once again the data gets stored in the session data, and is passed back as part 
 ```
 
 The lambda functions in this bot are completely stateless, so any data from prior invocations must come through the request object.
+
+## Creating buttons in user interface
+One of the features in the major chatbot user interfaces (Messenger, Slack, etc.) is buttons. These reduce the effort by the user by providing a series of options like so.
+![](https://s3.amazonaws.com/fastfoodchatbot/media/FBMessengerButtons.JPG)
+
+Each messaging platform has their own implementation of this pattern, and [here](https://developers.facebook.com/docs/messenger-platform/send-messages/template/button) is what Messenger uses.
+Lex handles the translation to get the buttons into the correct format, and within Lex, the [responseCard](http://docs.aws.amazon.com/lex/latest/dg/lambda-input-response-format.html#lambda-response-dialogAction) attribute needs to be provided with the specifics on the button detail.
 
 ## Deployment pipeline
 Modifying Lex is done completely through the console. The lambda functions that serve the business logic are hosted in AWS lambda, and are deployed from an EC2 host.
