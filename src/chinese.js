@@ -11,17 +11,41 @@ var drinks = require("data/drinks.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
-function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message) {
-    return {
-        sessionAttributes,
-        dialogAction: {
-            type: 'ElicitSlot',
-            intentName,
-            slots,
-            slotToElicit,
-            message,
-        },
-    };
+function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message, buttonData) {
+    if (buttonData) {
+	console.log("processing:" + JSON.stringify(buttonData));
+        return {
+            sessionAttributes,
+            dialogAction: {
+            	type: 'ElicitSlot',
+            	intentName,
+            	slots,
+            	slotToElicit,
+            	message,
+		responseCard: {
+		    version: '1',
+		    contentType: 'application/vnd.amazonaws.card.generic',
+		    genericAttachments: [
+			{
+			    title: 'Options:',
+			    buttons: buttonData,
+		    	},
+		    ],
+		},
+            },
+    	};
+    } else {
+        return {
+            sessionAttributes,
+            dialogAction: {
+                type: 'ElicitSlot',
+                intentName,
+                slots,
+                slotToElicit,
+                message,
+            },
+        };
+    }
 }
 
 function confirmIntent(sessionAttributes, intentName, slots, message) {
@@ -59,11 +83,12 @@ function delegate(sessionAttributes, slots) {
 
 // ---------------- Helper Functions --------------------------------------------------
 
-function buildValidationResult(isValid, violatedSlot, messageContent) {
+function buildValidationResult(isValid, violatedSlot, messageContent, buttonData) {
     return {
         isValid,
         violatedSlot,
         message: { contentType: 'PlainText', content: messageContent },
+	buttonData,
     };
 }
 
@@ -80,7 +105,7 @@ function validateFields(intentRequest, callback) {
 	if (!checkEntree.isValid) {
 	    validEntry = false;
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                intentRequest.currentIntent.slots, 'ChineseEntree', checkEntree.message));
+                intentRequest.currentIntent.slots, 'ChineseEntree', checkEntree.message, null));
 	} else {
 	    sessionAttributes.entreeCalories = checkEntree.calories;
 	    sessionAttributes.entreeSodium   = checkEntree.sodium;
@@ -95,8 +120,14 @@ function validateFields(intentRequest, callback) {
         // if the entree validation failed, pass back result to request
         if (!checkSide.isValid) {
             validEntry = false;
-            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                intentRequest.currentIntent.slots, 'ChineseSide', checkSide.message));
+	    if (checkSide.buttonData) { 
+		console.log("adding buttons");
+           	callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                    intentRequest.currentIntent.slots, 'ChineseSide', checkSide.message, checkSide.buttonData));
+	    } else {
+                callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                    intentRequest.currentIntent.slots, 'ChineseSide', checkSide.message, null));
+	    }
         } else {
 	    sessionAttributes.sideCalories = checkSide.calories;
             sessionAttributes.sideSodium   = checkSide.sodium;
@@ -112,7 +143,7 @@ function validateFields(intentRequest, callback) {
         if (!checkAppetizer.isValid) {
             validEntry = false;
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                intentRequest.currentIntent.slots, 'ChineseAppetizer', checkAppetizer.message));
+                intentRequest.currentIntent.slots, 'ChineseAppetizer', checkAppetizer.message, null));
         } else {
             sessionAttributes.appetizerCalories = checkAppetizer.calories;
             sessionAttributes.appetizerSodium   = checkAppetizer.sodium;
@@ -126,8 +157,8 @@ function validateFields(intentRequest, callback) {
         if (!checkDrink.isValid) {
             validEntry = false;
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                intentRequest.currentIntent.slots, 'Drink', checkDrink.message));
-        } else {
+                intentRequest.currentIntent.slots, 'Drink', checkDrink.message, null));
+        } else if (intentRequest.currentIntent.slots.Drink.toLowerCase() !== "no") {
 	    sessionAttributes.drinkName     = intentRequest.currentIntent.slots.Drink;
 	    sessionAttributes.drinkSize	    = checkDrink.size;
             sessionAttributes.drinkCalories = checkDrink.calories;
@@ -163,6 +194,7 @@ function validateFood(foodName, foodType) {
     var entreeCalories = 0;
     var entreeSodium = 0;
     var entreeName = "";
+    var buttons = [];
 
     for (var j = 0; j < foodItems.length; j++) {
         if (foodName.toLowerCase() == foodItems[j].foodName.toLowerCase()) {
@@ -178,14 +210,16 @@ function validateFood(foodName, foodType) {
 
     // check to see if the food name provided was valid. if not, format error message
     if (foodName.toLowerCase() === "rice") {
-        botMessage = "Which type do you want, White Rice or Brown Rice?";
-        return buildValidationResult(false, foodType, botMessage);
+	buttons.push({ "text":"White Rice", "value":"white rice" });
+	buttons.push({ "text":"Brown Rice", "value":"brown rice" });	
+        botMessage = "Which type?";
+	return buildValidationResult(false, foodType, botMessage, buttons);
     } else if (!validItem) {
 	botMessage = "I can't find " + foodName + ". How about ";
     	for (var k = 0; k < entreeAlternatives.length; k++) {
 	    botMessage = botMessage + entreeAlternatives[k] + ", ";
     	}
-	return buildValidationResult(false, foodType, botMessage);
+	return buildValidationResult(false, foodType, botMessage, null);
     } else {
 	return { isValid: true, calories: entreeCalories, sodium: entreeSodium, correctedName: entreeName };
     }
@@ -222,9 +256,9 @@ function validateDrink(drinkName) {
             drinkName.toLowerCase() === "large drink" ||
             drinkName.toLowerCase() === "yes" ) {
             // in this case, the response was too vague - so instruct the user to be more specific
-            return buildValidationResult(false, 'Drink', 'Please say a drink name, for example, Small Coke.');
+            return buildValidationResult(false, 'Drink', 'Please say a drink name, for example, Small Coke.', null);
         } else {
-            return buildValidationResult(false, 'Drink', `Sorry, I dont have information for ` + drinkName + '. Please try again.');
+            return buildValidationResult(false, 'Drink', `Sorry, I dont have information for ` + drinkName + '. Please try again.', null);
         }
     }
 }
