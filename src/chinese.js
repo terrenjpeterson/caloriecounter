@@ -28,6 +28,7 @@ function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message,
 		    genericAttachments: [
 			{
 			    title: 'Options:',
+			    subTitle: 'Click button below or type response.',
 			    buttons: buttonData,
 		    	},
 		    ],
@@ -210,16 +211,25 @@ function validateFood(foodName, foodType) {
 
     // check to see if the food name provided was valid. if not, format error message
     if (foodName.toLowerCase() === "rice") {
-	buttons.push({ "text":"White Rice", "value":"white rice" });
-	buttons.push({ "text":"Brown Rice", "value":"brown rice" });	
+	// present user with three different buttons for types of rice
         botMessage = "Which type?";
+	buttons.push({ "text":"White Rice", "value":"white rice" });
+	buttons.push({ "text":"Brown Rice", "value":"brown rice" });
+        buttons.push({ "text":"Fried Rice", "value":"fried rice" });	
+	return buildValidationResult(false, foodType, botMessage, buttons);
+    } else if (!validItem && foodType === "Sides") {
+	// present user with three different types of sides
+	botMessage = "I can't find " + foodName + ". How about...";
+        buttons.push({ "text":"Rice", "value":"rice" });
+        buttons.push({ "text":"Chow Mein", "value":"chow mein" });
+        buttons.push({ "text":"Vegetables", "value":"mixed vegetables" });
 	return buildValidationResult(false, foodType, botMessage, buttons);
     } else if (!validItem) {
 	botMessage = "I can't find " + foodName + ". How about ";
     	for (var k = 0; k < entreeAlternatives.length; k++) {
 	    botMessage = botMessage + entreeAlternatives[k] + ", ";
     	}
-	return buildValidationResult(false, foodType, botMessage, null);
+	return buildValidationResult(false, foodType, botMessage, null);	
     } else {
 	return { isValid: true, calories: entreeCalories, sodium: entreeSodium, correctedName: entreeName };
     }

@@ -1,4 +1,3 @@
-
 'use strict';
 
  /**
@@ -14,6 +13,28 @@ var dressings = require("data/dressings.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
+function buttonResponse(sessionAttributes, message, buttonData) {
+    console.log("processing:" + JSON.stringify(buttonData));
+    return {
+        sessionAttributes,
+        dialogAction: {
+            type: 'Close',
+            fulfillmentState: 'Fulfilled',
+            message: { contentType: 'PlainText', content: message },
+            responseCard: {
+                version: '1',
+                contentType: 'application/vnd.amazonaws.card.generic',
+                genericAttachments: [
+                    {
+                        title: 'Options:',
+                        subTitle: 'Click button below or type response.',
+                        buttons: buttonData,
+                    },
+                ],
+            },
+        },
+    };
+}
 
 function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message) {
     return {
@@ -94,6 +115,7 @@ function getDrinkSize(drinkName) {
 
 function calculateCalories(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+    var buttonData = [];
 
     const restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
@@ -250,20 +272,25 @@ function calculateCalories(intentRequest, callback) {
     sessionAttributes.totalCalories  = totalCalories;
 
     if (totalCalories > sessionAttributes.foodCalories || sessionAttributes.dressingCalories > 0) {
-	counterResponse = counterResponse + "You can also say 'more details' for an itemized breakout. ";
+	buttonData.push({ "text":"More Details", "value":"more details" });
     } else {
+	buttonData.push({ "text":"Analyze my Meal", "value":"analyze my meal" });
 	counterResponse = counterResponse + "To analyze this meal vs. your daily recommended calorie intake, " +
-	    "please say 'analyze my meal'. ";
+	    "please select 'analyze my meal'. ";
     }
 
     // for Panera, the option for counting carbs is available as an option as well
     if (sessionAttributes.restaurantName === "Panera") {
-	counterResponse = counterResponse + "If counting carbs, say 'Get carbs'.";
+        buttonData.push({ "text":"Get Carb Detail", "value":"Get carbs" });
     }
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
 
-    callback(close(sessionAttributes, 'Fulfilled',{ contentType: 'PlainText', content: counterResponse }));
+    if (buttonData) {
+	callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
+    } else {
+       callback(close(sessionAttributes, 'Fulfilled',{ contentType: 'PlainText', content: counterResponse }));
+    }
 }
 
 // this function converts the calorie count into carbs

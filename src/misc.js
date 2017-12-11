@@ -11,6 +11,28 @@ var restaurants = require("data/restaurants.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
+function buttonResponse(sessionAttributes, message, buttonData) {
+    console.log("processing:" + JSON.stringify(buttonData));
+    return {
+        sessionAttributes,
+        dialogAction: {
+            type: 'Close',
+	    fulfillmentState: 'Fulfilled',
+	    message: { contentType: 'PlainText', content: message },
+            responseCard: {
+                version: '1',
+                contentType: 'application/vnd.amazonaws.card.generic',
+                genericAttachments: [
+                    {
+                        title: 'Options:',
+                        subTitle: 'Click button below or type response.',
+                        buttons: buttonData,
+                    },
+                ],
+            },
+        },
+    };
+}
 
 function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message) {
     return {
@@ -73,12 +95,15 @@ function getIntroduction(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
     const slots = intentRequest.currentIntent.slots;
 
-    var counterResponse = "Hello, my name is Chuck. I am a chatbot that is an expert at fast food. " +
-        "To get started, say 'help', or ask me " +
-        "something like 'How many calories in a Big Mac' or 'What are my food options at Taco Bell'.";
+    var message = "Hello, my name is Chuck. I am a chatbot that is an expert at fast food. " +
+        "To get started, ask me something like 'How many calories in a Big Mac'.";
 
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: counterResponse }));
+    var buttonData = [];
+    buttonData.push({ "text":"Calories in a burger?", "value":"calories in a burger?" });
+    buttonData.push({ "text":"Eating a pizza.", "value":"eating a pizza." });
+    buttonData.push({ "text":"Panda Express", "value":"Panda Express" });
+
+    callback(buttonResponse(sessionAttributes, message, buttonData));
 }
 
 // this function is what retrieves the restaurants that data is available for
