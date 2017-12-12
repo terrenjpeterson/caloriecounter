@@ -28,6 +28,31 @@ function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message)
     };
 }
 
+function buttonSlot(sessionAttributes, intentName, slots, slotToElicit, messageContent, buttonData) {
+    console.log("processing:" + JSON.stringify(buttonData));
+    return {
+        sessionAttributes,
+        dialogAction: {
+            type: 'ElicitSlot',
+            intentName,
+            slots,
+            slotToElicit,
+            message: { contentType: 'PlainText', content: messageContent },
+	    responseCard: {
+		version: '1',
+		contentType: 'application/vnd.amazonaws.card.generic',
+		genericAttachments: [
+		    {
+			title: 'Options:',
+			subTitle: 'Click button below or type response.',
+			buttons: buttonData,
+		    },
+		],
+	    },
+        },
+    };
+} 
+
 function confirmIntent(sessionAttributes, intentName, slots, message) {
     return {
         sessionAttributes,
@@ -152,6 +177,7 @@ function scrubRestaurantName(restaurantName) {
     } else if (restaurantName.toLowerCase() === "chik-fil-a" ||
                restaurantName.toLowerCase() === "chick fil a" ||
                restaurantName.toLowerCase() === "chic fil a" ||
+               restaurantName.toLowerCase() === "chic-fil-a" ||
                restaurantName.toLowerCase() === "chik fil a" ||
                restaurantName.toLowerCase() === "chikfila") {
         console.log("corrected restaurant name typo");
@@ -824,7 +850,16 @@ function validateFoodTypes(intentRequest, callback) {
             sessionAttributes.restaurantName = intentRequest.currentIntent.slots.Restaurant;
 	    // get available food types for the restaurant
             const foodTypes = getFoodTypes(intentRequest.currentIntent.slots.Restaurant).foodOptions;
-	    if (foodTypes.length > 0 && !intentRequest.currentIntent.slots.FoodType) {
+	    if (foodTypes.length === 3 && !intentRequest.currentIntent.slots.FoodType) {
+		var botMessage = "Here are the food groups at " + 
+		    intentRequest.currentIntent.slots.Restaurant + ".";
+		var buttonData = [];
+		buttonData.push({ "text":foodTypes[0], "value":foodTypes[0] });
+                buttonData.push({ "text":foodTypes[1], "value":foodTypes[1] });
+                buttonData.push({ "text":foodTypes[2], "value":foodTypes[2] });
+		callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
+		    slots, 'FoodType', botMessage, buttonData));
+	    } else if (foodTypes.length > 0 && !intentRequest.currentIntent.slots.FoodType) {
 		var botMessage = "Okay, at " + intentRequest.currentIntent.slots.Restaurant + ". " +
 		   "Pick one of the following food groups: ";
 		// this array has all of the food types at the given restaurant
@@ -1022,7 +1057,7 @@ function validateUserEntry(intentRequest, callback) {
     }
 
     var nuggetSauce = intentRequest.currentIntent.slots.Sauce;
-    if (nuggetSauce && !invalidSlot) {
+    if (nuggetSauce && !invalidSlot && intentRequest.currentIntent.slots.Restaurant) {
 	console.log("Nugget sauce response provided.");
 	const sauceValidationResult = validateSauce(intentRequest);
 	if (!sauceValidationResult.isValid) {
