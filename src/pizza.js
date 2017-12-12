@@ -11,6 +11,29 @@ var pizzas = require("data/pizzas.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
+function buttonResponse(sessionAttributes, message, buttonData) {
+    console.log("processing:" + JSON.stringify(buttonData));
+    return {
+        sessionAttributes,
+        dialogAction: {
+            type: 'Close',
+            fulfillmentState: 'Fulfilled',
+            message: { contentType: 'PlainText', content: message },
+            responseCard: {
+                version: '1',
+                contentType: 'application/vnd.amazonaws.card.generic',
+                genericAttachments: [
+                    {
+                        title: 'Options:',
+                        subTitle: 'Click button below or type response.',
+                        buttons: buttonData,
+                    },
+                ],
+            },
+        },
+    };
+}
+
 function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message) {
     return {
         sessionAttributes,
@@ -130,8 +153,8 @@ function validateRestaurant(restaurantName) {
         return { isValid: true, restaurantName: matchName };
     } else {
         console.log("failed restaurant validation");
-	var botResponse = "Sorry, I don't have nutrition information for " + restaurantName + ". " +
-	    "I do have information about Domino's, Little Caesars, Pizza Hut and Papa John's.";
+	var botResponse = "Which restaurant? " +
+	    "I have information about Domino's, Little Caesars, Pizza Hut and Papa John's.";
         return buildValidationResult(false, 'PizzaRestaurant', botResponse);
     }
 }
@@ -182,6 +205,7 @@ function getPizzaTypes(intentRequest, callback) {
     const restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
 
     var botResponse = "Here are the pizza types at " + restaurantName + " : ";
+    var buttonData = [];
 
     // check if the restaurant is one that the bot has data for
     if (restaurantName.toLowerCase() === "papa johns" ||
@@ -197,14 +221,16 @@ function getPizzaTypes(intentRequest, callback) {
 		botResponse = botResponse + "To check calories, say something like " +
 		    "'How many calories in one slice of " + pizzas[i].pizzaSelections[0].name +
 		    " at " + pizzas[i].restaurant + "'.";
+        	buttonData.push({ "text":pizzas[i].pizzaSelections[0].name, "value":pizzas[i].pizzaSelections[0].name });
             }
 	}
     } else {
 	botResponse = "Sorry, I don't have pizza types for " + restaurantName + ".";
+	buttonData.push({ "text":"Papa John's?", "value":"Papa Johns?" });
+        buttonData.push({ "text":"Little Caesar's?", "value":"Little Caesars?" });
     }
 
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: botResponse }));
+    callback(buttonResponse(sessionAttributes, botResponse, buttonData));
 }
 
 // this function handles the flow for pizza places checking for calories
