@@ -77,6 +77,28 @@ function close(sessionAttributes, fulfillmentState, message) {
     };
 }
 
+function closeButton(sessionAttributes, fulfillmentState, message, buttonData) {
+    return {
+        sessionAttributes,
+        dialogAction: {
+            type: 'Close',
+            fulfillmentState,
+            message,
+            responseCard: {
+                version: '1',
+                contentType: 'application/vnd.amazonaws.card.generic',
+                genericAttachments: [
+                    {
+                        title: 'Options:',
+                        subTitle: 'Click button below or type response.',
+                        buttons: buttonData,
+                    },
+                ],
+            },
+        },
+    };
+}
+
 function delegate(sessionAttributes, slots) {
     return {
         sessionAttributes,
@@ -879,15 +901,19 @@ function validateFoodTypes(intentRequest, callback) {
             sessionAttributes.restaurantName = intentRequest.currentIntent.slots.Restaurant;
 	    // get available food types for the restaurant
             const foodTypes = getFoodTypes(intentRequest.currentIntent.slots.Restaurant).foodOptions;
-	    if (foodTypes.length === 3 && !intentRequest.currentIntent.slots.FoodAdjustment) {
+	    if (foodTypes.length === 3 && !intentRequest.currentIntent.slots.FoodType) {
 		var botMessage = "Here are the food groups at " + 
 		    intentRequest.currentIntent.slots.Restaurant + ".";
 		var buttonData = [];
+		console.log("adding buttons to response");
 		buttonData.push({ "text":foodTypes[0], "value":foodTypes[0] });
                 buttonData.push({ "text":foodTypes[1], "value":foodTypes[1] });
                 buttonData.push({ "text":foodTypes[2], "value":foodTypes[2] });
+		const foodTypePrompt = buildValidationResult(false, 'FoodType', botMessage);
+		//callback(delegateButton(sessionAttributes, slots, buttonData));
+		//callback(closeButton(sessionAttributes, 'Fulfilled', foodTypePrompt.message, buttonData));
 		callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
-		    slots, 'FoodType', botMessage, buttonData));
+		    slots, foodTypePrompt.violatedSlot, botMessage, buttonData));
 	    } else if (foodTypes.length > 0 && !intentRequest.currentIntent.slots.FoodType) {
 		var botMessage = "Okay, at " + intentRequest.currentIntent.slots.Restaurant + ". " +
 		   "Pick one of the following food groups: ";
