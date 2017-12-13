@@ -2,8 +2,8 @@
 # create build package for Lex chatbot, stage in s3 bucket, deploy package, then run a few tests to validate deployment
 
 # create temp zip file with all the json data objects
-zip -r foodbot.zip lambda.js data/restaurants.json data/foods.json data/drinks.json data/sauces.json data/dressings.json  package.json
-zip -r calcbot.zip calculate.js data/foods.json data/drinks.json data/sauces.json data/dressings.json
+zip -r foodbot.zip lambda.js data/restaurants.json data/foods.json data/drinks.json data/sauces.json data/dressings.json data/adjustments.json
+zip -r calcbot.zip calculate.js data/foods.json data/drinks.json data/sauces.json data/dressings.json data/adjustments.json
 zip -r pizzabot.zip pizza.js data/restaurants.json data/pizzas.json
 zip -r miscbot.zip misc.js data/restaurants.json data/foods.json data/drinks.json
 zip -r chinesebot.zip chinese.js data/foods.json data/drinks.json
@@ -26,6 +26,7 @@ aws s3 cp data/pizzas.json s3://fastfoodchatbot/data/
 aws s3 cp data/restaurants.json s3://fastfoodchatbot/data/
 aws s3 cp data/sauces.json s3://fastfoodchatbot/data/
 aws s3 cp data/dressings.json s3://fastfoodchatbot/data/
+aws s3 cp data/adjustments.json s3://fastfoodchatbot/data/
 echo 'copied data files to s3'
 
 # cleanup temporary zip files

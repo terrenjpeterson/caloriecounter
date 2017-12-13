@@ -10,6 +10,7 @@ var foodChoices = require("data/foods.json");
 var drinks = require("data/drinks.json");
 var sauces = require("data/sauces.json");
 var dressings = require("data/dressings.json");
+var adjustments = require("data/adjustments.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -127,6 +128,7 @@ function calculateCalories(intentRequest, callback) {
     const ketchup	 = intentRequest.currentIntent.slots.Ketchup;
     const sauce		 = intentRequest.currentIntent.slots.Sauce;
     const dressing	 = intentRequest.currentIntent.slots.Dressing;
+    const foodAdjustment = intentRequest.currentIntent.slots.FoodAdjustment;
 
     var totalCalories 	 = 0;
     var counterResponse  = "";
@@ -142,6 +144,15 @@ function calculateCalories(intentRequest, callback) {
 	sessionAttributes.foodCalories = foodCalories;
 	counterResponse = "At " + restaurantName + " eating a " + foodName;
 	console.log("returned food calories: " + JSON.stringify(foodCalories));
+	// check to see if an adjustment was made to the food entree (i.e. no cheese)
+        if (foodAdjustment && foodAdjustment.toLowerCase() !== "no changes") {
+	    const adjustCalories = getAdjustmentCalories(foodName, restaurantName, foodAdjustment).adjustCalories;
+	    console.log(JSON.stringify(adjustCalories));
+	    sessionAttributes.foodAdjustment = foodAdjustment;
+	    sessionAttributes.foodAdjCalories = adjustCalories;
+	    totalCalories += adjustCalories;
+	    counterResponse = counterResponse + " with " + foodAdjustment;
+	}
     } else if (nuggetQty) {
 	const nuggetName = nuggetQty + " piece chicken nuggets";
         var nuggetCalories = getFoodCalories(nuggetName, restaurantName).foodCalories;
@@ -421,6 +432,34 @@ function getSauceCalories(sauce, restaurantName) {
 
     return {
 	sauceCalories
+    };
+}
+
+// this function looks up any adjustments to the food
+function getAdjustmentCalories(foodName, restaurantName, foodAdjustment) {
+    var adjustCalories = 0;
+
+    console.log(JSON.stringify(adjustments));
+
+    for (var i = 0; i < adjustments.length; i++) {
+	if (restaurantName.toLowerCase() === adjustments[i].restaurant.toLowerCase()) {
+	    console.log("matched restaurant");
+	    for (var j = 0; j < adjustments[i].menuAdjustments.length; j++) {
+		if (foodName.toLowerCase() === adjustments[i].menuAdjustments[j].foodName.toLowerCase()) {
+		    console.log("matched menu item");
+		    for (var k = 0; k < adjustments[i].menuAdjustments[j].adjustments.length; k++) {
+			if (foodAdjustment.toLowerCase() === adjustments[i].menuAdjustments[j].adjustments[k].change.toLowerCase()) {
+			    console.log("Found a Match:" + JSON.stringify(adjustments[i].menuAdjustments[j].adjustments[k]));
+			    adjustCalories = adjustments[i].menuAdjustments[j].adjustments[k].calorieAdj;
+			}
+		    }
+		}
+	    }
+	}
+    }
+
+    return {
+	adjustCalories
     };
 }
 

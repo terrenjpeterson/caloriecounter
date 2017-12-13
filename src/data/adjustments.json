@@ -1,18 +1,18 @@
 [
     {
         "restaurant":"McDonalds",
-        "menuAdustments":[
+        "menuAdjustments":[
             { "foodName":"Big Mac",
               "adjustments": [
-                { "change":"No Cheese", "calorieAdj":-50 },
-		{ "change":"No Sauce", "calorieAdj":-90 },
-		{ "change":"No Cheese or Sauce", "calorieAdj":-140}
+                { "change":"No Cheese", "calorieAdj":-50, "highlight":true },
+		{ "change":"No Sauce", "calorieAdj":-90, "highlight":true },
+		{ "change":"No Cheese or Sauce", "calorieAdj":-140, "highlight":true }
               ]
             },
             { "foodName":"Quarter Pounder",
               "adjustments": [
-                { "change":"No Cheese", "calorieAdj":-100 }, 
-                { "change":"Half Bun", "calorieAdj":-85 }
+                { "change":"No Cheese", "calorieAdj":-100, "highlight":true }, 
+                { "change":"Half Bun", "calorieAdj":-85, "highlight":true }
               ]
             }
 	]

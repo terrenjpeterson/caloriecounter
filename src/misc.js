@@ -134,6 +134,8 @@ function getBasicDailyAnalysis(intentRequest, callback) {
     const femaleAverage = 2000;
     const sodiumIntake = 2300;
 
+    var buttonData = [];
+
     // change response depending on if a prior food calculation was saved in the session
     if (intentRequest.sessionAttributes.totalCalories) {
     	const mealEstimate = sessionAttributes.totalCalories;
@@ -149,24 +151,21 @@ function getBasicDailyAnalysis(intentRequest, callback) {
 	    botResponse = botResponse + "The American Heart Association recommends no more than " +
 		sodiumIntake + " mg of sodium per day, and this meal is " +
 		Math.round((sodiumEstimate * 100) /sodiumIntake) + "% of the daily amount.";
-	} else {
-	    botResponse = botResponse + "For a specific daily calorie intake estimate, say 'Customize'.";
-	}
+	} 
 
-    	callback(close(sessionAttributes, 'Fulfilled',
-            { contentType: 'PlainText', content: botResponse }));
+        buttonData.push({ "text":"Customize for me", "value":"customize" });
+
+	callback(buttonResponse(sessionAttributes, botResponse, buttonData));
 
     } else {
 	var defaultResponse = "An average daily diet requires " + maleAverage + " calories " +
 	    " for a male, and " + femaleAverage + " for a female. For how this compares to a " +
-	    "fast food meal, please describe what you would eat. Start by saying something " +
-	    "like, 'Eating at McDonalds.'";
+	    "fast food meal, please describe what you would eat. Start with something like below.";
 
-        callback(close(sessionAttributes, 'Fulfilled',
-            { contentType: 'PlainText', content: defaultResponse }));
+        buttonData.push({ "text":"Eating at McDonalds", "value":"eating at McDonalds" });
 
+	callback(buttonResponse(sessionAttributes, defaultResponse, buttonData));
     }
-
 }
 
 // this function is what builds the wrap-up of a conversation
@@ -391,13 +390,20 @@ function getHealthyChoice(intentRequest, callback) {
 function getMealDetails(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
     var detailResponse = "";
+    var buttonData = [];
 
     console.log("Session Attributes: " + JSON.stringify(intentRequest.sessionAttributes));
 
     if (sessionAttributes.foodName || sessionAttributes.extraName) {
 	if (sessionAttributes.foodName) {
 	    detailResponse = sessionAttributes.foodName + " is " + 
-	        sessionAttributes.foodCalories + " calories. ";
+	        sessionAttributes.foodCalories + " calories";
+	    if (sessionAttributes.foodAdjustment) {
+		detailResponse = detailResponse + ", but " + sessionAttributes.foodAdjustment +
+		    " removes " + (-1 * Number(sessionAttributes.foodAdjCalories)) + " calories. ";
+	    } else {
+		detailResponse = detailResponse + ". ";
+	    }
 	}
 	if (sessionAttributes.sauceName) {
 	    detailResponse = detailResponse + sessionAttributes.sauceName + " is " +
@@ -420,8 +426,7 @@ function getMealDetails(intentRequest, callback) {
 	    detailResponse = detailResponse + "Total Calories are " + 
 		sessionAttributes.totalCalories + ". ";
 	}
-	detailResponse = detailResponse + "To analyze this meal vs. your daily recommended " +
-	    "calorie intake, please say 'analyze my meal'.";
+    	buttonData.push({ "text":"Analyze my Meal", "value":"analyze my meal" });
     } else if (sessionAttributes.chineseRestaurant) {
 	detailResponse = sessionAttributes.entreeName + " is " + sessionAttributes.entreeCalories + 
 	    " calories, and " + sessionAttributes.entreeSodium + " mg of sodium. " +
@@ -437,16 +442,17 @@ function getMealDetails(intentRequest, callback) {
 		sessionAttributes.drinkName + " adds " + sessionAttributes.drinkCalories + " calories. ";
 	}
 	detailResponse = detailResponse + "Total Calories are " + sessionAttributes.totalCalories + 
-	    " and sodium intake is " + sessionAttributes.totalSodium + ". " +
-            "To analyze this meal vs. your daily recommended calorie intake, please say 'analyze my meal'.";
+	    " and sodium intake is " + sessionAttributes.totalSodium + ".";
+        buttonData.push({ "text":"Analyze my Meal", "value":"analyze my meal" });
     } else {
-	var detailResponse = "Sorry, first start by telling me more about the meal. " +
-	    "For example, say something like Eating at Burger King.";
+	var detailResponse = "Sorry, first start by telling me more about the meal. ";
+	    "For example, pick an option below";
+        buttonData.push({ "text":"Eating at Burger King", "value":"Eating at Burger King" });
+	buttonData.push({ "text":"Soups at Panera", "value":"Soups at Panera" });
+	buttonData.push({ "text":"Large Cheese Pizza", "value":"large cheese pizza" });
     }
 
-    callback(close(sessionAttributes, 'Fulfilled',
-	{ contentType: 'PlainText', content: detailResponse }));
-
+    callback(buttonResponse(sessionAttributes, detailResponse, buttonData));
 }
 
 // this function retrieves the food options for a given restaurant

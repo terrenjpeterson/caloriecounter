@@ -11,6 +11,7 @@ var drinks = require("data/drinks.json");
 var restaurants = require("data/restaurants.json");
 var sauces = require("data/sauces.json");
 var dressings = require("data/dressings.json");
+var adjustments = require("data/adjustments.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -82,6 +83,27 @@ function delegate(sessionAttributes, slots) {
         dialogAction: {
             type: 'Delegate',
             slots,
+        },
+    };
+}
+
+function delegateButton(sessionAttributes, slots, buttonData) {
+    return {
+        sessionAttributes,
+        dialogAction: {
+            type: 'Delegate',
+            slots,
+            responseCard: {
+                version: '1',
+                contentType: 'application/vnd.amazonaws.card.generic',
+                genericAttachments: [
+                    {
+                        title: 'Options:',
+                        subTitle: 'Click button below or type response.',
+                        buttons: buttonData,
+                    },
+                ],
+            },	
         },
     };
 }
@@ -556,6 +578,13 @@ function validateDressing(intentRequest) {
 
 }
 
+// this function will validate the adjustments being requested by the user
+function validateFoodAdjustments(intentRequest) {
+    console.log("validating adjustments provided " + intentRequest.currentIntent.slots.FoodAdjustment);
+
+    return { isValid: true};
+}
+
 // this function will validate the sauce answer provided by the user
 function validateSauce(intentRequest) {
     const slots = intentRequest.currentIntent.slots;
@@ -917,12 +946,14 @@ function validateUserEntry(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
     const slots = intentRequest.currentIntent.slots;
     var invalidSlot = false;
+    var buttonData = [];
 
     console.log("validating user entry");
 
     var restaurantName = intentRequest.currentIntent.slots.Restaurant;
     const foodName       = intentRequest.currentIntent.slots.Food;
     const drinkName      = intentRequest.currentIntent.slots.Drink;
+    const foodAdjustment = intentRequest.currentIntent.slots.FoodAdjustment;
 
     const validationResult = validateRestaurant(intentRequest);
 
@@ -966,8 +997,27 @@ function validateUserEntry(intentRequest, callback) {
                         
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                 slots, foodValidationResult.violatedSlot, foodValidationResult.message));
-        }
-    }
+        } else if (!extraName) {
+	    // no extra name, so check if entree has adjustments
+	    console.log("Valid food, but no extra yet - check for food adjustments");
+	    if (intentRequest.currentIntent.slots.Food === "Big Mac" && !foodAdjustment) {
+		// this will be moved to a separate function - just testing 
+		console.log("add buttons for adjustments");
+		buttonData.push({ "text":"No Cheese", "value":"No Cheese" });
+                buttonData.push({ "text":"No Sauce", "value":"No Sauce" });
+                buttonData.push({ "text":"No Changes", "value":"No Changes" });
+		invalidSlot = true;
+		var adjustMessage = "Any changes to the " + foodName + "?";
+		callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name, 
+		    slots, 'FoodAdjustment', adjustMessage, buttonData));
+	    }
+	} else if (foodAdjustment) {
+	    // food adjustment being requested
+	    console.log("Validate food adjustment");
+	    const validFoodAdjustment = validateFoodAdjustments(intentRequest);
+	    console.log(JSON.stringify(validFoodAdjustment));
+	}
+    } 
 
     // check if extra name was provided then validate
     var extraName = intentRequest.currentIntent.slots.Extra;
