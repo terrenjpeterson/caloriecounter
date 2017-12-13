@@ -879,7 +879,7 @@ function validateFoodTypes(intentRequest, callback) {
             sessionAttributes.restaurantName = intentRequest.currentIntent.slots.Restaurant;
 	    // get available food types for the restaurant
             const foodTypes = getFoodTypes(intentRequest.currentIntent.slots.Restaurant).foodOptions;
-	    if (foodTypes.length === 3 && !intentRequest.currentIntent.slots.FoodType) {
+	    if (foodTypes.length === 3 && !intentRequest.currentIntent.slots.FoodAdjustment) {
 		var botMessage = "Here are the food groups at " + 
 		    intentRequest.currentIntent.slots.Restaurant + ".";
 		var buttonData = [];
@@ -999,7 +999,7 @@ function validateUserEntry(intentRequest, callback) {
                 slots, foodValidationResult.violatedSlot, foodValidationResult.message));
         } else if (!extraName) {
 	    // no extra name, so check if entree has adjustments
-	    console.log("Valid food, but no extra yet - check for food adjustments");
+	    console.log("Valid food, but no extra yet - check for food adjustments" + foodAdjustment);
 	    if (intentRequest.currentIntent.slots.Food === "Big Mac" && !foodAdjustment) {
 		// this will be moved to a separate function - just testing 
 		console.log("add buttons for adjustments");
@@ -1008,8 +1008,9 @@ function validateUserEntry(intentRequest, callback) {
                 buttonData.push({ "text":"No Changes", "value":"No Changes" });
 		invalidSlot = true;
 		var adjustMessage = "Any changes to the " + foodName + "?";
+		const adjustmentPrompt = buildValidationResult(false, 'FoodAdjustment', adjustMessage);
 		callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name, 
-		    slots, 'FoodAdjustment', adjustMessage, buttonData));
+		    slots, adjustmentPrompt.violatedSlot, adjustMessage, buttonData));
 	    }
 	} else if (foodAdjustment) {
 	    // food adjustment being requested
