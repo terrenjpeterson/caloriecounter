@@ -1,0 +1,20 @@
+[
+    {
+        "restaurant":"McDonalds",
+        "menuAdustments":[
+            { "foodName":"Big Mac",
+              "adjustments": [
+                { "change":"No Cheese", "calorieAdj":-50 },
+		{ "change":"No Sauce", "calorieAdj":-90 },
+		{ "change":"No Cheese or Sauce", "calorieAdj":-140}
+              ]
+            },
+            { "foodName":"Quarter Pounder",
+              "adjustments": [
+                { "change":"No Cheese", "calorieAdj":-100 }, 
+                { "change":"Half Bun", "calorieAdj":-85 }
+              ]
+            }
+	]
+    }
+]
