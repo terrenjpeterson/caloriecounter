@@ -16,5 +16,34 @@
               ]
             }
 	]
+    },
+    {
+        "restaurant":"Burger King",
+        "menuAdjustments":[
+            { "foodName":"Whopper",
+              "adjustments": [
+                { "change":"No Mayo", "calorieAdj":-160, "highlight":true },
+                { "change":"Half Bun", "calorieAdj":-115, "highlight":true }
+              ]
+            },
+            { "foodName":"Whopper with Cheese",
+              "adjustments": [
+                { "change":"No Mayo", "calorieAdj":-160, "highlight":true },
+                { "change":"Half Bun", "calorieAdj":-115, "highlight":true }
+              ]
+            },
+            { "foodName":"Double Whopper",
+              "adjustments": [
+                { "change":"No Mayo", "calorieAdj":-160, "highlight":true },
+                { "change":"Half Bun", "calorieAdj":-115, "highlight":true }            
+              ]
+            },
+            { "foodName":"Whopper Jr",
+              "adjustments": [
+                { "change":"No Mayo", "calorieAdj":-70, "highlight":true },
+                { "change":"Half Bun", "calorieAdj":-60, "highlight":true }            
+              ]
+            } 
+        ]
     }
 ]

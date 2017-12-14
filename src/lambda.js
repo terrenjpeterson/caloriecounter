@@ -1024,19 +1024,19 @@ function validateUserEntry(intentRequest, callback) {
             callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                 slots, foodValidationResult.violatedSlot, foodValidationResult.message));
         } else if (!extraName) {
-	    // no extra name, so check if entree has adjustments
+	    // no extra name provided yet, so check if entree has potential adjustments
 	    console.log("Valid food, but no extra yet - check for food adjustments" + foodAdjustment);
-	    if (intentRequest.currentIntent.slots.Food === "Big Mac" && !foodAdjustment) {
+	    if (!foodAdjustment) {
 		// this will be moved to a separate function - just testing 
-		console.log("add buttons for adjustments");
-		buttonData.push({ "text":"No Cheese", "value":"No Cheese" });
-                buttonData.push({ "text":"No Sauce", "value":"No Sauce" });
-                buttonData.push({ "text":"No Changes", "value":"No Changes" });
-		invalidSlot = true;
-		var adjustMessage = "Any changes to the " + foodName + "?";
-		const adjustmentPrompt = buildValidationResult(false, 'FoodAdjustment', adjustMessage);
-		callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name, 
-		    slots, adjustmentPrompt.violatedSlot, adjustMessage, buttonData));
+		const foodButtons = getFoodAdjustments(foodName, intentRequest.currentIntent.slots.Restaurant).buttonData;
+		//console.log("possible buttons:" + JSON.stringify(foodButtons));
+		if (foodButtons.length > 0) {
+		    invalidSlot = true;
+		    var adjustMessage = "Any changes to the " + foodName + "?";
+		    const adjustmentPrompt = buildValidationResult(false, 'FoodAdjustment', adjustMessage);
+		    callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name, 
+		    	slots, adjustmentPrompt.violatedSlot, adjustMessage, foodButtons));
+		}
 	    }
 	} else if (foodAdjustment) {
 	    // food adjustment being requested
@@ -1180,6 +1180,32 @@ function validateUserEntry(intentRequest, callback) {
         callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
     }
     
+}
+
+// this function attempts to find a match for any adjustments that can be made to a food item
+function getFoodAdjustments(foodName, restaurantName) {
+    console.log("Attempting to find adjustments for " + foodName + " at " + restaurantName + ".");
+    var buttonData = [];
+
+    for (var i = 0; i < adjustments.length; i++) {
+        if (restaurantName.toLowerCase() === adjustments[i].restaurant.toLowerCase()) {
+            for (var j = 0; j < adjustments[i].menuAdjustments.length; j++) {
+                if (foodName.toLowerCase() === adjustments[i].menuAdjustments[j].foodName.toLowerCase()) {
+		    console.log(JSON.stringify(adjustments[i].menuAdjustments[j].adjustments));
+                    for (var k = 0; k < adjustments[i].menuAdjustments[j].adjustments.length; k++) {
+			if (adjustments[i].menuAdjustments[j].adjustments[k].highlight) {
+			    var foodOption = adjustments[i].menuAdjustments[j].adjustments[k].change;
+			    buttonData.push({ "text":foodOption, "value":foodOption });
+			}
+                    }
+                }
+            }
+	}
+    }
+
+    return { 
+	buttonData 
+    };
 }
 
 // this function builds an intelligent response back prompting the user for a side item
