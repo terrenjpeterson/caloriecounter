@@ -168,8 +168,7 @@ function validateRestaurant(intentRequest) {
         return { isValid: true };
     } else if (slots.Restaurant) {
         console.log("failed restaurant validation");
-	var botResponse = "Sorry, I haven't learned about " + slots.Restaurant + " yet. " +
-	    "Say, 'List of restaurants' for places I do know.";
+	var botResponse = "Sorry, I haven't learned about " + slots.Restaurant + " yet.";
         return buildValidationResult(false, 'Restaurant', botResponse);
     } else {
         // check if a food item has been entered. this might allow for restaurant to be defaulted.
@@ -754,8 +753,14 @@ function validateNuggets(nuggets, restaurantName) {
 
 function validateMexicanFood(intentRequest) {
     console.log("Running Validation for Mexican Food Types");
-    const restaurant = intentRequest.currentIntent.slots.Restaurant;
+    var restaurant = intentRequest.currentIntent.slots.Restaurant;
     var foodType = intentRequest.currentIntent.slots.MexicanFoodType;
+
+    if (!restaurant && intentRequest.sessionAttributes.restaurantName) {
+	console.log("no restaurant entered, but one in session");
+	restaurant = intentRequest.sessionAttributes.restaurantName;
+	intentRequest.currentIntent.slots.Restaurant = intentRequest.sessionAttributes.restaurantName;
+    }
 
     // start by checking for a restaurant. can't do any matching without it
     if (restaurant) {
@@ -892,10 +897,10 @@ function validateFoodTypes(intentRequest, callback) {
             console.log("Invalid restaurant name. Pass back failed validation");
             slots[`${validationResult.violatedSlot}`] = null;
             invalidSlot = true;
-
-            console.log("Validation Result: " + JSON.stringify(validationResult));
-            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                slots, validationResult.violatedSlot, validationResult.message));
+	    var buttonData = [];
+		buttonData.push({ "text":"List Restaurants", "value":"List Restaurants" });
+            callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
+                slots, validationResult.violatedSlot, validationResult.message, buttonData));
         } else {
             // save session attributes for later reference
             sessionAttributes.restaurantName = intentRequest.currentIntent.slots.Restaurant;
@@ -910,8 +915,6 @@ function validateFoodTypes(intentRequest, callback) {
                 buttonData.push({ "text":foodTypes[1], "value":foodTypes[1] });
                 buttonData.push({ "text":foodTypes[2], "value":foodTypes[2] });
 		const foodTypePrompt = buildValidationResult(false, 'FoodType', botMessage);
-		//callback(delegateButton(sessionAttributes, slots, buttonData));
-		//callback(closeButton(sessionAttributes, 'Fulfilled', foodTypePrompt.message, buttonData));
 		callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
 		    slots, foodTypePrompt.violatedSlot, botMessage, buttonData));
 	    } else if (foodTypes.length > 0 && !intentRequest.currentIntent.slots.FoodType) {
@@ -990,10 +993,10 @@ function validateUserEntry(intentRequest, callback) {
             console.log("Invalid restaurant name. Pass back failed validation");
             slots[`${validationResult.violatedSlot}`] = null;
 	    invalidSlot = true;
-            
-            console.log("Validation Result: " + JSON.stringify(validationResult));
-            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                slots, validationResult.violatedSlot, validationResult.message));
+            var buttonData = [];
+                buttonData.push({ "text":"List Restaurants", "value":"List Restaurants" });
+            callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
+                slots, validationResult.violatedSlot, validationResult.message.content, buttonData));
 	} else {
             // save session attributes for later reference
             sessionAttributes.restaurantName = restaurantName;
