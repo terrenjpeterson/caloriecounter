@@ -1174,6 +1174,18 @@ function validateUserEntry(intentRequest, callback) {
 
 	} else {	    
 	    console.log("Passed validation for Mexican food combinations.");
+            if (!foodAdjustment) {
+                // this will be moved to a separate function - just testing
+                const foodButtons = getFoodAdjustments(mexicanFoodType, intentRequest.currentIntent.slots.Restaurant).buttonData;
+                console.log("possible buttons:" + JSON.stringify(foodButtons));
+                if (foodButtons.length > 0) {
+                    invalidSlot = true;
+                    var adjustMessage = "Any changes to the " + mexicanFoodType + "?";
+                    const adjustmentPrompt = buildValidationResult(false, 'FoodAdjustment', adjustMessage);
+                    callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
+                        slots, adjustmentPrompt.violatedSlot, adjustMessage, foodButtons));
+                }
+            }
 	}
     }
 

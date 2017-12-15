@@ -204,6 +204,17 @@ function calculateCalories(intentRequest, callback) {
         sessionAttributes.foodCalories = mexFoodCalories;
         counterResponse = "At " + restaurantName + " eating a " + mexFoodName;
         console.log("returned food calories: " + JSON.stringify(mexFoodCalories));
+
+	// see if any adjustments have been made (i.e. adding guac, removing rice)
+        if (foodAdjustment && foodAdjustment.toLowerCase() !== "no changes") {
+            const adjustCalories = getAdjustmentCalories(intentRequest.currentIntent.slots.MexicanFoodType, 
+		restaurantName, foodAdjustment).adjustCalories;
+            console.log(JSON.stringify(adjustCalories));
+            sessionAttributes.foodAdjustment = foodAdjustment;
+            sessionAttributes.foodAdjCalories = adjustCalories;
+            totalCalories += adjustCalories;
+            counterResponse = counterResponse + " with " + foodAdjustment;
+        }
     }
 
     // process details related to the extra food item
@@ -282,7 +293,9 @@ function calculateCalories(intentRequest, callback) {
     counterResponse = counterResponse + "That is " + totalCalories + " calories. ";
     sessionAttributes.totalCalories  = totalCalories;
 
-    if (totalCalories > sessionAttributes.foodCalories || sessionAttributes.dressingCalories > 0) {
+    if (totalCalories > sessionAttributes.foodCalories || 
+	sessionAttributes.dressingCalories > 0 ||
+	sessionAttributes.foodAdjCalories > 0 ) {
 	buttonData.push({ "text":"More Details", "value":"more details" });
     } else {
 	buttonData.push({ "text":"Analyze my Meal", "value":"analyze my meal" });
@@ -439,11 +452,12 @@ function getSauceCalories(sauce, restaurantName) {
 function getAdjustmentCalories(foodName, restaurantName, foodAdjustment) {
     var adjustCalories = 0;
 
-    console.log(JSON.stringify(adjustments));
+    console.log("Finding adjustment for " + foodName + " to " + foodAdjustment + " at " + restaurantName);
 
     for (var i = 0; i < adjustments.length; i++) {
 	if (restaurantName.toLowerCase() === adjustments[i].restaurant.toLowerCase()) {
 	    console.log("matched restaurant");
+	    console.log(JSON.stringify(adjustments[i]));
 	    for (var j = 0; j < adjustments[i].menuAdjustments.length; j++) {
 		if (foodName.toLowerCase() === adjustments[i].menuAdjustments[j].foodName.toLowerCase()) {
 		    console.log("matched menu item");

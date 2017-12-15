@@ -399,8 +399,14 @@ function getMealDetails(intentRequest, callback) {
 	    detailResponse = sessionAttributes.foodName + " is " + 
 	        sessionAttributes.foodCalories + " calories";
 	    if (sessionAttributes.foodAdjustment) {
-		detailResponse = detailResponse + ", but " + sessionAttributes.foodAdjustment +
-		    " removes " + (-1 * Number(sessionAttributes.foodAdjCalories)) + " calories. ";
+		detailResponse = detailResponse + ", but " + sessionAttributes.foodAdjustment;
+		if (Number(sessionAttributes.foodAdjCalories) > 0) {
+		    detailResponse = detailResponse + " adds " + (Number(sessionAttributes.foodAdjCalories))
+			 + " calories. ";
+		} else {
+		    detailResponse = detailResponse + " removes " + 
+			(-1 * Number(sessionAttributes.foodAdjCalories)) + " calories. ";
+		}
 	    } else {
 		detailResponse = detailResponse + ". ";
 	    }

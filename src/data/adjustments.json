@@ -45,5 +45,30 @@
               ]
             } 
         ]
+    },
+    {
+        "restaurant":"Chipotle",
+        "menuAdjustments":[
+            { "foodName":"Burrito",
+              "adjustments": [
+                { "change":"No Rice", "calorieAdj":-210, "highlight":true },
+                { "change":"Add Guacomole", "calorieAdj":230, "highlight":true },
+                { "change":"No Cheese", "calorieAdj":-110, "highlight":true },
+		{ "change":"No Beans", "calorieAdj":-130, "highlight":false },
+		{ "change":"No Rice or Cheese", "calorieAdj":-320, "highlight":false },
+		{ "change":"Add Sour Cream", "calorieAdj":110, "highlight":false }
+              ]
+            },
+            { "foodName":"Burrito Bowl",
+              "adjustments": [
+                { "change":"No Rice", "calorieAdj":-210, "highlight":true },
+                { "change":"Add Guacomole", "calorieAdj":230, "highlight":true },
+                { "change":"No Cheese", "calorieAdj":-110, "highlight":true },
+                { "change":"No Beans", "calorieAdj":-130, "highlight":false },
+                { "change":"No Rice or Cheese", "calorieAdj":-320, "highlight":false },
+                { "change":"Add Sour Cream", "calorieAdj":110, "highlight":false }
+              ]
+            }
+        ]
     }
 ]
