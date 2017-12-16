@@ -47,6 +47,30 @@ function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message)
     };
 }
 
+function elicitSlotButton(sessionAttributes, intentName, slots, slotToElicit, message, buttonData) {
+    return {
+        sessionAttributes,
+        dialogAction: {
+            type: 'ElicitSlot',
+            intentName,
+            slots,
+            slotToElicit,
+            message,
+            responseCard: {
+                version: '1',
+                contentType: 'application/vnd.amazonaws.card.generic',
+                genericAttachments: [
+                    {
+                        title: 'Options:',
+                        subTitle: 'Click button below or type response.',
+                        buttons: buttonData,
+                    },
+                ],
+            },
+        },
+    };
+}
+
 function confirmIntent(sessionAttributes, intentName, slots, message) {
     return {
         sessionAttributes,
@@ -93,6 +117,7 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
 // this funciton is called during intial field validation
 function validateFields(intentRequest, callback) {
     var sessionAttributes = {};
+    var validData = true;
     const slots = intentRequest.currentIntent.slots;
 
     console.log("First check if restaurant needs to be defaulted.");
@@ -116,16 +141,30 @@ function validateFields(intentRequest, callback) {
     	}
 	// validate restaurant name
 	const validationResult = validateRestaurant(intentRequest.currentIntent.slots.PizzaRestaurant)
-	if (validationResult.isValid) {
-	    intentRequest.currentIntent.slots.PizzaRestaurant = validationResult.restaurantName;
-	    sessionAttributes.restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
-	    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
-	} else {
+	if (!validationResult.isValid) {
+	    validData = false;
 	    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
                     slots, validationResult.violatedSlot, validationResult.message));
+	} else {
+	    // save restaurant name in session
+    	    intentRequest.currentIntent.slots.PizzaRestaurant = validationResult.restaurantName;
+    	    sessionAttributes.restaurantName = intentRequest.currentIntent.slots.PizzaRestaurant;
 	}
-    } else {
-    	callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+    }
+
+    if (validData) {
+	if (intentRequest.currentIntent.slots.PizzaType || intentRequest.currentIntent.name === 'WhatPizzaTypes') {
+            callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+	} else {
+	    // prompt for pizza type and offer to list pizza types
+	    console.log("Building prompt for requesting pizza type.");
+	    var botResponse = "What type of pizza are you having?";
+	    var buttonData = [];
+		buttonData.push({ "text":"List Pizza Types", "value":"List Pizza Types" });
+	    const pizzaResult = buildValidationResult(false, 'PizzaType', botResponse);
+            callback(elicitSlotButton(sessionAttributes, intentRequest.currentIntent.name,
+                    slots, pizzaResult.violatedSlot, pizzaResult.message, buttonData));	
+	}
     }
 }
 
@@ -238,6 +277,7 @@ function getPizzaTypes(intentRequest, callback) {
 function calculatePizzaCalories(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
     var defaultSize = false;
+    var buttonData = [];
 
     // first scrub the restaurant name
     var updatedName = scrubRestaurantName(intentRequest.currentIntent.slots.PizzaRestaurant).scrubData.restaurantName;
@@ -322,6 +362,10 @@ function calculatePizzaCalories(intentRequest, callback) {
 		    botResponse = botResponse + " For a different size, say something like " +
 			"Large " + intentRequest.currentIntent.slots.PizzaType + " Pizza.";
 		}
+		var buttonValue = " pieces of a " + intentRequest.currentIntent.slots.PizzaSize +
+		    " " + intentRequest.currentIntent.slots.PizzaType;
+		buttonData.push({ "text":"Eating 2 Pieces", "value":"Eating 2" + buttonValue });
+                buttonData.push({ "text":"Eating 3 Pieces", "value":"Eating 3" + buttonValue });
 	    } 
 	} else {
 	    botResponse = intentRequest.currentIntent.slots.PizzaSize + " is not a valid size of pizza " +
@@ -335,8 +379,12 @@ function calculatePizzaCalories(intentRequest, callback) {
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
 
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: botResponse }));
+    if (buttonData.length > 0) {
+    	callback(buttonResponse(sessionAttributes, botResponse, buttonData));
+    } else {
+    	callback(close(sessionAttributes, 'Fulfilled',
+            { contentType: 'PlainText', content: botResponse }));
+    }
 }
 
 // --------------- Intents -----------------------
