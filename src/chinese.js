@@ -72,6 +72,28 @@ function close(sessionAttributes, fulfillmentState, message) {
     };
 }
 
+function closeButton(sessionAttributes, fulfillmentState, message, buttonData) {
+    return {
+        sessionAttributes,
+        dialogAction: {
+            type: 'Close',
+            fulfillmentState,
+            message,
+            responseCard: {
+                version: '1',
+                contentType: 'application/vnd.amazonaws.card.generic',
+                genericAttachments: [
+                    {
+                        title: 'Options:',
+                        subTitle: 'Click button below or type response.',
+                        buttons: buttonData,
+                    },
+                ],
+            },
+        },
+    };
+}
+
 function delegate(sessionAttributes, slots) {
     return {
         sessionAttributes,
@@ -161,7 +183,9 @@ function validateFields(intentRequest, callback) {
                 intentRequest.currentIntent.slots, 'Drink', checkDrink.message, null));
         } else if (intentRequest.currentIntent.slots.Drink.toLowerCase() !== "no") {
 	    sessionAttributes.drinkName     = intentRequest.currentIntent.slots.Drink;
-	    sessionAttributes.drinkSize	    = checkDrink.size;
+	    if (checkDrink.size) {
+	        sessionAttributes.drinkSize	    = checkDrink.size;
+	    }
             sessionAttributes.drinkCalories = checkDrink.calories;
         }
     }
@@ -277,6 +301,7 @@ function validateDrink(drinkName) {
 
 function calculateCalories(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+    var buttonData = [];
 
     // default to Panda Express for now
     var botResponse = "Eating at Panda Express. ";
@@ -304,15 +329,19 @@ function calculateCalories(intentRequest, callback) {
 
     // check if a drink was selected, if so, add to the response
     if (intentRequest.sessionAttributes.drinkName) {
-	botResponse = botResponse + "Drinking a " + intentRequest.sessionAttributes.drinkSize +
-	"oz. " + intentRequest.sessionAttributes.drinkName + ". ";
+	if (intentRequest.sessionAttributes.drinkSize) {
+	    botResponse = botResponse + "Drinking a " + intentRequest.sessionAttributes.drinkSize +
+	    "oz. " + intentRequest.sessionAttributes.drinkName + ". ";
+	} else {
+	    botResponse = botResponse + "Drinking a " + intentRequest.sessionAttributes.drinkName + ". ";
+	}
 	totalCalories = totalCalories + Number(intentRequest.sessionAttributes.drinkCalories);
     }
 	
-    // provide the total calories and sodium
+    // provide the total calories and sodium, and add a button option for more details
     botResponse = botResponse + "Total is " + totalCalories + " calories, and " +
-	totalSodium + " mg of sodium. " +
-	"You can also say 'more details' for an itemized breakout.";
+	totalSodium + " mg of sodium.";
+    buttonData.push({ "text":"More Details", "value":"more details" });
 
     // save session attributes for later reference
     sessionAttributes.entreeName = intentRequest.currentIntent.slots.ChineseEntree;
@@ -324,8 +353,8 @@ function calculateCalories(intentRequest, callback) {
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
 
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: botResponse }));
+    callback(closeButton(sessionAttributes, 'Fulfilled',
+        { contentType: 'PlainText', content: botResponse }, buttonData));
 }
 
 // --------------- Intents -----------------------

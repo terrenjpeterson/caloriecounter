@@ -444,8 +444,13 @@ function getMealDetails(intentRequest, callback) {
 		" calories, and " + sessionAttributes.appetizerSodium + " mg of sodium. ";
 	}
 	if (sessionAttributes.drinkName) {
-	    detailResponse = detailResponse + "The " + sessionAttributes.drinkSize + " oz. " + 
-		sessionAttributes.drinkName + " adds " + sessionAttributes.drinkCalories + " calories. ";
+	    if (sessionAttributes.drinkSize) {
+	    	detailResponse = detailResponse + "The " + sessionAttributes.drinkSize + " oz. " + 
+		    sessionAttributes.drinkName + " adds " + sessionAttributes.drinkCalories + " calories. ";
+	    } else {
+		detailResponse = detailResponse + "The " + sessionAttributes.drinkName + " adds " + 
+		    sessionAttributes.drinkCalories + " calories. ";
+	    }
 	}
 	detailResponse = detailResponse + "Total Calories are " + sessionAttributes.totalCalories + 
 	    " and sodium intake is " + sessionAttributes.totalSodium + ".";
