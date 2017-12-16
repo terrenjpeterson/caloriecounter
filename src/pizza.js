@@ -248,11 +248,16 @@ function calculatePizzaCalories(intentRequest, callback) {
 
     var botResponse = "Working on finding calories at " + intentRequest.currentIntent.slots.PizzaRestaurant + ".";
 
-    // check if size was provided - if not, default to medium size pizza
+    // check if size was provided - if not, default to medium size pizza unless at little caesars then large
     if (!intentRequest.currentIntent.slots.PizzaSize) {
 	defaultSize = true;
-	console.log("Default Pizza Size to Medium");
-	intentRequest.currentIntent.slots.PizzaSize = "Medium";
+    	if (intentRequest.currentIntent.slots.PizzaRestaurant.toLowerCase() === "little caesars") {
+            console.log("Default Pizza Size to Large at Little Caesars");
+            intentRequest.currentIntent.slots.PizzaSize = "Large";
+	} else {
+            console.log("Default Pizza Size to Medium");
+            intentRequest.currentIntent.slots.PizzaSize = "Medium";
+	}
     } 
 
     // validate the pizza type and get the calorie data for use in the response

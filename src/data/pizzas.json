@@ -204,37 +204,37 @@
         "pizzaSelections":[
             {"name":"Cheese",
              "sizes": [
-                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":250}
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":250}
              ]
             },
             {"name":"Pepperoni",
              "sizes": [
-                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":280}
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":280}
              ]
             },
             {"name":"Ultimate Supreme",
              "sizes": [
-                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":300}
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":300}
              ]
             },
             {"name":"3 Meat Treat",
              "sizes": [
-                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":330}
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":330}
              ]
             },
             {"name":"Hulu Hawaiian",
              "sizes": [
-                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":270}
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":270}
              ]
             },
             {"name":"Veggie",
              "sizes": [
-                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":270}
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":270}
              ]
             },
             {"name":"Italian Sausage",
              "sizes": [
-                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":270}
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":270}
              ]
             }
         ]
