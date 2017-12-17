@@ -70,5 +70,50 @@
               ]
             }
         ]
+    },
+    {
+        "restaurant":"In-N-Out",
+        "menuAdjustments":[
+            { "foodName":"Hamburger",
+              "adjustments": [
+                { "change":"No Spread", "calorieAdj":-80, "highlight":true },
+                { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+              ]
+            },
+            { "foodName":"Cheeseburger",
+              "adjustments": [
+                { "change":"No Spread", "calorieAdj":-80, "highlight":true },
+                { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+              ]
+            },
+            { "foodName":"Double Double",
+              "adjustments": [
+                { "change":"No Spread", "calorieAdj":-80, "highlight":true },
+                { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+              ]
+            },
+            { "foodName":"Three by Three",
+              "adjustments": [
+                { "change":"No Spread", "calorieAdj":-80, "highlight":true },
+                { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+              ]
+            },
+            { "foodName":"Four by Four",
+              "adjustments": [
+                { "change":"No Spread", "calorieAdj":-80, "highlight":true },
+                { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+              ]
+            },
+            { "foodName":"Grilled Cheese",
+              "adjustments": [
+                { "change":"No Spread", "calorieAdj":-80, "highlight":true }
+              ]
+            }
+        ]
     }
 ]

@@ -233,10 +233,15 @@ function scrubRestaurantName(restaurantName) {
     } else if (restaurantName.toLowerCase() === "5 guys" ||
 	       restaurantName.toLowerCase() === "5 guy's" ||
                restaurantName.toLowerCase() === "5 guy’s" ||
-	       restaurantName.toLowerCase() === "Five guy's" || 
-               restaurantName.toLowerCase() === "Five guy’s") {
+	       restaurantName.toLowerCase() === "five guy's" || 
+               restaurantName.toLowerCase() === "five guy’s") {
 	console.log("correct restaurant name apostrophie");
 	scrubData.restaurantName = "Five Guys";
+    } else if (restaurantName.toLowerCase() === "in-and-out" ||
+	       restaurantName.toLowerCase() === "in and out" ||
+	       restaurantName.toLowerCase() === "in n out") {
+	console.log("corrected restaurant name hyphens");
+	scrubData.restaurantName = "In-N-Out";
     }
 
     return {

@@ -444,7 +444,8 @@
 	    {"foodName":"BigMac", "calories":540},
             {"foodName":"BigMc", "calories":540, "correctedTerm":"Big Mac" },
 	    {"foodName":"2 Big Macs", "calories":1080},
-            {"foodName":"Quarter Pounder", "foodType":"Burger", "calories":540},
+            {"foodName":"Quarter Pounder", "foodType":"Burger", "calories":540, "correctedTerm":"Quarter Pounder with Cheese" },
+	    {"foodName":"Quarter Pounder Burger", "calories":540, "correctedTerm":"Quarter Pounder with Cheese" },
             {"foodName":"Quarter Pounder with Cheese", "calories":540},
             {"foodName":"Quarter Pound with Cheese", "calories":540},
             {"foodName":"Quarter Pounder Deluxe", "calories":600},
@@ -732,8 +733,9 @@
             {"foodName":"Nachos Bel Grande", "calories":760, "correctedTerm":"Nachos Bell Grande"},
             {"foodName":"Nacho Bell Grande", "calories":760, "correctedTerm":"Nachos Bell Grande"},
             {"foodName":"Nachos Supreme","calories":440},
+            {"foodName":"Nacho Supreme", "calories":440, "correctedTerm":"Nachos Supreme" },
             {"foodName":"Nachos","calories":440},
-            {"foodName":"Quesadilla","calories":460},
+            {"foodName":"Quesadilla", "calories":460, "correctedTerm":"Cheese Quesadilla" },
             {"foodName":"Cheese Quesadilla", "protein":"cheese", "foodType":"Quesadilla", "calories":460},
             {"foodName":"Chicken Quesadilla", "protein":"chicken", "foodType":"Quesadilla", "calories":510},
             {"foodName":"Steak Quesadilla", "protein":"steak", "foodType":"Quesadilla", "calories":510},
@@ -977,6 +979,7 @@
             { "foodName":"Bacon Cheeseburger", "foodType":"Burger", "calories":920 },
 	    { "foodName":"Bacon Cheeseburger all the way", "calories":970 },
             { "foodName":"Little Hamburger", "foodType":"Burger", "calories":480 },
+	    { "foodName":"Little Burger", "calories":480, "correctedTerm":"Little Hamburger" }, 
             { "foodName":"Little Cheeseburger", "foodType":"Burger", "calories":550 },
             { "foodName":"Little Bacon Burger", "foodType":"Burger", "calories":560 },
             { "foodName":"Little Bacon Cheeseburger", "foodType":"Burger", "calories":630 },
@@ -996,6 +999,28 @@
             { "foodName":"Regular French Fries", "calories":953, "sideItem":true, "ketchupItem":true },
             { "foodName":"Large French Fries", "calories":1314, "sideItem":true, "ketchupItem":true },
             { "foodName":"Large Fries", "calories":1314, "sideItem":true, "ketchupItem":true }
+	]
+    },
+    {
+        "restaurant":"In-N-Out",
+        "foodItems":[
+            { "foodName":"Hamburger", "foodType":"Burger", "calories":390 },
+            { "foodName":"Burger", "calories":670, "correctedTerm":"Hamburger" },
+            { "foodName":"Cheeseburger", "foodType":"Burger", "calories":480 },
+            { "foodName":"Double Double", "foodType":"Burger", "calories":670 },
+	    { "foodName":"Double-Double", "calories":670 },
+	    { "foodName":"Double Double Burger", "calories":670, "correctedTerm":"Double Double" },
+            { "foodName":"Double", "calories":670, "correctedTerm":"Double Double" },
+	    { "foodName":"Three by Three", "foodType":"Burger", "calories":860 },
+	    { "foodName":"3x3", "calories":860, "correctedTerm":"Three by Three" },
+	    { "foodName":"Four by Four", "foodType":"Burger", "calories":1050 },
+	    { "foodName":"4x4", "calories":1050, "correctedTerm":"Four by Four" },
+	    { "foodName":"Grilled Cheese", "calories":380 },
+            { "foodName":"French Fries", "foodType":"Fries", "calories":395, "sideItem":true, "ketchupItem":true },
+            { "foodName":"Fries", "calories":395, "correctedTerm":"French Fries", "sideItem":true, "ketchupItem":true },
+	    { "foodName":"Chocolate Shake", "foodType":"Shake", "calories":590, "sideItem":true },
+            { "foodName":"Vanilla Shake", "foodType":"Shake", "calories":590, "sideItem":true },
+            { "foodName":"Strawberry Shake", "foodType":"Shake", "calories":590, "sideItem":true }
 	]
     },
     {

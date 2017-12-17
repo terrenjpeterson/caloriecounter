@@ -2,6 +2,7 @@
     { "restaurantName":"Chipotle", "validRestaurant":true, "servesPizza":false },
     { "restaurantName":"Burger King", "validRestaurant":true, "servesPizza":false },
     { "restaurantName":"Five Guys", "validRestaurant":true, "servesPizza":false },
+    { "restaurantName":"In-N-Out", "validRestaurant":true, "servesPizza":false },
     { "restaurantName":"Subway", "validRestaurant":true, "servesPizza":false },
     { "restaurantName":"Panera", "validRestaurant":true, "servesPizza":false }, 
     { "restaurantName":"Chick-fil-A", "validRestaurant":true, "servesPizza":false },
