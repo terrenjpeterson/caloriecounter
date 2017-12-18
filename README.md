@@ -27,12 +27,15 @@ Currently there are many different intents that the NLU process sorts into.  Her
 - GetMexicanFoodCalories (Sample utterance - How many calories in a Chicken Burrito?)
 - GetNuggetsCalories (Sample utterance - How many calories in 20 Chicken Nuggets?)
 - GetPizzaCalories (Sample utterance - How many calories in 2 slices of Pepperoni Pizza at Papa Johns?)
+- GetChineseCalories (Sample utterace - How many calories in a Kung Pao Chicken?)
 
 There are also intents that complement the core features.
 - MoreDetails (Sample utterance - More details. Note: this can only be invoked after prior requests are made in the conversation as it's reading data from the session).
 - DailyIntakeAnalysis (Sample utterance - analyze my meal. Similar to more details, this uses session data, so must follow one of the prior requests.
 - WhatPizzaTypes (Sample utterance - What types of pizza are there?)
 - WhichRestaurants (Sample utterance - List of restaurants.)
+- CalculateBMR (Sample utterance - What is my daily recommended calorie intake?)
+- GetCarbs (Sample utterance - How many carbs in this?)
 
 Then there are intents that form the 'personality' of the bot. These were created based on real user usage, and prevent the generic error message from being used to respond.
 - EndConversation (Built-in intent - uses AWS sample utterances like - Stop)
@@ -43,6 +46,7 @@ Then there are intents that form the 'personality' of the bot. These were create
 - Shock (Sample utterances - wow, ouch)
 - MyName (Sample utterances - what is your name)
 - HelpRequest (Built-in intent - uses AWS sample utterances like - Help)
+- NewRestaurant (Sample utterance - New restaurant. This clears out the session.)
 
 Within each of the intents, sample utterances are provided that construct the potential sentances that a user may provide. The value of the slot (i.e. Large Fry) gets passed to the lambda function as a unique attribute.
 
@@ -67,6 +71,12 @@ Currently, here are the custom slots that are used by the intents.
 - PizzaRestaurants (sample values: Dominos, Papa John's, Little Caesars)
 - PizzaSize (sample values: Small, Medium, Large)
 - PizzaType (sample values: Sausage, Pepperoni, Honolulu Hawaiian)
+- ChineseEntree (sample values: Orange Chicken, Kung Pao Chicken)
+- ChineseSide (sample values: Fried Rice, Mixed Vegetables)
+- ChineseAppetizer (sample values: Egg Roll, Spring Roll)
+- FoodAdjustment (sample values: Add Guacomole, No Cheese)
+- DressingOptions (sample values: Italian, Balsamic Vinaigrette)
+- DippingSauce (sample values: Honey Mustard, Sweet and Sour)
 
 An item does not need to be specified in the slot for the NLU to place a value into it. However, if the data is sparse, it may degrade how the NLU interprets the user requests.
 
@@ -108,6 +118,8 @@ Here is an overview of each function currently written.
 
 4) misc.js - handles simple intents like help, the introduction, and more details around a meal.
 
+5) chinese.js - handles intents around chinese food, and coupling the different slots together to form a meal.
+
 ## Data lookup tables
 The core functionality of this bot is to be able to answer queries of how many calories are in different meals. While the slots that Lex uses are helpful in training the NLU models, they don't have the ability to serve as lookup files. 
 That's where the json objects come in that are stored in the [/src/data/](https://github.com/terrenjpeterson/caloriecounter/tree/master/src/data) folder.
@@ -135,6 +147,26 @@ Each food item may be duplicated for different spellings and phrases used to ret
             {"foodName":"French Fry", "calories":340},
 	    {"foodName":"Medium Fries", "calories":340},
             {"foodName":"Medium Fry", "calories":340},
+```
+
+There are also lookup tables around sauces, dressings, and individual item adjustments. For example.
+
+```sh
+
+[
+    {
+        "dressingName":"Ranch",
+        "calories":200,
+        "carbs":11,
+        "restaurantNames":["McDonalds"]
+    },
+    {
+        "dressingName":"French",
+        "calories":300,
+        "carbs":22,
+        "restaurantNames":["McDonalds"]
+    },
+
 ```
 
 Given that the NLU models do not correct spelling provided by the user, it's up to the Lambda functions to handle this part of the logic.
