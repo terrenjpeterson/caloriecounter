@@ -888,6 +888,10 @@ function validateFoodTypes(intentRequest, callback) {
 	    console.log("removing extra s from entrees");
 	    intentRequest.currentIntent.slots.FoodType === "Entree";
 	    slots.FoodType = "Entree";
+	} else if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "secret") {
+	    console.log("fixing secret menu routing");
+	    intentRequest.currentIntent.slots.FoodType === "Secret Menu";
+	    slots.FoodType = "Secret Menu";
 	}
     }
 

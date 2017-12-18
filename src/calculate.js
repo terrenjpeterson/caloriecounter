@@ -145,13 +145,19 @@ function calculateCalories(intentRequest, callback) {
 	counterResponse = "At " + restaurantName + " eating a " + foodName;
 	console.log("returned food calories: " + JSON.stringify(foodCalories));
 	// check to see if an adjustment was made to the food entree (i.e. no cheese)
-        if (foodAdjustment && foodAdjustment.toLowerCase() !== "no changes") {
-	    const adjustCalories = getAdjustmentCalories(foodName, restaurantName, foodAdjustment).adjustCalories;
-	    console.log(JSON.stringify(adjustCalories));
-	    sessionAttributes.foodAdjustment = foodAdjustment;
-	    sessionAttributes.foodAdjCalories = adjustCalories;
-	    totalCalories += adjustCalories;
-	    counterResponse = counterResponse + " with " + foodAdjustment;
+        if (foodAdjustment) {
+	    if (foodAdjustment.toLowerCase() !== "no changes" &&
+		foodAdjustment.toLowerCase() !== "no" &&
+		foodAdjustment.toLowerCase() !== "none" ) {
+	    	const adjustCalories = getAdjustmentCalories(foodName, restaurantName, foodAdjustment).adjustCalories;
+	    	console.log(JSON.stringify(adjustCalories));
+	    	sessionAttributes.foodAdjustment = foodAdjustment;
+	    	sessionAttributes.foodAdjCalories = adjustCalories;
+	    	totalCalories += adjustCalories;
+	    	counterResponse = counterResponse + " with " + foodAdjustment;
+	    } else {
+		console.log("User responded to not adjust food entry.");
+	    }
 	}
     } else if (nuggetQty) {
 	const nuggetName = nuggetQty + " piece chicken nuggets";

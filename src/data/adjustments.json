@@ -78,40 +78,46 @@
               "adjustments": [
                 { "change":"No Spread", "calorieAdj":-80, "highlight":true },
                 { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
-                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+		{ "change":"Animal Style", "calorieAdj":100, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":false }
               ]
             },
             { "foodName":"Cheeseburger",
               "adjustments": [
                 { "change":"No Spread", "calorieAdj":-80, "highlight":true },
                 { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
-                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+                { "change":"Animal Style", "calorieAdj":100, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":false }
               ]
             },
             { "foodName":"Double Double",
               "adjustments": [
                 { "change":"No Spread", "calorieAdj":-80, "highlight":true },
                 { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
-                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+                { "change":"Animal Style", "calorieAdj":100, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":false }
               ]
             },
             { "foodName":"Three by Three",
               "adjustments": [
                 { "change":"No Spread", "calorieAdj":-80, "highlight":true },
                 { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
-                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+                { "change":"Animal Style", "calorieAdj":100, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":false }
               ]
             },
             { "foodName":"Four by Four",
               "adjustments": [
                 { "change":"No Spread", "calorieAdj":-80, "highlight":true },
                 { "change":"Protein Style", "calorieAdj":-150, "highlight":true },
-                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":true }
+                { "change":"Animal Style", "calorieAdj":100, "highlight":true },
+                { "change":"Lettuce Bun", "calorieAdj":-150, "highlight":false }
               ]
             },
             { "foodName":"Grilled Cheese",
               "adjustments": [
-                { "change":"No Spread", "calorieAdj":-80, "highlight":true }
+                { "change":"No Spread", "calorieAdj":-80, "highlight":true },
+                { "change":"Animal Style", "calorieAdj":100, "highlight":true }
               ]
             }
         ]
