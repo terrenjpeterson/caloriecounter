@@ -841,6 +841,10 @@ function validateMexicanFood(intentRequest) {
 		} else {
 		    // no protein was provided, so check if it's needed.
 		    foodRequest = intentRequest.currentIntent.slots.MexicanFoodType;
+		    // this is a potential added term to include
+		    if (intentRequest.currentIntent.slots.Preparation) {
+			foodRequest = intentRequest.currentIntent.slots.Preparation + " " + foodRequest;
+		    }
 		    console.log("Attempt to match " + foodRequest);
 		    for (var m = 0; m < restaurantFoodItems.length; m++) {
 			if (restaurantFoodItems[m].foodName.toLowerCase() === foodRequest.toLowerCase()) {
