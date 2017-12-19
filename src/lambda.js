@@ -913,7 +913,7 @@ function validateFoodTypes(intentRequest, callback) {
 	    var buttonData = [];
 		buttonData.push({ "text":"List Restaurants", "value":"List Restaurants" });
             callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
-                slots, validationResult.violatedSlot, validationResult.message, buttonData));
+                slots, validationResult.violatedSlot, validationResult.message.content, buttonData));
         } else {
             // save session attributes for later reference
             sessionAttributes.restaurantName = intentRequest.currentIntent.slots.Restaurant;
