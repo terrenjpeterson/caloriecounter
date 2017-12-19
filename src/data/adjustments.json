@@ -72,6 +72,31 @@
         ]
     },
     {
+        "restaurant":"Taco Bell",
+        "menuAdjustments":[
+            { "foodName":"Nachos",
+              "adjustments": [
+                { "change":"Add Guacomole", "calorieAdj":35, "highlight":true }
+              ]
+            },
+            { "foodName":"Tacos",
+              "adjustments": [
+                { "change":"Add Guacomole", "calorieAdj":35, "highlight":true }
+              ]
+            },
+            { "foodName":"Soft Taco",
+              "adjustments": [
+                { "change":"Add Guacomole", "calorieAdj":35, "highlight":true }
+              ]
+            },
+            { "foodName":"Quesadilla",
+              "adjustments": [
+                { "change":"Add Guacomole", "calorieAdj":35, "highlight":true }
+              ]
+            }
+	]
+    },
+    {
         "restaurant":"In-N-Out",
         "menuAdjustments":[
             { "foodName":"Hamburger",
