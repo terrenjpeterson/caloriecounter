@@ -255,7 +255,9 @@ function getPizzaTypes(intentRequest, callback) {
         for (var i = 0; i < pizzas.length; i++) {
             if (restaurantName.toLowerCase() === pizzas[i].restaurant.toLowerCase()) {
 		for (var j = 0; j < pizzas[i].pizzaSelections.length; j++) {
-		    botResponse = botResponse + pizzas[i].pizzaSelections[j].name + ", ";
+		    if (!pizzas[i].pizzaSelections[j].correctedTerm) {
+		    	botResponse = botResponse + pizzas[i].pizzaSelections[j].name + ", ";
+		    }
 		} 
 		botResponse = botResponse + "To check calories, say something like " +
 		    "'How many calories in one slice of " + pizzas[i].pizzaSelections[0].name +
@@ -311,7 +313,12 @@ function calculatePizzaCalories(intentRequest, callback) {
 		if (intentRequest.currentIntent.slots.PizzaType.toLowerCase() === pizzas[i].pizzaSelections[j].name.toLowerCase()) {
 		    console.log("Found a match for " + intentRequest.currentIntent.slots.PizzaType);
 		    pizzaTypeData = pizzas[i].pizzaSelections[j].sizes;
-		    intentRequest.currentIntent.slots.PizzaType = pizzas[i].pizzaSelections[j].name;
+		    // overlay user request with correct capitalization and restaurant terminology
+		    if (pizzas[i].pizzaSelections[j].correctedTerm) {
+			intentRequest.currentIntent.slots.PizzaType = pizzas[i].pizzaSelections[j].correctedTerm;
+		    } else {
+		    	intentRequest.currentIntent.slots.PizzaType = pizzas[i].pizzaSelections[j].name;
+		    }
 		}
 	    }
 	}
