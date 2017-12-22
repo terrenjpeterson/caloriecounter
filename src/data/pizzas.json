@@ -149,6 +149,15 @@
                 {"size":"Extra Large", "diameter":16, "slicesPerPizza":8, "sliceCalories":430}
              ]
             },
+            {"name":"Hawaiian",
+	     "correctedTerm":"Honolulu Hawaiian",
+             "sizes": [
+                {"size":"Small", "diameter":10, "slicesPerPizza":6, "sliceCalories":230},
+                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":240},
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":330},
+                {"size":"Extra Large", "diameter":16, "slicesPerPizza":8, "sliceCalories":430}
+             ]
+            },
             {"name":"Memphis BBQ Chicken",
              "sizes": [
                 {"size":"Small", "diameter":10, "slicesPerPizza":6, "sliceCalories":240},
@@ -227,6 +236,12 @@
                 {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":270}
              ]
             },
+            {"name":"Hawaiian",
+             "correctedTerm":"Honolulu Hawaiian",
+             "sizes": [
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":270}
+             ]
+            },
             {"name":"Veggie",
              "sizes": [
                 {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":270}
@@ -270,6 +285,14 @@
                 {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":290}
              ]
             },
+            {"name":"Hawaiian",
+             "correctedTerm":"Honolulu Hawaiian",
+             "sizes": [
+                {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":130},
+                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":210},
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":290}
+             ]
+            },
             {"name":"Italian Meatball",
              "sizes": [
                 {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":130},
@@ -278,6 +301,14 @@
              ]
             },
             {"name":"Backyard BBQ Chicken",
+             "sizes": [
+                {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":140},
+                {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":230},
+                {"size":"Large", "diameter":14, "slicesPerPizza":8, "sliceCalories":330}
+             ]
+            },
+            {"name":"Backyard BBQ",
+	     "correctedTerm":"Backyard BBQ Chicken",
              "sizes": [
                 {"size":"Small", "diameter":10, "slicesPerPizza":8, "sliceCalories":140},
                 {"size":"Medium", "diameter":12, "slicesPerPizza":8, "sliceCalories":230},
