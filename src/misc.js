@@ -96,11 +96,12 @@ function getIntroduction(intentRequest, callback) {
     const slots = intentRequest.currentIntent.slots;
 
     var message = "Hello, my name is Chuck. I am a chatbot that is an expert at fast food. " +
-        "To get started, ask me something like 'How many calories in a Big Mac'.";
+        "To get started, ask me something like 'How many calories in a Chicken Sandwich'.";
 
+    // these are default buttons that show up to the user
     var buttonData = [];
-    buttonData.push({ "text":"Calories in a burger?", "value":"calories in a burger?" });
-    buttonData.push({ "text":"Eating a pizza.", "value":"eating a pizza." });
+    buttonData.push({ "text":"Calories in a Big Mac", "value":"Calories in a Big Mac" });
+    buttonData.push({ "text":"Eating a pizza", "value":"Eating a pizza" });
     buttonData.push({ "text":"Panda Express", "value":"Panda Express" });
 
     callback(buttonResponse(sessionAttributes, message, buttonData));
@@ -170,7 +171,8 @@ function getBasicDailyAnalysis(intentRequest, callback) {
 
 // this function is what builds the wrap-up of a conversation
 function endConversation(intentRequest, callback) {
-    const sessionAttributes = intentRequest.sessionAttributes || {};
+    // note: this intent resets the session data
+    const sessionAttributes = {};
 
     var counterResponse = 'Thanks for stoping by. I get off work at 5pm... on June 14, 2035! ';
 
@@ -292,6 +294,24 @@ function getHelp(intentRequest, callback) {
         
 }
 
+// this function is to solicit interest in weight loss tips
+function getWeightLossTips(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+
+    var counterResponse = "How much you weigh depends on your calorie consumption, " +
+	"versus what your body uses in a day. If you consume 500 calories less " +
+	"than what you eat each day, you will lose a pound a week.";
+
+    // add a button to offer health advice
+    var buttonData = [];
+        buttonData.push({ "text":"Wendy's healthy options", "value":"Wendys healthy options" });
+        buttonData.push({ "text":"Subway healthy options", "value":"Subway healthy options" });
+	buttonData.push({ "text":"What's a good diet food", "value":"What's a good diet food" });
+
+    callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
+
+}
+
 // this function is what calculates the BMR for a given user
 function calculateBMR(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
@@ -331,8 +351,11 @@ function calculateBMR(intentRequest, callback) {
     counterResponse = counterResponse + dci + " calories per day. This amount will increase if you are active " +
 	"at work or exercise on a regular basis. ";
 
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: counterResponse }));
+    // add a button to offer health advice
+    var buttonData = [];
+        buttonData.push({ "text":"Weight loss tips", "value":"Weight loss tips" });
+
+    callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
 
 }
 
@@ -377,6 +400,8 @@ function getHealthyChoice(intentRequest, callback) {
         counterResponse = counterResponse + " veggie sandwiches, and little size burgers. Just stay away from the fries. ";
     } else if (restaurant === "Sonic") {
         counterResponse = counterResponse + " veggie burgers. ";
+    } else if (restaurant === "Taco Bell") {
+	counterResponse = counterResponse + " many chicken and bean options. Just watch how many you eat! ";
     }
 
     counterResponse = counterResponse + "Let me know if you want me to get more details.";
@@ -603,6 +628,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'HealthyChoice') {
 	console.log("user requesting healthy choice meals");
 	return getHealthyChoice(intentRequest, callback);
+    } else if (intentName === 'WeightLossTips') {
+	console.log("weight loss tip request");
+	getWeightLossTips(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
