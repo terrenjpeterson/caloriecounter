@@ -106,5 +106,57 @@
         "calories":80,
         "carbs":18,
         "restaurantNames":["Subway"]
+    },
+    {
+    	"dressingName":"Vinaigrette",
+        "fullName":"Zesty Apple Cider Vinaigrette",
+        "calories":230,
+        "carbs":16,
+        "restaurantNames":["Chick-Fil-A"]
+    },
+    {
+        "dressingName":"Creamy Salsa",
+        "calories":290,
+        "carbs":3,
+        "restaurantNames":["Chick-Fil-A"]
+    },
+    {
+        "dressingName":"Light Italian",
+        "calories":25,
+        "carbs":3,
+        "restaurantNames":["Chick-Fil-A"]
+    },
+    {
+        "dressingName":"Balsamic Vinaigrette",
+	"fullName":"Light Balsamic Vinaigrette",
+        "calories":80,
+        "carbs":10,
+        "restaurantNames":["Chick-Fil-A"]
+    },
+    {
+        "dressingName":"Honey Mustard",
+        "fullName":"Fat Free Honey Mustard",
+        "calories":90,
+        "carbs":22,
+        "restaurantNames":["Chick-Fil-A"]
+    },
+    {
+        "dressingName":"Ranch",
+        "fullName":"Garlic & Herb Ranch",
+        "calories":280,
+        "carbs":2,
+        "restaurantNames":["Chick-Fil-A"]
+    },
+    {
+        "dressingName":"Avocado Lime Ranch",
+        "calories":310,
+        "carbs":3,
+        "restaurantNames":["Chick-Fil-A"]
+    },
+    {
+        "dressingName":"Chili Lime Vinaigrette",
+        "calories":60,
+        "carbs":9,
+        "restaurantNames":["Chick-Fil-A"]
     }
 ]
