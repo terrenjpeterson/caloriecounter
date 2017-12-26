@@ -244,6 +244,24 @@ function calculateCalories(intentRequest, callback) {
 	botResponse = botResponse + " and " + sideName;
     }
 
+    // if the user indicated they wanted to add a biscuit, add to calories and session
+    if (intentRequest.currentIntent.slots.AddBiscuit.toLowerCase() === "yes") {
+	botResponse = botResponse + " plus a Biscuit ";
+	const biscuitCalories = 180;
+	mealCalories += biscuitCalories;
+	sessionAttributes.sideName = "Biscuit";
+	sessionAttributes.sideCalories = biscuitCalories;
+    }
+
+    // if the user indicated that they wanted to add a cookie, add to calories and session
+    if (intentRequest.currentIntent.slots.AddCookie.toLowerCase() === "yes") {
+	botResponse = botResponse + ", and a cookie for dessert";
+	const cookieCalories = 150;
+	mealCalories += cookieCalories;
+	sessionAttributes.dessertName = "Cookie";
+	sessionAttributes.dessertCalories = cookieCalories;
+    }
+
     botResponse = botResponse + ". That is " + mealCalories + " calories.";
     buttonData.push({ "text":"More Details", "value":"more details" });
     buttonData.push({ "text":"Analyze my Meal", "value":"analyze my meal" });
