@@ -118,11 +118,77 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
 function validateFields(intentRequest, callback) {
     var sessionAttributes = {};
     var validData = true;
-    const slots = intentRequest.currentIntent.slots;
 
-    var botResponse = "All fields validated.";
+    if (intentRequest.currentIntent.slots.ChickenPart) {
+	// first scrub for naming conventions
+	if (intentRequest.currentIntent.slots.ChickenPart.toLowerCase() === "wing") {
+	    console.log("scrubbed user provided data for chicken wing");
+	    intentRequest.currentIntent.slots.ChickenPart === "Whole Wing";
+	} else if (intentRequest.currentIntent.slots.ChickenPart.toLowerCase() === "leg") {
+	    console.log("scrubbed user provided data for chicken drumstick");
+	    intentRequest.currentIntent.slots.ChickenPart === "Drumstick";
+	}
+	// make sure that what was provided is a valid choice
+	if (intentRequest.currentIntent.slots.ChickenPart.toLowerCase() === "whole wing" ||
+	    intentRequest.currentIntent.slots.ChickenPart.toLowerCase() === "breast" ||
+	    intentRequest.currentIntent.slots.ChickenPart.toLowerCase() === "thigh" ||
+	    intentRequest.currentIntent.slots.ChickenPart.toLowerCase() === "drumstick" ) {
+	    console.log("valid chicken part provided");
+	} else {
+	    // create error message
+	    validData = false;
+	    const errorMessage = "Hmmm, did you mean Wing, Breast, Thigh, or Drumstick?";
+	    const partPrompt = buildValidationResult(false, 'ChickenPart', errorMessage);
+	    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                intentRequest.currentIntent.slots, partPrompt.violatedSlot, partPrompt.message));	  
+	}
+    }
 
-    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+    if (intentRequest.currentIntent.slots.ChickenStyle) {
+	if (intentRequest.currentIntent.slots.ChickenStyle.toLowerCase() === "original recipe" ||
+	    intentRequest.currentIntent.slots.ChickenStyle.toLowerCase() === "extra crispy" ||
+	    intentRequest.currentIntent.slots.ChickenStyle.toLowerCase() === "kentucky grilled" ||
+	    intentRequest.currentIntent.slots.ChickenStyle.toLowerCase() === "spicy crispy" ) {
+	    console.log("valid chicken style provided");
+	} else {
+            // create error message
+            validData = false;
+            const errorMessage = "How about Original Recipe, Extra Crispy, Kentucky Grilled or Spicy Crispy?";
+            const stylePrompt = buildValidationResult(false, 'ChickenStyle', errorMessage);
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                intentRequest.currentIntent.slots, stylePrompt.violatedSlot, stylePrompt.message));
+        }
+    }	
+
+    // validate side item entered
+    if (intentRequest.currentIntent.slots.ChickenSides && validData) {
+	var validSide = false;
+        if (intentRequest.currentIntent.slots.ChickenSides.toLowerCase() === "no" ||
+            intentRequest.currentIntent.slots.ChickenSides.toLowerCase() === "none") {
+	    validSlide = true;
+	} else {
+            for (var j = 0; j < chickenItems[0].foodItems.length; j++) {
+                if (intentRequest.currentIntent.slots.ChickenSides.toLowerCase() === chickenItems[0].foodItems[j].foodName.toLowerCase()) {
+		    validSide = true;
+		    intentRequest.currentIntent.slots.ChickenSides = chickenItems[0].foodItems[j].foodName;
+                }
+            }	
+	}
+	if (validSide) {
+	    validData = true;
+        } else {
+	    validData = false;
+            const errorMessage = "Sorry, I don't have information on " + 
+		intentRequest.currentIntent.slots.ChickenSides + ". Try again, or say 'None'.";
+            const sidesPrompt = buildValidationResult(false, 'ChickenSides', errorMessage);
+            callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
+                intentRequest.currentIntent.slots, sidesPrompt.violatedSlot, sidesPrompt.message))
+	}
+    }
+
+    if (validData) {
+        callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+    }
 }
 
 // this function handles the flow for calculating the amount of calories for a chicken meal
@@ -134,11 +200,13 @@ function calculateCalories(intentRequest, callback) {
     var sideCalories = 0;
     var mealCalories = 0;
     var entreeName = "";
+    var buttonData = [];
 
     // parse out intents provided by the user
     const partName  = intentRequest.currentIntent.slots.ChickenPart;
     const styleName = intentRequest.currentIntent.slots.ChickenStyle;
     const sideName  = intentRequest.currentIntent.slots.ChickenSides;
+    const chickenPieces = Number(intentRequest.currentIntent.slots.QuantityPieces);
 
     // there is just one restaurant (KFC), so default for now
     const foodItems      = chickenItems[0].foodItems;
@@ -148,13 +216,18 @@ function calculateCalories(intentRequest, callback) {
     for (var i = 0; i < foodItems.length; i++) {
 	entreeName = styleName + " Chicken " + partName;
 	if (entreeName.toLowerCase() === foodItems[i].foodName.toLowerCase()) {
-	    entreeCalories = foodItems[i].calories;
+	    entreeCalories = foodItems[i].calories * chickenPieces;
 	    mealCalories = entreeCalories;
 	}
     }
 
     // prepare message back to the user
-    var botResponse = "At " + restaurantName + ", eating a " + entreeName
+    var botResponse = "At " + restaurantName + ", eating " + entreeName;
+
+    // make grammar corret with adding 's' to indicate plural
+    if (chickenPieces > 1) {
+	botResponse = botResponse + "s";
+    }
 
     // if a side exists, validate as well
     if (sideName.toLowerCase() !== "no" &&
@@ -172,17 +245,27 @@ function calculateCalories(intentRequest, callback) {
     }
 
     botResponse = botResponse + ". That is " + mealCalories + " calories.";
+    buttonData.push({ "text":"More Details", "value":"more details" });
+    buttonData.push({ "text":"Analyze my Meal", "value":"analyze my meal" });
 
     // save session data for future response
     sessionAttributes.restaurantName = restaurantName;;
-    sessionAttributes.foodName       = entreeName;
+    if (chickenPieces === 1) {
+	sessionAttributes.foodName = "One Piece of " + entreeName;
+    } else if (chickenPieces > 1) {
+	sessionAttributes.foodName = chickenPieces + " Pieces of " + entreeName;
+    }
     sessionAttributes.foodCalories   = entreeCalories;
     sessionAttributes.totalCalories  = mealCalories;
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
 
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: botResponse }));
+    if (buttonData) {
+	callback(buttonResponse(sessionAttributes, botResponse, buttonData));
+    } else {
+       callback(close(sessionAttributes, 'Fulfilled',
+	{ contentType: 'PlainText', content: botResponse }));
+    }
 }
 
 // --------------- Intents -----------------------
