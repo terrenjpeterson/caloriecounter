@@ -1,0 +1,15 @@
+[
+    {
+        "restaurant":"KFC",
+        "foodItems":[
+	    { "foodName":"Original Recipe Chicken Breast", "calories":390, "sodium":1190, "carbs":11 },
+            { "foodName":"Original Recipe Chicken Drumstick", "calories":130, "sodium":430, "carbs":4 },
+            { "foodName":"Original Recipe Chicken Thigh", "calories":280, "sodium":910, "carbs":8 },
+            { "foodName":"Original Recipe Chicken Whole Wing", "calories":130, "sodium":380, "carbs":3 },
+	    { "foodName":"Coleslaw", "calories":170, "sodium":180, "carbs":14 },
+            { "foodName":"Green Beans", "calories":25, "sodium":260, "carbs":4 },
+            { "foodName":"Mashed Potatoes", "calories":90, "sodium":320, "carbs":15 },
+            { "foodName":"BBQ Baked Beans", "calories":240, "sodium":820, "carbs":43 }
+	]
+    }
+]

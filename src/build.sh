@@ -7,17 +7,21 @@ zip -r calcbot.zip calculate.js data/foods.json data/drinks.json data/sauces.jso
 zip -r pizzabot.zip pizza.js data/restaurants.json data/pizzas.json
 zip -r miscbot.zip misc.js data/restaurants.json data/foods.json data/drinks.json
 zip -r chinesebot.zip chinese.js data/foods.json data/drinks.json
+zip -r chickenbot.zip chicken.js data/chicken.json data/drinks.json
 
 # copy the build file and source files to a staging bucket in case need for research
 aws s3 cp lambda.js s3://fastfoodchatbot/binaries/
 aws s3 cp pizza.js s3://fastfoodchatbot/binaries/
 aws s3 cp calculate.js s3://fastfoodchatbot/binaries/
 aws s3 cp misc.js s3://fastfoodchatbot/binaries/
+aws s3 cp chinese.js s3://fastfoodchatbot/binaries/
+aws s3 cp chicken.js s3://fastfoodchatbot/binaries/
 aws s3 cp foodbot.zip s3://fastfoodchatbot/binaries/
 aws s3 cp pizzabot.zip s3://fastfoodchatbot/binaries/
 aws s3 cp calcbot.zip s3://fastfoodchatbot/binaries/
 aws s3 cp miscbot.zip s3://fastfoodchatbot/binaries/
 aws s3 cp chinesebot.zip s3://fastfoodchatbot/binaries/
+aws s3 cp chickenbot.zip s3://fastfoodchatbot/binaries/
 echo 'copied zip files and source code to s3'
 
 aws s3 cp data/foods.json s3://fastfoodchatbot/data/
@@ -27,6 +31,7 @@ aws s3 cp data/restaurants.json s3://fastfoodchatbot/data/
 aws s3 cp data/sauces.json s3://fastfoodchatbot/data/
 aws s3 cp data/dressings.json s3://fastfoodchatbot/data/
 aws s3 cp data/adjustments.json s3://fastfoodchatbot/data/
+aws s3 cp data/chicken.json s3://fastfoodchatbot/data/
 echo 'copied data files to s3'
 
 # cleanup temporary zip files
@@ -35,6 +40,7 @@ rm pizzabot.zip
 rm calcbot.zip
 rm miscbot.zip
 rm chinesebot.zip
+rm chickenbot.zip
 echo 'removed temp files'
 
 # update the lambda function with the binaries that have been staged
@@ -43,6 +49,7 @@ aws lambda update-function-code --function-name myPizzaCalorieCounterGreen --s3-
 aws lambda update-function-code --function-name myCalorieCalculatorGreen --s3-bucket fastfoodchatbot --s3-key binaries/calcbot.zip
 aws lambda update-function-code --function-name myCalorieBotMiscMsgGreen --s3-bucket fastfoodchatbot --s3-key binaries/miscbot.zip
 aws lambda update-function-code --function-name myChineseFoodCalculatorGreen --s3-bucket fastfoodchatbot --s3-key binaries/chinesebot.zip
+aws lambda update-function-code --function-name myChickenCounterGreen --s3-bucket fastfoodchatbot --s3-key binaries/chickenbot.zip
 echo 'new versions of lambda functions has been deployed'
 
 # read in test data required for a food validation request
