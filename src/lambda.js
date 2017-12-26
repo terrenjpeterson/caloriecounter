@@ -1007,6 +1007,7 @@ function validateUserEntry(intentRequest, callback) {
     const slots = intentRequest.currentIntent.slots;
     var invalidSlot = false;
     var buttonData = [];
+    var breakfastItem = false;
 
     console.log("validating user entry");
 
@@ -1047,6 +1048,10 @@ function validateUserEntry(intentRequest, callback) {
         const foodValidationResult = validateFood(intentRequest);
 
 	console.log("food validation result: " + JSON.stringify(foodValidationResult));
+	// if item is breakfast related, save for later prompts
+	if (foodValidationResult.breakfastItem) {
+	    breakfastItem = true;
+	}
 
         // check if food was valid
         if (!foodValidationResult.isValid) {
@@ -1122,7 +1127,7 @@ function validateUserEntry(intentRequest, callback) {
 	if (intentRequest.currentIntent.slots.Restaurant && !invalidSlot) {
 	    if (intentRequest.currentIntent.name === 'GetCalories') {
 		invalidSlot = true;
-		buildExtraMessage(intentRequest, callback);
+		buildExtraMessage(intentRequest, breakfastItem, callback);
 	    }
 	}
     }
@@ -1255,7 +1260,7 @@ function getFoodAdjustments(foodName, restaurantName) {
 }
 
 // this function builds an intelligent response back prompting the user for a side item
-function buildExtraMessage(intentRequest, callback) {
+function buildExtraMessage(intentRequest, breakfastItem, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
 
     console.log("Building side item prompt for " + intentRequest.currentIntent.slots.Restaurant);
@@ -1273,8 +1278,10 @@ function buildExtraMessage(intentRequest, callback) {
 	botMessage = botMessage + "Waffle Fries";
     } else if (intentRequest.currentIntent.slots.Restaurant === "Sonic") {
 	botMessage = botMessage + "Fries, Chili Cheese Fries, or Tots";
+    } else if (breakfastItem) {
+	botMessage = botMessage + "Hash Browns";
     } else {
-	botMessage = botMessage + "Fries";
+	botMessage = botMessage + "Fries or Side Salad";
     }
     botMessage = botMessage + "?";
                 
