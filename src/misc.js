@@ -8,6 +8,7 @@
 
 var foodChoices = require("data/foods.json");
 var restaurants = require("data/restaurants.json");
+var chickenChoices = require("data/chicken.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -519,10 +520,15 @@ function getFoodOptions(intentRequest, callback) {
 
     var foodItems = [];
     // find the restaurant food items for the restaurant provided
-    for (var i = 0; i < foodChoices.length; i++) {
-        if (restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
-            foodItems = foodChoices[i].foodItems;
-	    restaurant = foodChoices[i].restaurant;
+    if (restaurant.toLowerCase() === "kfc") {
+	foodItems = chickenChoices[0].foodItems;
+	restaurant = "KFC";
+    } else {
+    	for (var i = 0; i < foodChoices.length; i++) {
+            if (restaurant.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+            	foodItems = foodChoices[i].foodItems;
+	    	restaurant = foodChoices[i].restaurant;
+	    }
         } 
     }
 

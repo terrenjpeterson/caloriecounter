@@ -5,7 +5,7 @@
 zip -r foodbot.zip lambda.js data/restaurants.json data/foods.json data/drinks.json data/sauces.json data/dressings.json data/adjustments.json data/chicken.json
 zip -r calcbot.zip calculate.js data/foods.json data/drinks.json data/sauces.json data/dressings.json data/adjustments.json
 zip -r pizzabot.zip pizza.js data/restaurants.json data/pizzas.json
-zip -r miscbot.zip misc.js data/restaurants.json data/foods.json data/drinks.json
+zip -r miscbot.zip misc.js data/restaurants.json data/foods.json data/drinks.json data/chicken.json
 zip -r chinesebot.zip chinese.js data/foods.json data/drinks.json
 zip -r chickenbot.zip chicken.js data/chicken.json data/drinks.json
 
