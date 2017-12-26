@@ -12,6 +12,7 @@ var restaurants = require("data/restaurants.json");
 var sauces = require("data/sauces.json");
 var dressings = require("data/dressings.json");
 var adjustments = require("data/adjustments.json");
+var chickenChoices = require("data/chicken.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -252,6 +253,7 @@ function scrubRestaurantName(restaurantName) {
 // this function will validate that the restaurant provided by the user matches what data we have
 function validateFood(intentRequest) {
     var validFood = false;
+    var breakfastItem = false;
     var restaurant = intentRequest.currentIntent.slots.Restaurant;
     var foodItems = [];
     var foodCalories = 0;
@@ -284,6 +286,10 @@ function validateFood(intentRequest) {
 		} else {
 		    slots.Food = foodItems[j].foodName;
 		}
+		// check if the item is for breakfast
+		if (foodItems[j].breakfastItem) {
+		    breakfastItem = true;
+		}
 		// check if the item is already a side (i.e. fries) as we would then skip that question
 		if (foodItems[j].sideItem) {
 		    if (!intentRequest.currentIntent.slots.Extra) {
@@ -309,7 +315,7 @@ function validateFood(intentRequest) {
     // create response. if food item didn't match, respond as such, else pass back as supported.
     if (validFood) {
         console.log("passed food validation");
-        return { isValid: true, calories: foodCalories };
+        return { isValid: true, calories: foodCalories, breakfastItem: breakfastItem };
     } else if (slots.Food) {
 	const foodError = processFoodEntryError(intentRequest);
 	console.log(JSON.stringify(foodError));
@@ -412,10 +418,14 @@ function getFoodItems(foodType, restaurantName) {
     console.log("Finding potential food items for " + foodType + " at " + restaurantName + ".");
 
     // sort through the food choices and pull out those relating to the restaraunt that has already been validated
-    for (var i = 0; i < foodChoices.length; i++) {
-        if (restaurantName.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
-            restaurantFoodItems = foodChoices[i].foodItems;
-        }
+    if (restaurantName.toLowerCase() === "kfc") {
+	restaurantFoodItems = chickenChoices[0].foodItems;
+    } else {
+    	for (var i = 0; i < foodChoices.length; i++) {
+            if (restaurantName.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+            	restaurantFoodItems = foodChoices[i].foodItems;
+            }
+	}
     } 
 
     console.log(JSON.stringify(restaurantFoodItems));
@@ -436,19 +446,27 @@ function getFoodItems(foodType, restaurantName) {
 }
 
 // this retrieves the types of food at a given restaurant
+
 function getFoodTypes(restaurantName) {
     var foodOptions = [];
     var foodItems = [];
 
     console.log("finding food options at " + restaurantName);
 
-    for (var i = 0; i < foodChoices.length; i++) {
-        if (restaurantName.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
-            foodItems = foodChoices[i].foodItems;
-            console.log("match restaurant - food items: " + JSON.stringify(foodItems));
+    // search for valid food types based on data arrays read into skill
+    if (restaurantName.toLowerCase() === "kfc") {
+	console.log("loading KFC items: " + JSON.stringify(chickenChoices[0].foodItems));
+	foodItems = chickenChoices[0].foodItems;
+    } else {
+    	for (var i = 0; i < foodChoices.length; i++) {
+            if (restaurantName.toLowerCase() === foodChoices[i].restaurant.toLowerCase()) {
+            	foodItems = foodChoices[i].foodItems;
+            	console.log("match restaurant - food items: " + JSON.stringify(foodItems));
+	    }
 	}
     }
 
+    // now parse through and find the unique food types
     for (var j = 0; j < foodItems.length; j++) {
 	if (foodItems[j].foodType) {
 	    var newEntry = true;
