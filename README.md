@@ -27,7 +27,8 @@ Currently there are many different intents that the NLU process sorts into.  Her
 - GetMexicanFoodCalories (Sample utterance - How many calories in a Chicken Burrito?)
 - GetNuggetsCalories (Sample utterance - How many calories in 20 Chicken Nuggets?)
 - GetPizzaCalories (Sample utterance - How many calories in 2 slices of Pepperoni Pizza at Papa Johns?)
-- GetChineseCalories (Sample utterace - How many calories in a Kung Pao Chicken?)
+- GetChineseCalories (Sample utterance - How many calories in a Kung Pao Chicken?)
+- GetChickenCalories (Sample utterance - How many calories in a piece of Original Recipe Chicken?) 
 
 There are also intents that complement the core features.
 - MoreDetails (Sample utterance - More details. Note: this can only be invoked after prior requests are made in the conversation as it's reading data from the session).
@@ -77,6 +78,9 @@ Currently, here are the custom slots that are used by the intents.
 - FoodAdjustment (sample values: Add Guacomole, No Cheese)
 - DressingOptions (sample values: Italian, Balsamic Vinaigrette)
 - DippingSauce (sample values: Honey Mustard, Sweet and Sour)
+- ChickenPart (sample values: Drumstick, Breast, Wing)
+- ChickenStyle (sample values: Original Recipe, Extra Crispy)
+- ChickenSides (sample values: Mashed Potatoes, Baked Beans)
 
 An item does not need to be specified in the slot for the NLU to place a value into it. However, if the data is sparse, it may degrade how the NLU interprets the user requests.
 
