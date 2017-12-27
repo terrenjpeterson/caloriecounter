@@ -1,0 +1,34 @@
+{
+    "messageVersion": "1.0",
+    "invocationSource": "FulfillmentCodeHook",
+    "userId": "03h7srocc9wpchbgvxl4xjr9c8ekbvpp",
+    "sessionAttributes": {},
+    "requestAttributes": null,
+    "bot": {
+        "name": "FastFoodChecker",
+        "alias": "$LATEST",
+        "version": "$LATEST"
+    },
+    "outputDialogMode": "Text",
+    "currentIntent": {
+        "name": "SubOfTheDay",
+        "slots": {
+            "DayOfWeek": "today"
+        },
+        "slotDetails": {
+            "DayOfWeek": {
+                "resolutions": [
+                    {
+                        "value": "today"
+                    },
+                    {
+                        "value": "Today"
+                    }
+                ],
+                "originalValue": "today"
+            }
+        },
+        "confirmationStatus": "None"
+    },
+    "inputTranscript": "today"
+}
