@@ -5,7 +5,7 @@
 zip -r foodbot.zip lambda.js data/restaurants.json data/foods.json data/drinks.json data/sauces.json data/dressings.json data/adjustments.json data/chicken.json
 zip -r calcbot.zip calculate.js data/foods.json data/drinks.json data/sauces.json data/dressings.json data/adjustments.json
 zip -r pizzabot.zip pizza.js data/restaurants.json data/pizzas.json
-zip -r miscbot.zip misc.js data/restaurants.json data/foods.json data/drinks.json data/chicken.json
+zip -r miscbot.zip misc.js data/restaurants.json data/foods.json data/drinks.json data/chicken.json data/specials.json
 zip -r chinesebot.zip chinese.js data/foods.json data/drinks.json
 zip -r chickenbot.zip chicken.js data/chicken.json data/drinks.json
 
@@ -32,6 +32,7 @@ aws s3 cp data/sauces.json s3://fastfoodchatbot/data/
 aws s3 cp data/dressings.json s3://fastfoodchatbot/data/
 aws s3 cp data/adjustments.json s3://fastfoodchatbot/data/
 aws s3 cp data/chicken.json s3://fastfoodchatbot/data/
+aws s3 cp data/specials.json s3://fastfoodchatbot/data/
 echo 'copied data files to s3'
 
 # cleanup temporary zip files
@@ -135,6 +136,20 @@ aws lambda invoke --function-name myChineseFoodCalculatorGreen --payload "$reque
 response=$(<testOutput.json)
 echo $response
 echo 'test case 6 complete'
+
+# read in test data required for the pizza test
+echo 'test case 7 sub of day request'
+cd testing
+request=$(<subDayRequest.json)
+cd ..
+
+# invoke the lambda function that checks on the sub of the day
+aws lambda invoke --function-name myCalorieBotMiscMsgGreen --payload "$request" testOutput.json
+
+# read response file into local variable then print on the console
+response=$(<testOutput.json)
+echo $response
+echo 'test case 7 complete'
 
 # clean-up any temporary data
 #aws s3 rm foodbot.zip s3://fastfoodchatbot/binaries/

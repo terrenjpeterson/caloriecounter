@@ -9,6 +9,7 @@
 var foodChoices = require("data/foods.json");
 var restaurants = require("data/restaurants.json");
 var chickenChoices = require("data/chicken.json");
+var subOfDay = require("data/specials.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -101,9 +102,9 @@ function getIntroduction(intentRequest, callback) {
 
     // these are default buttons that show up to the user
     var buttonData = [];
-    buttonData.push({ "text":"Calories in a Big Mac", "value":"Calories in a Big Mac" });
+    buttonData.push({ "text":"Calories in Big Mac", "value":"Calories in a Big Mac" });
     buttonData.push({ "text":"Eating a pizza", "value":"Eating a pizza" });
-    buttonData.push({ "text":"Panda Express", "value":"Panda Express" });
+    buttonData.push({ "text":"Sub of the Day", "value":"Sub of the day" });
 
     callback(buttonResponse(sessionAttributes, message, buttonData));
 }
@@ -293,6 +294,48 @@ function getHelp(intentRequest, callback) {
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
         
+}
+
+// this function retrieves the Subway sub of the day
+function getSubOfDay(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+    var subName = "Default";
+
+    // get today's day of week
+    var d = new Date();
+    var n = d.getDay();
+
+    // go through array and depending on user request, find appropriate sub
+    for (var i = 0; i < subOfDay.length ; i++) {
+	const dayRequest = intentRequest.currentIntent.slots.DayOfWeek.toLowerCase();
+	if (dayRequest === "today") {
+	    if (n === subOfDay[i].todayNum) {
+		subName = subOfDay[i].subName;
+	    }
+	} else if (dayRequest === "tomorrow") {
+	    if (n === subOfDay[i].tomorrowNum) {
+		subName = subOfDay[i].subName;
+	    }
+	} else {
+	    if (dayRequest === subOfDay[i].weekday.toLowerCase()) {
+	    	subName = subOfDay[i].subName;
+	    }
+	}
+    }
+
+    // formulate response
+    var counterResponse = "The Subway Sub of the Day for " + 
+	intentRequest.currentIntent.slots.DayOfWeek +
+	" is " + subName + ". " +
+	"Would you like nutritional details?";
+
+    // add buttons
+    var buttonData = [];
+        buttonData.push({ "text":"6 Inch Sub", "value":"How many calories in a 6 inch " + subName + " at Subway" });
+        buttonData.push({ "text":"Footlong Sub", "value":"How many calories in a footlong " + subName + " at Subway" });
+
+    callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
+
 }
 
 // this function is to solicit interest in weight loss tips
@@ -637,6 +680,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'WeightLossTips') {
 	console.log("weight loss tip request");
 	getWeightLossTips(intentRequest, callback);
+    } else if (intentName === 'SubOfTheDay') {
+	console.log("request sub of the day");
+	getSubOfDay(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);

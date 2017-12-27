@@ -1,0 +1,44 @@
+[
+	{
+		"weekday": "Sunday",
+		"todayNum": 6,
+		"tomorrowNum": 0,
+		"subName": "Meatball Marinara"
+	},
+	{
+		"weekday": "Monday",
+		"todayNum": 0,
+		"tomorrowNum": 1,
+		"subName": "Sweet Onion Chicken Teriyaki"
+	},
+	{
+		"weekday": "Tuesday",
+		"todayNum": 1,
+		"tomorrowNum": 2,
+		"subName": "Oven Roasted Chicken"
+	},
+	{
+		"weekday": "Wednesday",
+		"todayNum": 2,
+		"tomorrowNum": 3,
+		"subName": "Turkey Breast"
+	},
+	{
+		"weekday": "Thursday",
+		"todayNum": 3,
+		"tomorrowNum": 4,
+		"subName": "Italian BMT"
+	},
+	{
+		"weekday": "Friday",
+		"todayNum": 4,
+		"tomorrowNum": 5,
+		"subName": "Tuna"
+	},
+	{
+		"weekday": "Saturday",
+		"todayNum": 5,
+		"tomorrowNum": 6,
+		"subName": "Meatball Marinara"
+	}
+]
