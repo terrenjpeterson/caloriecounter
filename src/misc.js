@@ -446,6 +446,8 @@ function getHealthyChoice(intentRequest, callback) {
         counterResponse = counterResponse + " veggie burgers. ";
     } else if (restaurant === "Taco Bell") {
 	counterResponse = counterResponse + " many chicken and bean options. Just watch how many you eat! ";
+    } else if (restaurant === "Panda Express") {
+	counterResponse = counterResponse + " the option of putting the entree onto vegetables rather than rice. ";
     }
 
     counterResponse = counterResponse + "Let me know if you want me to get more details.";
