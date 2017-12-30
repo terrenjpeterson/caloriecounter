@@ -21,5 +21,8 @@ response=$(<output.json)
 
 # read the data object returned from the function call and use it to load the custom slot
 data=$(<output.json)
-aws lex-models put-slot-type --name FoodOptions --checksum 987622cb-c19c-4fe9-a004-6246343cce11 --enumeration-values "$data" >> sysoutfood.txt
+# need to automate reading this in
+# aws lex-models get-slot-type --name FoodOptions --slot-type-version '$LATEST'
+checksum='9bd3ce85-a444-41a5-8a24-465594828f02'
+aws lex-models put-slot-type --name FoodOptions --checksum "$checksum" --enumeration-values "$data" > sysoutfood.txt
 echo 'complete building slot'
