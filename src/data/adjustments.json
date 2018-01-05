@@ -91,7 +91,8 @@
             },
             { "foodName":"Quesadilla",
               "adjustments": [
-                { "change":"Add Guacomole", "calorieAdj":35, "highlight":true }
+                { "change":"Add Guacomole", "calorieAdj":35, "highlight":true },
+	        { "change":"Extra Cheese", "calorieAdj":220, "highlight":true }
               ]
             }
 	]
@@ -144,7 +145,12 @@
                 { "change":"No Spread", "calorieAdj":-80, "highlight":true },
                 { "change":"Animal Style", "calorieAdj":100, "highlight":true }
               ]
-            }
+            },
+            { "foodName":"French Fries",
+              "adjustments": [
+                { "change":"Animal Style", "calorieAdj":100, "highlight":true }
+              ]
+            }	      
         ]
     }
 ]

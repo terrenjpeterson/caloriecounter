@@ -205,6 +205,7 @@ function scrubRestaurantName(restaurantName) {
         restaurantName.toLowerCase() === "mcdonald" ||
         restaurantName.toLowerCase() === "mc donald" ||
         restaurantName.toLowerCase() === "mc donalds" ||
+	restaurantName.toLowerCase() === "mc donald's" ||
         restaurantName.toLowerCase() === "mcdonald's") {
         console.log("corrected restaurant name typo");
         scrubData.restaurantName = "McDonalds";
@@ -221,6 +222,7 @@ function scrubRestaurantName(restaurantName) {
     } else if (restaurantName.toLowerCase() === "chik-fil-a" ||
                restaurantName.toLowerCase() === "chick fil a" ||
                restaurantName.toLowerCase() === "chic fil a" ||
+	       restaurantName.toLowerCase() === "chic fill a" ||
                restaurantName.toLowerCase() === "chic-fil-a" ||
                restaurantName.toLowerCase() === "chik fil a" ||
                restaurantName.toLowerCase() === "chikfila") {
