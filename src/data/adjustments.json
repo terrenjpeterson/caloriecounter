@@ -18,6 +18,81 @@
 	]
     },
     {
+	"restaurant":"Subway",
+	"menuAdjustments":[
+	    { "foodName":"6 inch Black Forest Ham",
+	      "adjustments": [
+		{ "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+		{ "change":"Cheese", "calorieAdj":50, "highlight":true },
+		{ "change":"Ranch", "calorieAdj":110, "highlight":true }
+	      ]
+	    },
+            { "foodName":"6 inch Oven Roasted Chicken",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+            { "foodName":"6 inch Oven Roast Beef",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+            { "foodName":"6 inch Rotisserie Chicken",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+            { "foodName":"6 inch Subway Club",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+            { "foodName":"6 inch Chicken Teriyaki",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+            { "foodName":"6 inch Turkey Breast",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+            { "foodName":"6 inch Veggie Delite",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+            { "foodName":"6 inch Cold Cut Combo",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+            { "foodName":"6 inch Meatball Marinara",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            }
+        ]
+    },
+    {
         "restaurant":"Burger King",
         "menuAdjustments":[
             { "foodName":"Whopper",
