@@ -1,0 +1,38 @@
+[
+    {
+        "restaurant":"McDonalds",
+        "mealOptions":[
+            { "calorieLimit":500,
+              "options": [
+                { "category":"Chicken", "order":"Grilled Chicken Sandwich, a Side Salad with Italian Dressing, and a Diet Coke", "calories":445 },
+		{ "category":"Salad", "order":"Southwest Grilled Chicken Salad with Creamy Southwest Dressing, and an Iced Tea", "calories":470 },
+		{ "category":"Breakfast", "order":"Egg McMuffin, Hash Browns, and a Coffee", "calories":450 }
+              ]
+            }
+	]
+    },
+    {
+        "restaurant":"Subway",
+        "mealOptions":[
+            { "calorieLimit":500,
+              "options": [
+                { "category":"Turkey", "order":"6 inch Turkey Breast with Cheese, Chips, and a Diet Coke", "calories":490 },
+		{ "category":"Chicken", "order":"6 inch Oven Roasted Chicken with Cheese, Apple Slices, and a Diet Coke", "calories":405 }
+              ]
+            }
+        ]
+    },
+    {
+        "restaurant":"Chipotle",
+        "mealOptions":[
+            { "calorieLimit":500,
+              "options": [
+                { "category":"Chicken", "order":"Grilled Chicken Sandwich, a Side Salad with Italian Dressing, and a Diet Coke", "calories":445 },
+                { "category":"Salad", "order":"Southwest Grilled Chicken Salad with Creamy Southwest Dressing, and an Iced Tea", "calories":470 },
+                { "category":"Breakfast", "order":"Egg McMuffin, Hash Browns, and a Coffee", "calories":450 }
+              ]
+            }
+        ]
+    }
+]
+

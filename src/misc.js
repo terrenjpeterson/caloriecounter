@@ -10,6 +10,7 @@ var foodChoices = require("data/foods.json");
 var restaurants = require("data/restaurants.json");
 var chickenChoices = require("data/chicken.json");
 var subOfDay = require("data/specials.json");
+var healthyOptions = require("data/healthy.json");
 
 // --------------- Helpers that build all of the responses -----------------------
 
@@ -45,6 +46,31 @@ function elicitSlot(sessionAttributes, intentName, slots, slotToElicit, message)
             slots,
             slotToElicit,
             message,
+        },
+    };
+}
+
+function buttonSlot(sessionAttributes, intentName, slots, slotToElicit, messageContent, buttonData) {
+    console.log("processing:" + JSON.stringify(buttonData));
+    return {
+        sessionAttributes,
+        dialogAction: {
+            type: 'ElicitSlot',
+            intentName,
+            slots,
+            slotToElicit,
+            message: { contentType: 'PlainText', content: messageContent },
+            responseCard: {
+                version: '1',
+                contentType: 'application/vnd.amazonaws.card.generic',
+                genericAttachments: [
+                    {
+                        title: 'Options:',
+                        subTitle: 'Click button below or type response.',
+                        buttons: buttonData,
+                    },
+                ],
+            },
         },
     };
 }
@@ -425,35 +451,102 @@ function getHealthyChoice(intentRequest, callback) {
     var counterResponse = restaurant + " has ";
 
     if (restaurant === "Subway") {
-	counterResponse = counterResponse + " healthy salads and sandwiches. ";
+	counterResponse = counterResponse + "healthy salads and sandwiches.";
     } else if (restaurant === "McDonalds") {
-	counterResponse = counterResponse + " grilled chicken sandwiches and salads. ";
+	counterResponse = counterResponse + "grilled chicken sandwiches and salads.";
     } else if (restaurant === "Panera") {
-        counterResponse = counterResponse + " healthy soups, salads, and sandwiches. ";
+        counterResponse = counterResponse + "healthy soups, salads, and sandwiches.";
     } else if (restaurant === "Burger King") {
-        counterResponse = counterResponse + " a nice grilled chicken sandwich. ";
+        counterResponse = counterResponse + "a nice grilled chicken sandwich.";
     } else if (restaurant === "Chick-fil-A") {
-        counterResponse = counterResponse + " grilled chicken sandwiches and salads. ";
+        counterResponse = counterResponse + "grilled chicken sandwiches and salads.";
     } else if (restaurant === "Wendys") {
-        counterResponse = counterResponse + " chicken sandwiches and a healthy fish sandwich. ";
+        counterResponse = counterResponse + "chicken sandwiches and a healthy fish sandwich.";
     } else if (restaurant === "Arbys") {
-        counterResponse = counterResponse + " roast beef and turkey sandwiches as well as salads. ";
+        counterResponse = counterResponse + "roast beef and turkey sandwiches as well as salads.";
     } else if (restaurant === "Hardees") {
-        counterResponse = counterResponse + " charbroiled chicken and veggie sandwiches. ";
+        counterResponse = counterResponse + "charbroiled chicken and veggie sandwiches.";
     } else if (restaurant === "Five Guys") {
-        counterResponse = counterResponse + " veggie sandwiches, and little size burgers. Just stay away from the fries. ";
+        counterResponse = counterResponse + "veggie sandwiches, and little size burgers. Just stay away from the fries.";
     } else if (restaurant === "Sonic") {
-        counterResponse = counterResponse + " veggie burgers. ";
+        counterResponse = counterResponse + "veggie burgers.";
     } else if (restaurant === "Taco Bell") {
-	counterResponse = counterResponse + " many chicken and bean options. Just watch how many you eat! ";
+	counterResponse = counterResponse + "many chicken and bean options. Just watch how many you eat!";
     } else if (restaurant === "Panda Express") {
-	counterResponse = counterResponse + " the option of putting the entree onto vegetables rather than rice. ";
+	counterResponse = counterResponse + "the option of putting the entree onto vegetables rather than rice.";
+    } else if (restaurant === "Chipotle") {
+	counterResponse = counterResponse + "bowls. The tortilla on a burrito has 300 calories. Also skip the chips and guac.";
     }
 
     counterResponse = counterResponse + "Let me know if you want me to get more details.";
 
     callback(close(sessionAttributes, 'Fulfilled',
         { contentType: 'PlainText', content: counterResponse }));
+}
+
+// this function returns a meal recommendation based on certain calorie thresholds
+
+function getLowCalorieOption(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+    var restaurantName = intentRequest.currentIntent.slots.Restaurant;
+    const calorieLimit = intentRequest.currentIntent.slots.QtyCalories;
+    const foodType = intentRequest.currentIntent.slots.FoodType;
+    var buttonData = [];
+
+    var counterResponse = "At " + restaurantName + ", you can get ";
+    const mealOptions = getHealthyOptions(restaurantName, calorieLimit).mealOptions;
+
+    console.log("Get Low Calorie Options " + JSON.stringify(mealOptions));
+    console.log("Session Attributes: " + JSON.stringify(intentRequest.sessionAttributes));
+
+    // check if the request is a fulfillment or validation and respond accordingly
+    if (intentRequest.invocationSource === 'FulfillmentCodeHook') {
+	// match the food category with the options
+	var i = 0;
+	for (var k = 0; k < mealOptions.length; k++) {
+	    if (mealOptions[k].category.toLowerCase() === foodType.toLowerCase()) {
+		i = k;
+	    }
+	}
+	counterResponse = counterResponse + mealOptions[i].order + " for " + mealOptions[i].calories + " calories.";
+
+        callback(close(sessionAttributes, 'Fulfilled',
+            { contentType: 'PlainText', content: counterResponse }));
+    } else {
+	// check if the restaurant name hasn't been entered, but there's one in the session data - default for user
+	if (!restaurantName && sessionAttributes.restaurantName) {
+	    restaurantName = sessionAttributes.restaurantName;
+	    intentRequest.currentIntent.slots.Restaurant = sessionAttributes.restaurantName;
+	}
+	// if there isn't a food type, prompt with buttons for the restaurant
+	if (restaurantName && !foodType) {
+	    const prompt = "Which type of meal?";
+	    console.log("building prompt for food type options");
+	    for (var i = 0; i < mealOptions.length; i++) {
+	        buttonData.push( { "text":mealOptions[i].category, "value":mealOptions[i].category });	    
+	    }
+            const foodTypePrompt = buildValidationResult(false, 'FoodType', prompt);
+            callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
+                intentRequest.currentIntent.slots, foodTypePrompt.violatedSlot, prompt, buttonData));
+        } else {
+	    // let Lex framework handle validation prompts
+	    console.log("continue validation");
+	    callback(delegate(sessionAttributes, intentRequest.currentIntent.slots));
+        }
+    }
+}
+
+// this function determines what the food type options are for a given restaurant
+
+function getHealthyOptions(restaurantName, calorieLimit) {
+    console.log("Healthy Options Lookup");
+    var mealOptions = [];
+
+    mealOptions = healthyOptions[0].mealOptions[0].options;
+
+    return { 
+	mealOptions 
+    };
 }
 
 // this function returns the details of a recent meal request stored in session data
@@ -682,6 +775,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'WeightLossTips') {
 	console.log("weight loss tip request");
 	getWeightLossTips(intentRequest, callback);
+    } else if (intentName === 'LowCalorieMeals') {
+	console.log("low calorie meal request");
+	getLowCalorieOption(intentRequest, callback);
     } else if (intentName === 'SubOfTheDay') {
 	console.log("request sub of the day");
 	getSubOfDay(intentRequest, callback);
