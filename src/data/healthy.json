@@ -27,9 +27,18 @@
         "mealOptions":[
             { "calorieLimit":500,
               "options": [
-                { "category":"Chicken", "order":"Grilled Chicken Sandwich, a Side Salad with Italian Dressing, and a Diet Coke", "calories":445 },
-                { "category":"Salad", "order":"Southwest Grilled Chicken Salad with Creamy Southwest Dressing, and an Iced Tea", "calories":470 },
-                { "category":"Breakfast", "order":"Egg McMuffin, Hash Browns, and a Coffee", "calories":450 }
+                { "category":"Chicken", "order":"Chicken Burrito Bowl with no Rice and an Iced Tea", "calories":420 }
+              ]
+            }
+        ]
+    },
+    {
+        "restaurant":"Chick-fil-A",
+        "mealOptions":[
+            { "calorieLimit":500,
+              "options": [
+                { "category":"Chicken", "order":"Grilled Chicken Sandwich, a Small Chicken Noodle Soup, and a Diet Lemonade", "calories":460 },
+                { "category":"Breakfast", "order":"Chicken Biscuit, Fruit Cup, and a Coffee", "calories":495 }
               ]
             }
         ]

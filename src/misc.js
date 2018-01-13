@@ -446,6 +446,7 @@ function getShockResponse(intentRequest, callback) {
 
 function getHealthyChoice(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+    var buttonData = [];
 
     const restaurant = intentRequest.currentIntent.slots.Restaurant;
     var counterResponse = restaurant + " has ";
@@ -478,13 +479,16 @@ function getHealthyChoice(intentRequest, callback) {
 	counterResponse = counterResponse + "bowls. The tortilla on a burrito has 300 calories. Also skip the chips and guac.";
     }
 
-    counterResponse = counterResponse + "Let me know if you want me to get more details.";
+    // this adds a button giving a meal option under 500 calories for that restaurant
+    const buttonValue = "What items are at " + restaurant + " under 500 calories.";
+    buttonData.push({"text":"Example Meal", "value":buttonValue});
 
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: counterResponse }));
+    counterResponse = counterResponse + "Let me know if I can recommend a meal for you.";
+
+    callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
 }
 
-// this function returns a meal recommendation based on certain calorie thresholds
+// this function returns a meal recommendation based on certain calorie thresholds for a given restaurant
 
 function getLowCalorieOption(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
@@ -492,6 +496,25 @@ function getLowCalorieOption(intentRequest, callback) {
     const calorieLimit = intentRequest.currentIntent.slots.QtyCalories;
     const foodType = intentRequest.currentIntent.slots.FoodType;
     var buttonData = [];
+    var validRestaurant = false;
+
+    // check if the restaurant name hasn't been entered, but there's one in the session data - default for user
+    if (!restaurantName && sessionAttributes.restaurantName) {
+        restaurantName = sessionAttributes.restaurantName;
+        intentRequest.currentIntent.slots.Restaurant = sessionAttributes.restaurantName;
+    }
+
+    // validate restaurant choice - right now this is limited
+    if (restaurantName) {
+    	if (restaurantName.toLowerCase() === "mcdonalds" ||
+            restaurantName.toLowerCase() === "subway" ||
+            restaurantName.toLowerCase() === "chipotle" ||
+            restaurantName.toLowerCase() === "chick-fil-a" ) {
+	    validRestaurant = true;
+	} else {
+	    console.log("failed validation for " + restaurantName);
+        }
+    }
 
     var counterResponse = "At " + restaurantName + ", you can get ";
     const mealOptions = getHealthyOptions(restaurantName, calorieLimit).mealOptions;
@@ -513,13 +536,8 @@ function getLowCalorieOption(intentRequest, callback) {
         callback(close(sessionAttributes, 'Fulfilled',
             { contentType: 'PlainText', content: counterResponse }));
     } else {
-	// check if the restaurant name hasn't been entered, but there's one in the session data - default for user
-	if (!restaurantName && sessionAttributes.restaurantName) {
-	    restaurantName = sessionAttributes.restaurantName;
-	    intentRequest.currentIntent.slots.Restaurant = sessionAttributes.restaurantName;
-	}
 	// if there isn't a food type, prompt with buttons for the restaurant
-	if (restaurantName && !foodType) {
+	if (validRestaurant && !foodType) {
 	    const prompt = "Which type of meal?";
 	    console.log("building prompt for food type options");
 	    for (var i = 0; i < mealOptions.length; i++) {
@@ -528,6 +546,21 @@ function getLowCalorieOption(intentRequest, callback) {
             const foodTypePrompt = buildValidationResult(false, 'FoodType', prompt);
             callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
                 intentRequest.currentIntent.slots, foodTypePrompt.violatedSlot, prompt, buttonData));
+	} else if (!validRestaurant) {
+	    // if the request isn't for a restaurant that has recommendations, offer alternatives
+	    console.log("no recommendations for restaurant");
+	    var prompt = "Sorry, I don't have any recommendations for ";
+	    if (!restaurantName) {
+		prompt = "Here are some restaurants that I have meal ideas for.";
+	    } else {
+		prompt = prompt + restaurantName + ".";
+	    }
+	    const restaurantPrompt = buildValidationResult(false, 'Restaurant', prompt);
+	    buttonData.push({"text":"McDonalds", "value":"McDonalds"});
+	    buttonData.push({"text":"Subway", "value":"Subway"});
+	    buttonData.push({"text":"Chick-fil-A", "value":"Chick-fil-A"});
+            callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
+                intentRequest.currentIntent.slots, restaurantPrompt.violatedSlot, prompt, buttonData));
         } else {
 	    // let Lex framework handle validation prompts
 	    console.log("continue validation");
