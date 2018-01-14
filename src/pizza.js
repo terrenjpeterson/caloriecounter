@@ -262,7 +262,11 @@ function getPizzaTypes(intentRequest, callback) {
 		botResponse = botResponse + "To check calories, say something like " +
 		    "'How many calories in one slice of " + pizzas[i].pizzaSelections[0].name +
 		    " at " + pizzas[i].restaurant + "'.";
-        	buttonData.push({ "text":pizzas[i].pizzaSelections[0].name, "value":pizzas[i].pizzaSelections[0].name });
+		// add buttons for the first three pizzas
+		for (var j = 0; j < 3; j++) {
+        	    buttonData.push({ "text":pizzas[i].pizzaSelections[j].name, 
+			"value":pizzas[i].pizzaSelections[j].name });
+		}
             }
 	}
     } else {
@@ -353,10 +357,18 @@ function calculatePizzaCalories(intentRequest, callback) {
 	}
 	if (caloriesPerSlice > 0) {
 	    if (intentRequest.currentIntent.slots.Quantity) {
-	    	botResponse = "At " + intentRequest.currentIntent.slots.PizzaRestaurant + ", " +
-		    intentRequest.currentIntent.slots.Quantity + " slices of a " + 
+		// in this scenario, the response is for a specific number of slices
+		const totalCalories = intentRequest.currentIntent.slots.Quantity * caloriesPerSlice;
+		const foodName = intentRequest.currentIntent.slots.Quantity + " slices of a " +
 		    intentRequest.currentIntent.slots.PizzaSize + " " + intentRequest.currentIntent.slots.PizzaType +
-		    " pizza is " + (intentRequest.currentIntent.slots.Quantity * caloriesPerSlice) + " calories.";
+		    " pizza";
+	    	botResponse = "At " + intentRequest.currentIntent.slots.PizzaRestaurant + ", " + foodName +
+		    " is " + totalCalories + " calories.";
+		buttonData.push({ "text":"Analyze my Meal", "value":"Analyze my Meal" });
+		// save session data for future questions
+		sessionAttributes.totalCalories = totalCalories;
+		sessionAttributes.foodCalories = totalCalories;
+		sessionAttributes.foodName = foodName;
     	    } else {
 	    	// request is for the calories in an entire pizza
 	    	botResponse = "At " + intentRequest.currentIntent.slots.PizzaRestaurant + 
@@ -364,15 +376,20 @@ function calculatePizzaCalories(intentRequest, callback) {
 		    intentRequest.currentIntent.slots.PizzaType + " pizza " +
 		    " is " + (slicesPerPizza * caloriesPerSlice) + " calories. The pizza comes cut in " +
 		    slicesPerPizza + " slices, and each slice is " + caloriesPerSlice + " calories.";
+
+		// create buttons to make it easier for user to respond
+                var buttonValue = " pieces of a " + intentRequest.currentIntent.slots.PizzaSize +
+                    " " + intentRequest.currentIntent.slots.PizzaType;
+                buttonData.push({ "text":"Eating 2 Pieces", "value":"Eating 2" + buttonValue });
+                buttonData.push({ "text":"Eating 3 Pieces", "value":"Eating 3" + buttonValue });
+
 		// prompt to change size if this was a default, except for little caesars which has only one size
 		if (defaultSize && intentRequest.currentIntent.slots.PizzaRestaurant !== 'Little Caesars') {
+		    const altSizeRequest = "Large " + intentRequest.currentIntent.slots.PizzaType + " Pizza";
 		    botResponse = botResponse + " For a different size, say something like " +
-			"Large " + intentRequest.currentIntent.slots.PizzaType + " Pizza.";
+			altSizeRequest + ".";
+		    buttonData.push({ "text":"Large Pizza", "value":altSizeRequest });
 		}
-		var buttonValue = " pieces of a " + intentRequest.currentIntent.slots.PizzaSize +
-		    " " + intentRequest.currentIntent.slots.PizzaType;
-		buttonData.push({ "text":"Eating 2 Pieces", "value":"Eating 2" + buttonValue });
-                buttonData.push({ "text":"Eating 3 Pieces", "value":"Eating 3" + buttonValue });
 	    } 
 	} else {
 	    botResponse = intentRequest.currentIntent.slots.PizzaSize + " is not a valid size of pizza " +
@@ -386,6 +403,7 @@ function calculatePizzaCalories(intentRequest, callback) {
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));
 
+    // close the intent and add buttons if appropriate
     if (buttonData.length > 0) {
     	callback(buttonResponse(sessionAttributes, botResponse, buttonData));
     } else {
