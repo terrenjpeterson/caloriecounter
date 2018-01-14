@@ -367,16 +367,20 @@ function getSubOfDay(intentRequest, callback) {
 // this function is to solicit interest in weight loss tips
 function getWeightLossTips(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+    const dci = intentRequest.sessionAttributes.dci;
 
     var counterResponse = "How much you weigh depends on your calorie consumption, " +
-	"versus what your body uses in a day. If you consume 500 calories less " +
-	"than what you eat each day, you will lose a pound a week.";
+	"versus what your body uses. Consuming 500 calories less " +
+	"than what you eat each day, you will lose a pound a week. ";
+
+    if (dci) {
+	counterResponse = counterResponse + "For you, that would be consuming " + (dci-500) +
+	    " calories each day, or " + Math.round((dci-500)/3) + " per meal.";
+    }
 
     // add a button to offer health advice
     var buttonData = [];
-        buttonData.push({ "text":"Wendy's healthy options", "value":"Wendys healthy options" });
-        buttonData.push({ "text":"Subway healthy options", "value":"Subway healthy options" });
-	buttonData.push({ "text":"What's a good diet food", "value":"What's a good diet food" });
+	buttonData.push({ "text":"Diet food", "value":"What's a good diet food" });
 
     callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
 
@@ -418,15 +422,18 @@ function calculateBMR(intentRequest, callback) {
 
     var dci = Math.round(bmr * 1.2);
 
-    counterResponse = counterResponse + dci + " calories per day. This amount will increase if you are active " +
-	"at work or exercise on a regular basis. ";
+    counterResponse = counterResponse + dci + " calories per day, or " + Math.round(dci/3) +
+	" calories per meal. " +
+	"This amount will increase if you are active at work or exercise on a regular basis. ";
 
     // add a button to offer health advice
     var buttonData = [];
         buttonData.push({ "text":"Weight loss tips", "value":"Weight loss tips" });
 
-    callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
+    // save the daily caloric intake for later in session
+    sessionAttributes.dci = dci;
 
+    callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
 }
 
 // this function is what builds the response to a shock message (i.e. wow)
@@ -666,6 +673,7 @@ function getMealDetails(intentRequest, callback) {
 // this function retrieves the food options for a given restaurant
 function getFoodOptions(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+    var buttonData = [];
 
     var restaurant = intentRequest.currentIntent.slots.Restaurant;
     var foodType   = intentRequest.currentIntent.slots.FoodType;
@@ -705,30 +713,34 @@ function getFoodOptions(intentRequest, callback) {
 
     // go through the food items, and list those matching the food type
     var foodTypeMatch = false;
-    var foodNameExample = "";
+    var foodExamples = [];
 
     for (var j = 0; j < foodItems.length; j++) {
 	// first make sure a food type exists for the item
 	if (foodItems[j].foodType) {
 	    if (foodItems[j].foodType.toLowerCase() === foodType.toLowerCase()) {
 		botResponse = botResponse + foodItems[j].foodName + ", ";
-		foodNameExample = foodItems[j].foodName;
+		foodExamples.push(foodItems[j].foodName);
 		foodTypeMatch = true;
 	    }
 	}
     }
 
+    // if there are matches for the food type provided - give meaningful message
     if (foodTypeMatch) {
 	botResponse = botResponse + " Want calorie details? Say something like " +
-	    "How many calories in a " + foodNameExample + " at " + restaurant + ".";
+	    "How many calories in a " + foodExamples[(foodExamples.length-1)] + " at " + restaurant + ".";
+	for (var k = 0; k < 3; k++) {
+	    var buttonRequest = "How many calories in a " + foodExamples[k] + " at " + restaurant; 
+	    buttonData.push({ "text":foodExamples[k], "value":buttonRequest });
+	}
+	callback(buttonResponse(sessionAttributes, botResponse, buttonData));
     } else {
 	botResponse = "Sorry, I don't have information for types of " + foodType + " at " +
 	    restaurant + ".";
+    	callback(close(sessionAttributes, 'Fulfilled',
+            { contentType: 'PlainText', content: botResponse }))
     }
-
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: botResponse }));
-
 }
 
 // --------------- Intents -----------------------
