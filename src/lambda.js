@@ -1270,27 +1270,37 @@ function buildExtraMessage(intentRequest, breakfastItem, callback) {
     // customize the message based on the restaurant name
      
     var botMessage = "Any side items with that - for example, ";
-           
-    // vary message based on restaurant name
+    var buttonData = [];
+
+    // vary message based on restaurant name and add buttons for common options
     if (intentRequest.currentIntent.slots.Restaurant === "Panera") {
 	botMessage = botMessage + "Chips, Baguette, or a Cup of Soup";
+	buttonData.push({ "text":"Chips", "value":"Chips" });
+        buttonData.push({ "text":"Baguette", "value":"Baguette" });
+        buttonData.push({ "text":"Cup of Soup", "value":"Cup of Soup" });
     } else if (intentRequest.currentIntent.slots.Restaurant === "Subway") {
 	botMessage = botMessage + "Potato Chips or Cheetos";
+        buttonData.push({ "text":"Potato Chips", "value":"Potato Chips" });
+        buttonData.push({ "text":"Cheetos", "value":"Cheetos" });
     } else if (intentRequest.currentIntent.slots.Restaurant === "Chick-fil-A") {
 	botMessage = botMessage + "Waffle Fries";
+        buttonData.push({ "text":"Waffle Fries", "value":"Waffle Fries" });
     } else if (intentRequest.currentIntent.slots.Restaurant === "Sonic") {
 	botMessage = botMessage + "Fries, Chili Cheese Fries, or Tots";
     } else if (breakfastItem) {
 	botMessage = botMessage + "Hash Browns";
+        buttonData.push({ "text":"Hash Browns", "value":"Hash Browns" });
     } else {
 	botMessage = botMessage + "Fries or Side Salad";
+        buttonData.push({ "text":"Fries", "value":"Fries" });
+        buttonData.push({ "text":"Side Salad", "value":"Side Salad" });
     }
     botMessage = botMessage + "?";
                 
     const defaultExtra = buildValidationResult(false, 'Extra', botMessage);
                
-    callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-	intentRequest.currentIntent.slots, defaultExtra.violatedSlot, defaultExtra.message));
+    callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
+	intentRequest.currentIntent.slots, defaultExtra.violatedSlot, defaultExtra.message.content, buttonData));
 }
 
 // --------------- Intents -----------------------
