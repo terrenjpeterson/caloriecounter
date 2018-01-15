@@ -897,15 +897,6 @@ function validateFoodTypes(intentRequest, callback) {
 
     console.log("Validate Food Types");
 
-    // remove space from footlong
-    if (intentRequest.currentIntent.slots.FoodType) {
-	if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "foot long") {
-	    console.log("Fixed minor spelling issue with Footlong Food Type");
-	    intentRequest.currentIntent.slots.FoodType === "Footlong";
-	    slots.FoodType = "Footlong";
-	}
-    }
-
     // scrub common mispellings of food types
     if (intentRequest.currentIntent.slots.FoodType) {
 	if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "entrees") {
@@ -916,6 +907,32 @@ function validateFoodTypes(intentRequest, callback) {
 	    console.log("fixing secret menu routing");
 	    intentRequest.currentIntent.slots.FoodType === "Secret Menu";
 	    slots.FoodType = "Secret Menu";
+        } else if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "burritos") {
+            console.log("fixing menu routing");
+            intentRequest.currentIntent.slots.FoodType === "Burrito";
+            slots.FoodType = "Burrito";
+        } else if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "salads") {
+            console.log("fixing menu routing");
+            intentRequest.currentIntent.slots.FoodType === "Salad";
+            slots.FoodType = "Salad";
+        } else if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "chalupas") {
+            console.log("fixing menu routing");
+            intentRequest.currentIntent.slots.FoodType === "Chalupa";
+            slots.FoodType = "Chalupa";
+        } else if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "sandwiches") {
+            console.log("fixing menu routing");
+            intentRequest.currentIntent.slots.FoodType === "Sandwich";
+            slots.FoodType = "Sandwich";
+        } else if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "footling" ||
+		   intentRequest.currentIntent.slots.FoodType.toLowerCase() === "foot long") {
+            console.log("fixing menu routing");
+            intentRequest.currentIntent.slots.FoodType === "Footlong";
+            slots.FoodType = "Footlong";
+        } else if (intentRequest.currentIntent.slots.FoodType.toLowerCase() === "burgers" ||
+		   intentRequest.currentIntent.slots.FoodType.toLowerCase() === "whopper" ) {
+            console.log("fixing menu routing");
+            intentRequest.currentIntent.slots.FoodType === "Burger";
+            slots.FoodType = "Burger";
 	}
     }
 
@@ -1282,18 +1299,22 @@ function buildExtraMessage(intentRequest, breakfastItem, callback) {
 	botMessage = botMessage + "Potato Chips or Cheetos";
         buttonData.push({ "text":"Potato Chips", "value":"Potato Chips" });
         buttonData.push({ "text":"Cheetos", "value":"Cheetos" });
+	buttonData.push({ "text":"No", "value":"No" });
     } else if (intentRequest.currentIntent.slots.Restaurant === "Chick-fil-A") {
 	botMessage = botMessage + "Waffle Fries";
         buttonData.push({ "text":"Waffle Fries", "value":"Waffle Fries" });
+        buttonData.push({ "text":"No", "value":"No" });
     } else if (intentRequest.currentIntent.slots.Restaurant === "Sonic") {
 	botMessage = botMessage + "Fries, Chili Cheese Fries, or Tots";
     } else if (breakfastItem) {
 	botMessage = botMessage + "Hash Browns";
         buttonData.push({ "text":"Hash Browns", "value":"Hash Browns" });
+        buttonData.push({ "text":"No", "value":"No" });
     } else {
 	botMessage = botMessage + "Fries or Side Salad";
         buttonData.push({ "text":"Fries", "value":"Fries" });
         buttonData.push({ "text":"Side Salad", "value":"Side Salad" });
+        buttonData.push({ "text":"No", "value":"No" });
     }
     botMessage = botMessage + "?";
                 

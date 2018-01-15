@@ -490,7 +490,7 @@ function getHealthyChoice(intentRequest, callback) {
     const buttonValue = "What items are at " + restaurant + " under 500 calories.";
     buttonData.push({"text":"Example Meal", "value":buttonValue});
 
-    counterResponse = counterResponse + "Let me know if I can recommend a meal for you.";
+    counterResponse = counterResponse + " Let me know if I can recommend a meal for you.";
 
     callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
 }
@@ -681,21 +681,6 @@ function getFoodOptions(intentRequest, callback) {
     var botResponse = "Here are the types of " + foodType + " at " + restaurant + ". ";
 
     console.log("Attempting to retrieve types of " + foodType + " at " + restaurant + ".");
-
-    // clean up different spellings of food types - including plural items
-    if (foodType.toLowerCase() === "burritos") {
-	foodType = "Burrito";
-    } else if (foodType.toLowerCase() === "salads") {
-	foodType = "Salad";
-	console.log("corrected Salads to Salad for food lookup");
-    } else if (foodType.toLowerCase() === "chalupas") {
-	foodType = "Chalupa";
-    } else if (foodType.toLowerCase() === "sandwiches") {
-	foodType = "Sandwich";
-    } else if (foodType.toLowerCase() === "burgers" ||
-	       foodType.toLowerCase() === "whopper") {
-	foodType = "Burger";
-    }
 
     var foodItems = [];
     // find the restaurant food items for the restaurant provided
