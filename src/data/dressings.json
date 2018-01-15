@@ -30,6 +30,25 @@
         "restaurantNames":["McDonalds"]
     },
     {
+        "dressingName":"Southwest",
+	"fullName":"Creamy Southwest",
+        "calories":120,
+        "carbs":11,
+        "restaurantNames":["McDonalds"]
+    },
+    {
+        "dressingName":"Ranch",
+        "calories":100,
+        "carbs":2,
+        "restaurantNames":["Wendys"]
+    },
+    {
+        "dressingName":"Caesar",
+        "calories":80,
+        "carbs":2,
+        "restaurantNames":["Wendys"]
+    },
+    {
         "dressingName":"Caesar",
         "calories":170,
         "carbs":2,
@@ -158,5 +177,11 @@
         "calories":60,
         "carbs":9,
         "restaurantNames":["Chick-Fil-A"]
+    },
+    {
+        "dressingName":"Vinaigrette",
+        "calories":220,
+        "carbs":18,
+        "restaurantNames":["Chipotle"]
     }
 ]

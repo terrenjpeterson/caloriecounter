@@ -6,13 +6,27 @@
               "adjustments": [
                 { "change":"No Cheese", "calorieAdj":-50, "highlight":true },
 		{ "change":"No Sauce", "calorieAdj":-90, "highlight":true },
-		{ "change":"No Cheese or Sauce", "calorieAdj":-140, "highlight":true }
+		{ "change":"No Cheese or Sauce", "calorieAdj":-140, "highlight":true },
+		{ "change":"No Onion", "calorieAdj":-10, "highlight":false },
+                { "change":"No Onions", "calorieAdj":-10, "highlight":false }
               ]
             },
             { "foodName":"Quarter Pounder",
               "adjustments": [
                 { "change":"No Cheese", "calorieAdj":-100, "highlight":true }, 
                 { "change":"Half Bun", "calorieAdj":-85, "highlight":true }
+              ]
+            },
+	    { "foodName":"Filet-o-Fish Sandwich",
+              "adjustments": [
+                { "change":"No Cheese", "calorieAdj":-50, "highlight":true },
+                { "change":"No Sauce", "calorieAdj":-90, "highlight":true },
+		{ "change":"No Cheese or Sauce", "calorieAdj":-140, "highlight":true }
+              ]
+            },
+            { "foodName":"McChicken Sandwich",
+              "adjustments": [
+                { "change":"No Mayo", "calorieAdj":-40, "highlight":true }
               ]
             }
 	]
@@ -89,6 +103,20 @@
                 { "change":"Cheese", "calorieAdj":50, "highlight":true },
                 { "change":"Ranch", "calorieAdj":110, "highlight":true }
               ]
+            },
+            { "foodName":"6 inch Tuna",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+            { "foodName":"6 inch Italian BMT",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
+                { "change":"Cheese", "calorieAdj":50, "highlight":true },
+                { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
             }
         ]
     },
@@ -118,7 +146,22 @@
                 { "change":"No Mayo", "calorieAdj":-70, "highlight":true },
                 { "change":"Half Bun", "calorieAdj":-60, "highlight":true }            
               ]
-            } 
+            },
+            { "foodName":"Grilled Chicken Sandwich",
+              "adjustments": [
+                { "change":"No Mayo", "calorieAdj":-100, "highlight":true }
+              ]
+            },
+            { "foodName":"Crispy Chicken Sandwich",
+              "adjustments": [
+                { "change":"No Mayo", "calorieAdj":-210, "highlight":true } 
+              ]
+            },
+            { "foodName":"Original Chicken Sandwich",
+              "adjustments": [
+                { "change":"No Mayo", "calorieAdj":-210, "highlight":true } 
+              ]
+            }
         ]
     },
     {
