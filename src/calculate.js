@@ -303,8 +303,10 @@ function calculateCalories(intentRequest, callback) {
 	sessionAttributes.dressingCalories > 0 ||
 	sessionAttributes.foodAdjCalories > 0 ) {
 	buttonData.push({ "text":"More Details", "value":"more details" });
+	buttonData.push({ "text":"Different Meal", "value":"Eating at " + restaurantName });
     } else {
 	buttonData.push({ "text":"Analyze my Meal", "value":"analyze my meal" });
+	buttonData.push({ "text":"Different Meal", "value":"Eating at " + restaurantName });
 	counterResponse = counterResponse + "To analyze this meal vs. your daily recommended calorie intake, " +
 	    "please select 'analyze my meal'. ";
     }
