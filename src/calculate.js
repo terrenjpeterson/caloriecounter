@@ -115,7 +115,8 @@ function getDrinkSize(drinkName) {
 // this function is what builds the main response around checking for calories
 
 function calculateCalories(intentRequest, callback) {
-    const sessionAttributes = intentRequest.sessionAttributes || {};
+    // need to clear session to make sure nothing carries over from prior calculation
+    const sessionAttributes = {};
     var buttonData = [];
 
     const restaurantName = intentRequest.currentIntent.slots.Restaurant;
