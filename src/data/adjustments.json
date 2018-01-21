@@ -69,7 +69,7 @@
                 { "change":"Ranch", "calorieAdj":110, "highlight":true }
               ]
             },
-            { "foodName":"6 inch Chicken Teriyaki",
+            { "foodName":"6 inch Sweet Onion Chicken Teriyaki",
               "adjustments": [
                 { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
                 { "change":"Cheese", "calorieAdj":50, "highlight":true },
@@ -116,6 +116,90 @@
                 { "change":"Mayonnaise", "calorieAdj":110, "highlight":true },
                 { "change":"Cheese", "calorieAdj":50, "highlight":true },
                 { "change":"Ranch", "calorieAdj":110, "highlight":true }
+              ]
+            },
+	    { "foodName":"Footlong Black Forest Ham",
+	      "adjustments": [
+		{ "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+		{ "change":"Cheese", "calorieAdj":100, "highlight":true },
+		{ "change":"Ranch", "calorieAdj":220, "highlight":true }
+	      ]
+	    },
+            { "foodName":"Footlong Oven Roasted Chicken",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Oven Roast Beef",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Rotisserie Chicken",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Subway Club",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Sweet Onion Chicken Teriyaki",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Turkey Breast",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Veggie Delite",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Cold Cut Combo",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Meatball Marinara",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Tuna",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
+              ]
+            },
+            { "foodName":"Footlong Italian BMT",
+              "adjustments": [
+                { "change":"Mayonnaise", "calorieAdj":220, "highlight":true },
+                { "change":"Cheese", "calorieAdj":100, "highlight":true },
+                { "change":"Ranch", "calorieAdj":220, "highlight":true }
               ]
             }
         ]
