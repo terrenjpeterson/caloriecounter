@@ -33,12 +33,45 @@
         ]
     },
     {
+        "restaurant":"Taco Bell",
+        "mealOptions":[
+            { "calorieLimit":500,
+              "options": [
+                { "category":"Burrito", "order":"Fresco Chicken Burrito Supreme, a side of Black Beans, and a diet Pepsi", "calories":420 },
+		{ "category":"Taco", "order":"Two Shredded Chicken Fresco Soft Tacos, Chips and Salsa, and a diet Mountain Dew", "calories":480 }
+              ]
+            }
+        ]
+    },
+    {
         "restaurant":"Chick-fil-A",
         "mealOptions":[
             { "calorieLimit":500,
               "options": [
                 { "category":"Chicken", "order":"Grilled Chicken Sandwich, a Small Chicken Noodle Soup, and a Diet Lemonade", "calories":460 },
                 { "category":"Breakfast", "order":"Chicken Biscuit, Fruit Cup, and a Coffee", "calories":495 }
+              ]
+            }
+        ]
+    },
+    {
+        "restaurant":"Burger King",
+        "mealOptions":[
+            { "calorieLimit":500,
+              "options": [
+                { "category":"Chicken", "order":"Grilled Chicken Sandwich no Mayo, a Side Salad with no dressing, and a Diet Coke", "calories":430 },
+		{ "category":"Burger", "order":"Whopper Junior no Mayo, a Value Size Onion Rings, and a Diet Sprite", "calories":450 },
+		{ "category":"Breakfast", "order":"Egg and Cheese Croissanwich, small hash browns, and coffee", "calories":550 }
+              ]
+            }
+        ]
+    },
+    {
+        "restaurant":"Panda Express",
+        "mealOptions":[
+            { "calorieLimit":500,
+              "options": [
+                { "category":"Chicken", "order":"Mushroom Chicken and Mixed Vegetables with a Potsticker, and drinking tea.", "calories":460 }
               ]
             }
         ]

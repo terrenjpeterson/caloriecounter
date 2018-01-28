@@ -61,6 +61,7 @@
     {"drinkName":"Dr Pepper", "calories":150, "size":12},
     {"drinkName":"Small Dr Pepper", "calories":150, "size":12 },
     {"drinkName":"Medium Dr Pepper", "calories":200, "size":16 },
+    {"drinkName":"Medium Dr. Pepper", "calories":200, "size":16 },
     {"drinkName":"Large Dr Pepper", "calories":290, "size":24, "restaurant":"McDonalds"},
     {"drinkName":"Diet Dr Pepper", "calories":0, "size":12},
     {"drinkName":"Large Diet Dr Pepper", "calories":0, "size":32},
