@@ -201,6 +201,16 @@ function calculateCalories(intentRequest, callback) {
 	console.log(JSON.stringify(mexFoodEval));
 	var mexFoodCalories = mexFoodEval.foodCalories;
 	    mexFoodName = mexFoodEval.correctFoodName;
+	// check to see if there are multiple being requested - i.e. 3 tacos
+        if (intentRequest.currentIntent.slots.FoodQty) {
+	    if (intentRequest.currentIntent.slots.FoodQty === '2') {
+		mexFoodCalories = 2 * mexFoodEval.foodCalories;
+		mexFoodName = "Two " + mexFoodEval.correctFoodName;
+	    } else if (intentRequest.currentIntent.slotsFoodQty === '3') {
+		mexFoodCalories = 3 * mexFoodEval.foodCalories;
+		mexFoodName = "Three " + mexFoodEval.correctFoodName;
+	    }
+	}
 	// this condition is where the combination food name is alternate form (i.e. protein first)
 	if (mexFoodCalories === 0) {
 	    mexFoodCalories = getFoodCalories(altMexFoodName, restaurantName).foodCalories;
@@ -252,7 +262,11 @@ function calculateCalories(intentRequest, callback) {
 	    }
 	// check if a dressing has been added - likely the extra was a type of salad
 	} else if (dressing) {
-	    if (dressing === "no" || dressing === "none") {
+	    // validate that some version of not wanting dressing is checked and add zero
+	    if (dressing.toLowerCase() === "no" || 
+		dressing.toLowerCase() === "none" || 
+		dressing.toLowerCase() === "no dressing") {
+		counterResponse = counterResponse + " without any dressing ";
 		console.log("No dressing on the salad. Don't add calories.");
 	    } else {
 		// call the function that calculates the dressing calories and add to response
@@ -277,7 +291,7 @@ function calculateCalories(intentRequest, callback) {
     if (drinkName.toLowerCase() === "nothing" ||
         drinkName.toLowerCase() === "none" ||
         drinkName.toLowerCase() === "no" ) {
-        counterResponse = counterResponse + ". ";
+        counterResponse = counterResponse + ", and nothing to drink. ";
     } else {
 	// get the number of calories in the drink and add to the total
 	var drinkCalories = getDrinkCalories(drinkName).drinkCalories;
@@ -315,6 +329,8 @@ function calculateCalories(intentRequest, callback) {
     // for Panera, the option for counting carbs is available as an option as well
     if (sessionAttributes.restaurantName === "Panera") {
         buttonData.push({ "text":"Get Carb Detail", "value":"Get carbs" });
+    } else {
+	buttonData.push({ "text":"Different Restaurant", "value":"New restaurant" });
     }
 
     console.log("saving session data: " + JSON.stringify(sessionAttributes));

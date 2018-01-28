@@ -368,14 +368,15 @@ function getSubOfDay(intentRequest, callback) {
 function getWeightLossTips(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
     const dci = intentRequest.sessionAttributes.dci;
+    const goal = 250;
 
     var counterResponse = "How much you weigh depends on your calorie consumption, " +
-	"versus what your body uses. Consuming 500 calories less " +
-	"than what you eat each day, you will lose a pound a week. ";
+	"versus what your body uses. For example, consuming just " + goal + " calories less " +
+	"than you use each day loses a pound of fat every other week. ";
 
     if (dci) {
-	counterResponse = counterResponse + "For you, that would be consuming " + (dci-500) +
-	    " calories each day, or " + Math.round((dci-500)/3) + " per meal.";
+	counterResponse = counterResponse + "For you, that would be consuming " + (dci-goal) +
+	    " calories each day, or " + Math.round((dci-goal)/3) + " per meal.";
     }
 
     // add a button to offer health advice
@@ -479,7 +480,7 @@ function getHealthyChoice(intentRequest, callback) {
     } else if (restaurant === "Sonic") {
         counterResponse = counterResponse + "veggie burgers.";
     } else if (restaurant === "Taco Bell") {
-	counterResponse = counterResponse + "many chicken and bean options. Just watch how many you eat!";
+	counterResponse = counterResponse + "fresco style preparation of many items with no cheese or sour cream. Just watch how many you eat!";
     } else if (restaurant === "Panda Express") {
 	counterResponse = counterResponse + "the option of putting the entree onto vegetables rather than rice.";
     } else if (restaurant === "Chipotle") {
@@ -516,10 +517,12 @@ function getLowCalorieOption(intentRequest, callback) {
     	if (restaurantName.toLowerCase() === "mcdonalds" ||
             restaurantName.toLowerCase() === "subway" ||
             restaurantName.toLowerCase() === "chipotle" ||
-            restaurantName.toLowerCase() === "chick-fil-a" ) {
+            restaurantName.toLowerCase() === "chick-fil-a" ||
+	    restaurantName.toLowerCase() === "taco bell" ||
+	    restaurantName.toLowerCase() === "burger king") {
 	    validRestaurant = true;
 	} else {
-	    console.log("failed validation for " + restaurantName);
+	    console.log("no low calorie options for " + restaurantName);
         }
     }
 
@@ -539,12 +542,15 @@ function getLowCalorieOption(intentRequest, callback) {
 	    }
 	}
 	counterResponse = counterResponse + mealOptions[i].order + " for " + mealOptions[i].calories + " calories.";
+	// save session data to continue dialog
+	sessionAttributes.restaurantName = restaurantName;
+	sessionAttributes.foodType = foodType;
 
         callback(close(sessionAttributes, 'Fulfilled',
             { contentType: 'PlainText', content: counterResponse }));
     } else {
 	// if there isn't a food type, prompt with buttons for the restaurant
-	if (validRestaurant && !foodType) {
+	if (validRestaurant && !foodType && !intentRequest.currentIntent.slots.Drink) {
 	    const prompt = "Which type of meal?";
 	    console.log("building prompt for food type options");
 	    for (var i = 0; i < mealOptions.length; i++) {
@@ -568,6 +574,11 @@ function getLowCalorieOption(intentRequest, callback) {
 	    buttonData.push({"text":"Chick-fil-A", "value":"Chick-fil-A"});
             callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
                 intentRequest.currentIntent.slots, restaurantPrompt.violatedSlot, prompt, buttonData));
+	} else if (intentRequest.currentIntent.slots.Drink) {
+	    // user is complaining about not liking the drink
+	    const drinkMessage = "That's okay, you can always have water. " +
+		"The key point is to not drink too many calories with your meal.";
+	    callback(close(sessionAttributes, 'Fulfilled', { contentType: 'PlainText', content: drinkMessage }));
         } else {
 	    // let Lex framework handle validation prompts
 	    console.log("continue validation");
@@ -579,10 +590,24 @@ function getLowCalorieOption(intentRequest, callback) {
 // this function determines what the food type options are for a given restaurant
 
 function getHealthyOptions(restaurantName, calorieLimit) {
-    console.log("Healthy Options Lookup");
+    console.log("Healthy Options Lookup for " + restaurantName + ".");
     var mealOptions = [];
 
-    mealOptions = healthyOptions[0].mealOptions[0].options;
+    if (restaurantName) {
+    	// go through array and find the options for the given restaurant
+    	for (var i = 0; i < healthyOptions.length; i++) {
+	    if (healthyOptions[i].restaurant.toLowerCase() === restaurantName.toLowerCase()) {
+	    	mealOptions = healthyOptions[i].mealOptions[0].options;
+	    	console.log("found match : " + JSON.stringify(mealOptions));
+	    }
+	}
+    }
+
+    // if there was no match for the restaurant, default to the first one
+    if (!mealOptions) {
+        mealOptions = healthyOptions[0].mealOptions[0].options;
+	console.log("Defaulting to meal options at " + healthyOptions[0].restaurant + "."); 
+    }
 
     return { 
 	mealOptions 
@@ -637,6 +662,8 @@ function getMealDetails(intentRequest, callback) {
 		sessionAttributes.totalCalories + ". ";
 	}
     	buttonData.push({ "text":"Analyze my Meal", "value":"analyze my meal" });
+        buttonData.push({ "text":"Different Meal", "value":"Eating at " + sessionAttributes.restaurantName });
+        buttonData.push({ "text":"New Restaurant", "value":"New restaurant" });
     } else if (sessionAttributes.chineseRestaurant) {
 	detailResponse = sessionAttributes.entreeName + " is " + sessionAttributes.entreeCalories + 
 	    " calories, and " + sessionAttributes.entreeSodium + " mg of sodium. " +
