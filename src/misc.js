@@ -467,6 +467,8 @@ function getHealthyChoice(intentRequest, callback) {
         counterResponse = counterResponse + "healthy soups, salads, and sandwiches.";
     } else if (restaurant === "Burger King") {
         counterResponse = counterResponse + "a nice grilled chicken sandwich.";
+    } else if (restaurant === "Cookout") {
+	counterResponse = counterResponse + "char-grilled chicken breast sandwiches. Just stay away from their fancy milkshakes.";
     } else if (restaurant === "Chick-fil-A") {
         counterResponse = counterResponse + "grilled chicken sandwiches and salads.";
     } else if (restaurant === "Wendys") {
@@ -519,6 +521,7 @@ function getLowCalorieOption(intentRequest, callback) {
             restaurantName.toLowerCase() === "chipotle" ||
             restaurantName.toLowerCase() === "chick-fil-a" ||
 	    restaurantName.toLowerCase() === "taco bell" ||
+	    restaurantName.toLowerCase() === "panda express" ||
 	    restaurantName.toLowerCase() === "burger king") {
 	    validRestaurant = true;
 	} else {

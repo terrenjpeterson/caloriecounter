@@ -9,6 +9,7 @@
     { "restaurantName":"McDonalds", "validRestaurant":true, "servesPizza":false },
     { "restaurantName":"Wendys", "validRestaurant":true, "servesPizza":false },
     { "restaurantName":"Sonic", "validRestaurant":true, "servesPizza":false },
+    { "restaurantName":"Cookout", "validRestaurant":true, "servesPizza":false },
     { "restaurantName":"Taco Bell", "validRestaurant":true, "servesPizza":false },
     { "restaurantName":"Arbys", "validRestaurant":true, "servesPizza":false },
     { "restaurantName":"Hardees", "validRestaurant":true, "servesPizza":false },
@@ -16,5 +17,6 @@
     { "restaurantName":"Papa Johns", "validRestaurant":true, "servesPizza":true },
     { "restaurantName":"Little Caesars", "validRestaurant":true, "servesPizza":true },
     { "restaurantName":"Pizza Hut", "validRestaurant":true, "servesPizza":true },
-    { "restaurantName":"Panda Express", "validRestaurant":true, "servesChinese":true }
+    { "restaurantName":"Panda Express", "validRestaurant":true, "servesChinese":true },
+    { "restaurantName":"KFC", "validRestaurant":true, "servesPizza":false }
 ]

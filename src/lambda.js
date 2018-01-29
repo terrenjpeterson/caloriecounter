@@ -970,14 +970,19 @@ function validateFoodTypes(intentRequest, callback) {
 	    } else if (foodTypes.length > 0 && !intentRequest.currentIntent.slots.FoodType) {
 		var botMessage = "Okay, at " + intentRequest.currentIntent.slots.Restaurant + ". " +
 		   "Pick one of the following food groups: ";
+		var buttonData = [];
 		// this array has all of the food types at the given restaurant
 		for (var i = 0; i < foodTypes.length; i++) {
 		    botMessage = botMessage + foodTypes[i] + ", ";
+		    // for the first three entries, add a button for the user to choose
+		    if (i < 3) {
+			buttonData.push({ "text":foodTypes[i], "value":foodTypes[i] });
+		    }
 		}
 		// send back the message
 		const optionValidationResult = buildValidationResult(false, 'FoodType', botMessage);
-            	callback(elicitSlot(sessionAttributes, intentRequest.currentIntent.name,
-                    slots, optionValidationResult.violatedSlot, optionValidationResult.message));
+                callback(buttonSlot(sessionAttributes, intentRequest.currentIntent.name,
+                    slots, optionValidationResult.violatedSlot, botMessage, buttonData));
 	    } else if (foodTypes.length > 0) {
 		// food type entered by user - validate
 		var foodTypeMatch = false;
@@ -1306,6 +1311,11 @@ function buildExtraMessage(intentRequest, breakfastItem, callback) {
         buttonData.push({ "text":"No", "value":"No" });
     } else if (intentRequest.currentIntent.slots.Restaurant === "Sonic") {
 	botMessage = botMessage + "Fries, Chili Cheese Fries, or Tots";
+    } else if (intentRequest.currentIntent.slots.Restaurant === "Cookout") {
+	botMessage = botMessage + "one of their sides";
+	buttonData.push({ "text":"Onion Rings", "value":"Onion Rings Side Order" });
+        buttonData.push({ "text":"Hushpuppies", "value":"Hushpuppies Side Order" });
+        buttonData.push({ "text":"Regular Fries", "value":"Regular Fries" });
     } else if (breakfastItem) {
 	botMessage = botMessage + "Hash Browns";
         buttonData.push({ "text":"Hash Browns", "value":"Hash Browns" });

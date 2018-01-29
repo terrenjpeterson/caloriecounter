@@ -6,7 +6,7 @@
               "adjustments": [
                 { "change":"No Cheese", "calorieAdj":-50, "highlight":true },
 		{ "change":"No Sauce", "calorieAdj":-90, "highlight":true },
-		{ "change":"No Cheese or Sauce", "calorieAdj":-140, "highlight":true },
+		{ "change":"No Cheese or Sauce", "calorieAdj":-140, "highlight":false },
 		{ "change":"No Onion", "calorieAdj":-10, "highlight":false },
                 { "change":"No Onions", "calorieAdj":-10, "highlight":false }
               ]
@@ -27,6 +27,56 @@
             { "foodName":"McChicken Sandwich",
               "adjustments": [
                 { "change":"No Mayo", "calorieAdj":-40, "highlight":true }
+              ]
+            }
+	]
+    },
+    {
+	"restaurant":"Cookout",
+	"menuAdjustments":[
+	    { "foodName":"Small Hamburger",
+	      "adjustments": [
+		{ "change":"Everything", "calorieAdj":91, "highlight":true },
+		{ "change":"Cookout Style", "calorieAdj":123, "highlight":true },
+		{ "change":"Out West Style", "calorieAdj":202, "highlight":false },
+		{ "change":"Steak Style", "calorieAdj":91, "highlight":false },
+		{ "change":"Cheddar Style", "calorieAdj":233, "highlight":true }
+	      ]
+	    },
+            { "foodName":"Regular Hamburger",
+              "adjustments": [
+                { "change":"Everything", "calorieAdj":91, "highlight":true },
+                { "change":"Cookout Style", "calorieAdj":123, "highlight":true },
+                { "change":"Out West Style", "calorieAdj":202, "highlight":false },
+                { "change":"Steak Style", "calorieAdj":91, "highlight":false },
+                { "change":"Cheddar Style", "calorieAdj":233, "highlight":true }
+              ]
+            },
+            { "foodName":"Hamburger",
+              "adjustments": [
+                { "change":"Everything", "calorieAdj":91, "highlight":true },
+                { "change":"Cookout Style", "calorieAdj":123, "highlight":true },
+                { "change":"Out West Style", "calorieAdj":202, "highlight":false },
+                { "change":"Steak Style", "calorieAdj":91, "highlight":false },
+                { "change":"Cheddar Style", "calorieAdj":233, "highlight":true }
+              ]
+            },
+            { "foodName":"Huge Hamburger",
+              "adjustments": [
+                { "change":"Everything", "calorieAdj":91, "highlight":true },
+                { "change":"Cookout Style", "calorieAdj":123, "highlight":true },
+                { "change":"Out West Style", "calorieAdj":202, "highlight":false },
+                { "change":"Steak Style", "calorieAdj":91, "highlight":false },
+                { "change":"Cheddar Style", "calorieAdj":233, "highlight":true }
+              ]
+            },
+            { "foodName":"Big Double",
+              "adjustments": [
+                { "change":"Everything", "calorieAdj":91, "highlight":true },
+                { "change":"Cookout Style", "calorieAdj":123, "highlight":true },
+                { "change":"Out West Style", "calorieAdj":202, "highlight":false },
+                { "change":"Steak Style", "calorieAdj":91, "highlight":false },
+                { "change":"Cheddar Style", "calorieAdj":233, "highlight":true }
               ]
             }
 	]
