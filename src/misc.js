@@ -745,7 +745,12 @@ function getFoodOptions(intentRequest, callback) {
     if (foodTypeMatch) {
 	botResponse = botResponse + " Want calorie details? Say something like " +
 	    "How many calories in a " + foodExamples[(foodExamples.length-1)] + " at " + restaurant + ".";
-	for (var k = 0; k < 3; k++) {
+	// find out how many buttons exist for the food example
+	var buttonLength = 3;
+	if (foodExamples.length < 3) {
+	    buttonLength = foodExamples.length;
+	}
+	for (var k = 0; k < buttonLength; k++) {
 	    var buttonRequest = "How many calories in a " + foodExamples[k] + " at " + restaurant; 
 	    buttonData.push({ "text":foodExamples[k], "value":buttonRequest });
 	}
