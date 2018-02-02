@@ -138,5 +138,17 @@
     {"drinkName":"Small Coffee", "calories":0},
     {"drinkName":"Large Coffee", "calories":0},
     {"drinkName":"Decaf Coffee", "calories":0},
-    {"drinkName":"Gatorade", "calories":150, "size":20}
+    {"drinkName":"Gatorade", "calories":150, "size":20},
+    {"drinkName":"Frappe", "calories":420, "size":12, "restaurant":"McDonalds", "correctedTerm":"Small Mocha Frappe" },
+    {"drinkName":"Small Frappe", "calories":420, "size":12, "restaurant":"McDonalds", "correctedTerm":"Small Mocha Frappe" },
+    {"drinkName":"Medium Frappe", "calories":550, "size":16, "restaurant":"McDonalds", "correctedTerm":"Medium Mocha Frappe" },
+    {"drinkName":"Large Frappe", "calories":680, "size":22, "restaurant":"Mcdonalds", "correctedTerm":"Large Mocha Frappe" },
+    {"drinkName":"Small Mocha Frappe", "calories":420, "size":12, "restaurant":"McDonalds" },
+    {"drinkName":"Medium Mocha Frappe", "calories":550, "size":16, "restaurant":"McDonalds" },
+    {"drinkName":"Large Mocha Frappe", "calories":680, "size":22, "restaurant":"Mcdonalds" },
+    {"drinkName":"Small Caramel Frappe", "calories":420, "size":12, "restaurant":"McDonalds" },
+    {"drinkName":"Medium Caramel Frappe", "calories":550, "size":16, "restaurant":"McDonalds" },
+    {"drinkName":"Large Caramel Frappe", "calories":680, "size":22, "restaurant":"Mcdonalds" },
+    {"drinkName":"Mocha Frappe", "calories":420, "size":12, "restaurant":"McDonalds", "correctedTerm":"Small Mocha Frappe" },
+    {"drinkName":"Caramel Frappe", "calories":420, "size":12, "restaurant":"McDonalds", "correctedTerm":"Small Caramel Frappe" }
 ]
