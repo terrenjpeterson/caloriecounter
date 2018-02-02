@@ -1311,6 +1311,8 @@ function buildExtraMessage(intentRequest, breakfastItem, callback) {
         buttonData.push({ "text":"No", "value":"No" });
     } else if (intentRequest.currentIntent.slots.Restaurant === "Sonic") {
 	botMessage = botMessage + "Fries, Chili Cheese Fries, or Tots";
+	buttonData.push({ "text":"Fries", "value":"fries" });
+	buttonData.push({ "text":"Tots", "value":"tots" });
     } else if (intentRequest.currentIntent.slots.Restaurant === "Cookout") {
 	botMessage = botMessage + "one of their sides";
 	buttonData.push({ "text":"Onion Rings", "value":"Onion Rings Side Order" });
