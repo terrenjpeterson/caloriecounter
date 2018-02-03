@@ -364,7 +364,9 @@ function calculatePizzaCalories(intentRequest, callback) {
 		    " pizza";
 	    	botResponse = "At " + intentRequest.currentIntent.slots.PizzaRestaurant + ", " + foodName +
 		    " is " + totalCalories + " calories.";
+		// add buttons to provide options on next steps
 		buttonData.push({ "text":"Analyze my Meal", "value":"Analyze my Meal" });
+		buttonData.push({ "text":"Different Restaurant", "value":"New restaurant" });
 		// save session data for future questions
 		sessionAttributes.totalCalories = totalCalories;
 		sessionAttributes.foodCalories = totalCalories;

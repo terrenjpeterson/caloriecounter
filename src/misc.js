@@ -271,11 +271,14 @@ function replyComingBack(intentRequest, callback) {
 // this function reacts to someone indicating that they want a new restaurant
 function resetRestaurant(intentRequest, callback) {
     const sessionAttributes = {};
+    var buttonData = [];
 
     var counterResponse = "Got it. Which restaurant are you at now?";
 
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: counterResponse }));
+    // provide a button to easily list restaurants
+    buttonData.push({ "text":"List Restaurants", "value":"List restaurants" });
+
+    callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
 }
 
 // this function reacts to a pause in the conversation
