@@ -255,6 +255,21 @@
         ]
     },
     {
+	"restaurant":"Arbys",
+	"menuAdjustments":[
+	    { "foodName":"Fish Sandwich", 
+	      "adjustments": [
+		{ "change":"No Tartar Sauce", "calorieAdj":-120, "highlight":true }
+	      ]
+	    },
+            { "foodName":"Crispy Fish Sandwich", 
+              "adjustments": [
+                { "change":"No Tartar Sauce", "calorieAdj":-120, "highlight":true } 
+              ]
+            }
+	]
+    },
+    {
         "restaurant":"Burger King",
         "menuAdjustments":[
             { "foodName":"Whopper",

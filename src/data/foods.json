@@ -981,7 +981,13 @@
 	    {"foodName":"Roast Beef and Cheese Slider","calories":240},
             {"foodName":"Roast Beef 'n Cheese Slider","calories":240},
 	    {"foodName":"Turkey and Cheese Slider","calories":200},
-            {"foodName":"Turkey 'n Cheese Slider","calories":200}
+            {"foodName":"Turkey 'n Cheese Slider","calories":200},
+	    {"foodName":"Crispy Fish Sandwich", "calories":570, "foodType":"Fish" },
+	    {"foodName":"Fish Sandwich", "calories":570, "correctedTerm":"Crispy Fish Sandwich" },
+	    {"foodName":"Crispy Fish Flatbread", "calories":590, "foodType":"Fish" },
+	    {"foodName":"Kings Hawaiian Fish Deluxe", "calories":690, "foodType":"Fish" },
+	    {"foodName":"Nashville Hot Fish", "calories":540, "foodType":"Fish" },
+	    {"foodName":"Kings Hawaiian Nashville Hot Fish Deluxe", "calories":670, "foodType":"Fish" }
 	]
     },
     {
