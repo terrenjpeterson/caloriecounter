@@ -12,6 +12,25 @@ var chickenChoices = require("data/chicken.json");
 var subOfDay = require("data/specials.json");
 var healthyOptions = require("data/healthy.json");
 
+const dietExamples = [
+"Skipping a single 20oz Coke or Pepsi at any restaurant eliminates 250 calories.",
+"Drinking a 12oz Mountain Dew versus a large 32oz Mountain Dew reduces your calorie intake by 240 calories.",
+"Drinking a water versus a 20oz Lemonade eliminates 250 calories.",
+"Skipping the mayonnaise on a Footlong Subway sandwich eliminates 220 calories.",
+"Not adding guacamole to a Burrito at Chipotle eliminates 230 calories.",
+"Going without rice or cheese in a Burrito Bowl at Chipotle eliminates 320 calories.",
+"Having a Grilled Chicken Sandwich versus a Crispy Chicken Sandwich at Burger King reduces calories by 200.",
+"Eating a Small Chicken Noodle Soup rather than a Large Waffle Fries at Chick-fil-A saves you 320 calories.",
+"Eating a Egg White Delight McMuffin for breakfast rather than a Sausage and Egg McMuffin reduces your calorie count by 210.",
+"Having a Single rather than a Double at Wendy's reduces your calories by 240.",
+"Eating a Fresco Chicken Burrito instead of a Double Chalupa at Taco Bell saves 240 calories.",
+"Eating a Small French Fries at Hardees rather than a Large French Fries saves 230 calories.",
+"Eating a Regular Fries rather than a Large Fries at Five Guys saves 361 calories.",
+"Having your Orange Chicken on Mixed Vegetables rather than White Rice saves 300 calories.",
+"Eating a side order of Hushpuppies at Cookout rather than a full order saves 300 calories."
+];
+
+
 // --------------- Helpers that build all of the responses -----------------------
 
 function buttonResponse(sessionAttributes, message, buttonData) {
@@ -384,7 +403,8 @@ function getWeightLossTips(intentRequest, callback) {
 
     // add a button to offer health advice
     var buttonData = [];
-	buttonData.push({ "text":"Diet food", "value":"What's a good diet food" });
+	buttonData.push({ "text":"Diet Food Idea", "value":"What's a good diet food" });
+	buttonData.push({ "text":"How to Adjust", "value":"another calorie reduction example" });
 
     callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
 
@@ -499,6 +519,22 @@ function getHealthyChoice(intentRequest, callback) {
     counterResponse = counterResponse + " Let me know if I can recommend a meal for you.";
 
     callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
+}
+
+// this function returns an idea around reducing calories a slight amount (200-300 calories)
+
+function getCalorieReductionIdea(intentRequest, callback) {
+    const sessionAttributes = intentRequest.sessionAttributes || {};
+    var buttonData = [];
+    const exampleNum = Math.floor(Math.random() * dietExamples.length);
+
+    var counterResponse = "Here is an example of a small change to make once a day. " + dietExamples[exampleNum];
+
+    // add buttons to provide options
+    buttonData.push({ "text":"Another Example", "value":"another calorie reduction example"});
+    buttonData.push({ "text":"Diet Food Idea", "value":"What's a good diet food" });
+
+    callback(buttonResponse(sessionAttributes, counterResponse, buttonData))
 }
 
 // this function returns a meal recommendation based on certain calorie thresholds for a given restaurant
@@ -849,6 +885,9 @@ function dispatch(intentRequest, callback) {
     } else if (intentName === 'SubOfTheDay') {
 	console.log("request sub of the day");
 	getSubOfDay(intentRequest, callback);
+    } else if (intentName === 'DietCalorieExample') {
+	console.log("request example of 250 calories");
+	getCalorieReductionIdea(intentRequest, callback);
     }
     
     throw new Error(`Intent with name ${intentName} not supported`);
