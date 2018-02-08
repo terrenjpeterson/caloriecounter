@@ -391,6 +391,8 @@ function calculatePizzaCalories(intentRequest, callback) {
 		    botResponse = botResponse + " For a different size, say something like " +
 			altSizeRequest + ".";
 		    buttonData.push({ "text":"Large Pizza", "value":altSizeRequest });
+		} else {
+		    buttonData.push({ "text":"Different Restaurant", "value":"Different restaurant" });
 		}
 	    } 
 	} else {
