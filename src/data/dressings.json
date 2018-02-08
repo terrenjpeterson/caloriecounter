@@ -24,6 +24,13 @@
         "restaurantNames":["McDonalds"]
     },
     {
+        "dressingName":"Vinaigrette",
+        "fullName":"Balsamic Vinaigrette",
+        "calories":45,
+        "carbs":5,
+        "restaurantNames":["McDonalds"]
+    },
+    {
         "dressingName":"Creamy Southwest",
         "calories":120,
         "carbs":11,
