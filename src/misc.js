@@ -157,6 +157,7 @@ function getIntroduction(intentRequest, callback) {
 // this function is what retrieves the restaurants that data is available for
 function getRestaurants(intentRequest, callback) {
     const sessionAttributes = intentRequest.sessionAttributes || {};
+    var buttonData = [];
 
     var counterResponse = "Okay, here are the fast food restaurants that I have " +
         "info on. ";
@@ -166,13 +167,14 @@ function getRestaurants(intentRequest, callback) {
 	if (restaurants[i].validRestaurant) {
             counterResponse = counterResponse + restaurants[i].restaurantName + ", ";
 	}
+	if (i < 3) {
+	    buttonData.push({ "text":restaurants[i].restaurantName, "value":restaurants[i].restaurantName });
+	}
     }
 
     counterResponse = counterResponse + "Say something like, 'Eating at McDonalds', to begin.";
 
-    callback(close(sessionAttributes, 'Fulfilled',
-        { contentType: 'PlainText', content: counterResponse }));
-        
+    callback(buttonResponse(sessionAttributes, counterResponse, buttonData));
 }
 
 // this function calculates how much a given meal covers for daily calories
