@@ -37,7 +37,25 @@
 	    { "foodName":"Kennel Corn", "calories":80, "sodium":0, "carbs":20 },
 	    { "foodName":"Caesar Side Salad", "calories":40, "sodium":90, "carbs":2 },
 	    { "foodName":"Side Salad", "foodType":"Sides", "calories":15, "sodium":10, "carbs":3 },
-	    { "foodName":"House Side Salad", "calories":15, "sodium":10, "carbs":3 }
+	    { "foodName":"House Side Salad", "calories":15, "sodium":10, "carbs":3 },
+	    { "foodName":"Chocolate Chip Cookie", "calories":160, "sodium":85, "carbs":22 },
+            { "foodName":"Oatmeal Raisin Cookie", "calories":150, "sodium":90, "carbs":22 }
+	]
+    },
+    {
+	"restaurant":"Popeyes",
+	"foodItems":[
+            { "foodName":"Mild Recipe Chicken", "foodType":"Chicken", "calories":380, "sodium":1230, "carbs":16 },
+            { "foodName":"Mild Recipe Chicken Breast", "calories":380, "sodium":1230, "carbs":16 },
+            { "foodName":"Mild Recipe Chicken Drumstick", "calories":160, "sodium":460, "carbs":5 },
+            { "foodName":"Mild Recipe Chicken Thigh", "calories":280, "sodium":640, "carbs":7 },
+            { "foodName":"Mild Recipe Chicken Whole Wing", "calories":210, "sodium":610, "carbs":8 },
+            { "foodName":"Spicy Recipe Chicken", "foodType":"Chicken", "calories":380, "sodium":1230, "carbs":16 },
+            { "foodName":"Spicy Recipe Chicken Breast", "calories":380, "sodium":1230, "carbs":16 },
+            { "foodName":"Spicy Recipe Chicken Drumstick", "calories":160, "sodium":460, "carbs":5 },
+            { "foodName":"Spicy Recipe Chicken Thigh", "calories":280, "sodium":640, "carbs":7 },
+            { "foodName":"Spicy Recipe Chicken Whole Wing", "calories":210, "sodium":610, "carbs":8 },
+            { "foodName":"Cajun Fries", "calories":268, "sodium":587, "carbs":33 }
 	]
     }
 ]
